@@ -4,6 +4,7 @@ stages:
 
 .build:
   image: ruby:2.6.6
+  stage: build
   cache:
     key: ptis-tool-back
     paths:
@@ -20,9 +21,9 @@ stages:
   services:
     - name: postgres:10.14
   variables:
-    POSTGRES_USER: postgresql
+    POSTGRES_USER: P-TIS-tool-Back
     POSTGRES_PASSWORD: rubyonrails
-    DB_USERNAME: postgresql
+    DB_USERNAME: P-TIS-tool-Back
     DB_PASSWORD: rubyonrails
     DB_HOST: postgres
     RAILS_ENV: test
