@@ -44,6 +44,6 @@ minitest:
     name: coverage
     paths:
       - coverage/
-    script:
-      - bundle exec rails db:test:prepare
-      - bundle exec rails test
+  script:
+    - bundle exec rails db:test:prepare
+    - bundle exec rails test
