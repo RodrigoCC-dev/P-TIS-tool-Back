@@ -41,7 +41,7 @@ build:
     - echo -e "production:\n  secret_key_base:" > ./config/secrets.yml
     - echo " $SECRET_ENV_VAR" >> ./config/secrets.yml
     - cat ./config/secrets.yml
-    - bundle exec rails db:migrate RAILS_ENV=production --trace
+    - bundle exec rails db:migrate --trace
     - rvmsudo bundle exec passenger start
   before_script:
     - export APT_CACHE_DIR=`pwd`/apt-cache && mkdir -pv $APT_CACHE_DIR
