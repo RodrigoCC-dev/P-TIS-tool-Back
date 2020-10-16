@@ -15,7 +15,7 @@ build:
     - bundle install --jobs $(nproc) "${FLAGS[@]}" --path=vendor
   before_script:
     - gem install bundler --no-document
-    - SECRET_ENV_VAR=$(bundle exec rake secret)
+    - SECRET_ENV_VAR=$(bundle exec rails secret)
 
 .db:
   extends: build
