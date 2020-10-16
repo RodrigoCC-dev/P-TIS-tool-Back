@@ -11,7 +11,7 @@ build:
   script:
     - echo -e "production:\n  secret_key_base:" > ./config/secrets.yml
     - echo " $SECRET_ENV_VAR" >> ./config/secrets.yml
-    - cat ./config/secrets:yml
+    - cat ./config/secrets.yml
   before_script:
     - export APT_CACHE_DIR=`pwd`/apt-cache && mkdir -pv $APT_CACHE_DIR
     - apt update -qq && apt -o dir::cache::archives="$APT_CACHE_DIR" install -yqq nodejs
