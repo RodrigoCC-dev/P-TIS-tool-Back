@@ -31,7 +31,7 @@ build:
     - apt update -qq && apt -o dir::cache::archives="$APT_CACHE_DIR" install -yqq nodejs
     - gem install bundler --no-document
     - bundle install --jobs $(nproc) "${FLAGS[@]}" --path=vendor
-    - bundle exec rails db:create db:schema:load --trace
+    - bundle exec rails db:create db:migrate db:schema:load --trace
 
 minitest:
   extends: .db
