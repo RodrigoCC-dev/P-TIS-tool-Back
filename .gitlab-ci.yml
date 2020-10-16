@@ -22,9 +22,9 @@ stages:
     - name: postgres:10.14
   variables:
     POSTGRES_USER: P-TIS-tool-Back
-    POSTGRES_PASSWORD: rubyonrails
+    POSTGRES_PASSWORD: postgres
     DB_USERNAME: P-TIS-tool-Back
-    DB_PASSWORD: rubyonrails
+    DB_PASSWORD: postgres
     DB_HOST: postgres
     RAILS_ENV: test
     DISABLE_SPRING: 1
