@@ -1,8 +1,4 @@
-stages:
-  - build
-  - test
-
-.build:
+build:
   image: ruby:2.6.6
   stage: build
   cache:
@@ -17,15 +13,16 @@ stages:
     - bundle install --jobs $(nproc) "${FLAGS[@]}" --path=vendor
 
 .db:
-  extends: .build
+  extends: build
   services:
     - name: postgres:10.14
   variables:
     POSTGRES_USER: P-TIS-tool-Back
-    POSTGRES_PASSWORD: postgres
+    POSTGRES_PASSWORD: ''
     DB_USERNAME: P-TIS-tool-Back
     DB_PASSWORD: postgres
     DB_HOST: postgres
+    POSTGRES_HOST_AUTH_METHOD: trust
     RAILS_ENV: test
     DISABLE_SPRING: 1
     BUNDLE_PATH: vendor/bundle
