@@ -22,6 +22,7 @@ build:
   stage: build
   script:
     - bundle install --deployment --without development test
+    - SECRET_ENV_VAR=$(bundle exec rails secret)
     - echo -e "production:\n  secret_key_base:" > ./config/.example_secrets.yml
     - echo "$(cat ./config/.example_secrets.yml) $SECRET_ENV_VAR" > ./config/secrets.yml
     - cat ./config/secrets.yml
@@ -32,7 +33,6 @@ build:
     - apt update -qq && apt -o dir::cache::archives="$APT_CACHE_DIR" install -yqq nodejs
     - gem install bundler --no-document
     - bundle install --jobs $(nproc) "${FLAGS[@]}" --path=vendor
-    - SECRET_ENV_VAR=$(bundle exec rails secret)
 
 minitest:
   image: ruby:2.6.6
