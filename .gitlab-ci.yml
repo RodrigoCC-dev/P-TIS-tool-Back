@@ -9,8 +9,11 @@ build:
       - node_modules/
     policy: pull
   script:
-    - gem install bundler --no-document
+    - echo $SECRET_ENV_VAR
     - bundle install --jobs $(nproc) "${FLAGS[@]}" --path=vendor
+  before_script:
+    - gem install bundler --no-document
+    - export SECRET_ENV_VAR= bundle exec rake secret
 
 .db:
   extends: build
