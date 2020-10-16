@@ -9,7 +9,8 @@ build:
       - node_modules/
     policy: pull
   script:
-    - echo -e "production:\n  secret_key_base: $SECRET_ENV_VAR" > ./config/secrets.yml
+    - echo -e "production:\n  secret_key_base:" > ./config/secrets.yml
+    - echo " $SECRET_ENV_VAR" >> ./config/secrets.yml
     - cat ./config/secrets:yml
     - bundle install --jobs $(nproc) "${FLAGS[@]}" --path=vendor
   before_script:
