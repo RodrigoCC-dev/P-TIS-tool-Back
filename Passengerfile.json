@@ -1,0 +1,6 @@
+{
+  "environment": "production",
+  "port": 8080,
+  "daemonize": true,
+  "user": "root"
+}
