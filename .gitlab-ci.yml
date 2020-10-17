@@ -83,5 +83,5 @@ deploy:
     - echo $CI_BUILD_TOKEN | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
     - echo "deploying to Docker start..."
-    - docker build --pull -t "$CI_REGISTRY_IMAGE"
+    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
     - docker push "$CI_REGISTRY_IMAGE"
