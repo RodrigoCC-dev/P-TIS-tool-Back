@@ -73,5 +73,11 @@ minitest:
 deploy:
   extends: build
   stage: deploy
+  services:
+    - docker:dind
+  before_script:
+    - echo $CI_BUILD_TOKEN | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
   script:
-    - echo "deploy to Docker start..."
+    - echo "deploying to Docker start..."
+    - docker build --pull -t "$CI_REGISTRY_IMAGE"
+    - docker push "$CI_REGISTRY_IMAGE"
