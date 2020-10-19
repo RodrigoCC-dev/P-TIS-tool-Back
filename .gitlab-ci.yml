@@ -4,6 +4,10 @@ stages:
   - static code analisys
   - deploy
 
+only:
+  - tags
+  - master
+
 build:
   image: ruby:2.6.6
   cache:
