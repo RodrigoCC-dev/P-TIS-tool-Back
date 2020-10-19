@@ -1,0 +1,12 @@
+class CreateObjetivos < ActiveRecord::Migration[6.0]
+  def change
+    create_table :objetivos do |t|
+      t.text :descripcion
+      t.references :bitacora_revision, null: false, foreign_key: true
+      t.bool :borrado, default:false
+      t.datetime :deleted_at
+
+      t.timestamps
+    end
+  end
+end
