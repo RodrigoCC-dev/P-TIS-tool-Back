@@ -7,7 +7,7 @@ class CreateUsuarios < ActiveRecord::Migration[6.0]
       t.string :run
       t.string :correo_elec
       t.string :password
-      t.bool :borrado
+      t.bool :borrado, default: false
       t.datetime :deleted_at
       t.references :rol, null: false, foreign_key: true
 

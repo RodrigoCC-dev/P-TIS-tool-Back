@@ -5,7 +5,7 @@ class CreateSecciones < ActiveRecord::Migration[6.0]
       t.references :jornada, null: false, foreign_key: true
       t.references :semestre, null: false, foreign_key: true
       t.references :curso, null: false, foreign_key: true
-      t.bool :borrado
+      t.bool :borrado, default: false
       t.datetime :deleted_at
 
       t.timestamps

@@ -6,7 +6,7 @@ class CreateSemestres < ActiveRecord::Migration[6.0]
       t.bool :activo
       t.datetime :inicio
       t.datetime :fin
-      t.bool :borrado
+      t.bool :borrado, default: false
       t.datetime :deleted_at
 
       t.timestamps

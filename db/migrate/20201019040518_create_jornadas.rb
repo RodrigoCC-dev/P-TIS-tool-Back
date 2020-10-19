@@ -3,7 +3,7 @@ class CreateJornadas < ActiveRecord::Migration[6.0]
     create_table :jornadas do |t|
       t.string :nombre
       t.integer :identificado
-      t.bool :borrado
+      t.bool :borrado, default:false
       t.datetime :deleted_at
 
       t.timestamps
