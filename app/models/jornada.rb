@@ -1,0 +1,2 @@
+class Jornada < ApplicationRecord
+end

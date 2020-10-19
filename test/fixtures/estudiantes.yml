@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  iniciales: MyString
+  usuario: one
+  seccion: one
+  grupo: one
+
+two:
+  iniciales: MyString
+  usuario: two
+  seccion: two
+  grupo: two

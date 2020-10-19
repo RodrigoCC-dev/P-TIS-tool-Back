@@ -1,0 +1,2 @@
+class Semestre < ApplicationRecord
+end
