@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  revisado: false
+  tipo_estado: one
+
+two:
+  revisado: false
+  tipo_estado: two

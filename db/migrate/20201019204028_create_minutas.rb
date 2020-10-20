@@ -9,7 +9,7 @@ class CreateMinutas < ActiveRecord::Migration[6.0]
       t.references :estudiante, null: false, foreign_key: true
       t.references :tipo_minuta, null: false, foreign_key: true
       t.references :clasificacion, null: false, foreign_key: true
-      t.bool :borrado, default: false
+      t.boolean :borrado, default: false
       t.datetime :deleted_at
 
       t.timestamps

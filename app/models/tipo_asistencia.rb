@@ -1,0 +1,2 @@
+class TipoAsistencia < ApplicationRecord
+end

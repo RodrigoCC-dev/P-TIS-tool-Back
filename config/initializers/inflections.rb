@@ -23,4 +23,7 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.irregular 'revision', 'revisiones'
   inflect.irregular 'clasificacion', 'clasificaciones'
   inflect.irregular 'minuta', 'minutas'
+  inflect.irregular 'asistencia', 'asistencias'
+  inflect.irregular 'actividad', 'actividades'
+  inflect.irregular 'respuesta', 'respuestas'
 end

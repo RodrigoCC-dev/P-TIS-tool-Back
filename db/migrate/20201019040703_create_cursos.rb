@@ -3,7 +3,7 @@ class CreateCursos < ActiveRecord::Migration[6.0]
     create_table :cursos do |t|
       t.string :nombre
       t.string :codigo
-      t.bool :borrado, default:false
+      t.boolean :borrado, default:false
       t.datetime :deleted_at
 
       t.timestamps
