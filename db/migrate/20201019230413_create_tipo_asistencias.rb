@@ -3,7 +3,7 @@ class CreateTipoAsistencias < ActiveRecord::Migration[6.0]
     create_table :tipo_asistencias do |t|
       t.string :tipo
       t.string :descripcion
-      t.bool :borrado
+      t.bool :borrado, default: false 
       t.datetime :deleted_at
 
       t.timestamps

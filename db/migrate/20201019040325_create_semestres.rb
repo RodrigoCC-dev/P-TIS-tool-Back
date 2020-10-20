@@ -3,7 +3,7 @@ class CreateSemestres < ActiveRecord::Migration[6.0]
     create_table :semestres do |t|
       t.integer :numero
       t.integer :agno
-      t.boolean :activo
+      t.boolean :activo, default: true
       t.datetime :inicio
       t.datetime :fin
       t.boolean :borrado, default: false

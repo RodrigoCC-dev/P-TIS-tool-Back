@@ -4,7 +4,7 @@ class CreateComentarios < ActiveRecord::Migration[6.0]
       t.text :comentario
       t.boolean :es_item
       t.bigint :id_item
-      t.boolean :borrado
+      t.boolean :borrado, default: false
       t.datetime :deleted_at
       t.references :asistencia, null: false, foreign_key: true
       t.references :minuta, null: false, foreign_key: true

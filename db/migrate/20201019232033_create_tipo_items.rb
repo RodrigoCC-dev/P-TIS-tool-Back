@@ -3,7 +3,7 @@ class CreateTipoItems < ActiveRecord::Migration[6.0]
     create_table :tipo_items do |t|
       t.string :tipo
       t.string :descripcion
-      t.boolean :borrado
+      t.boolean :borrado, default: false
       t.datetime :deleted_at
 
       t.timestamps

@@ -3,7 +3,7 @@ class CreateTipoEstados < ActiveRecord::Migration[6.0]
     create_table :tipo_estados do |t|
       t.string :abreviacion
       t.string :descripcion
-      t.boolean :borrado
+      t.boolean :borrado, default: false
       t.datetime :deleted_at
 
       t.timestamps

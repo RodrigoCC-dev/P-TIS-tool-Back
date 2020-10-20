@@ -3,7 +3,7 @@ class CreateRoles < ActiveRecord::Migration[6.0]
     create_table :roles do |t|
       t.string :rol
       t.integer :rango
-      t.boolean :borrado
+      t.boolean :borrado, default: false
       t.datetime :deleted_at
 
       t.timestamps
