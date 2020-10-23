@@ -2,10 +2,10 @@
 
 one:
   motivo: MyString
-  borrado: 
+  borrado: false
   deleted_at: 2020-10-19 18:38:43
 
 two:
   motivo: MyString
-  borrado: 
+  borrado: false
   deleted_at: 2020-10-19 18:38:43
