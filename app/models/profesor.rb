@@ -1,4 +1,4 @@
 class Profesor < ApplicationRecord
   belongs_to :usuario
-  belongs_to :seccion
+  has_and_belongs_to_many :secciones
 end
