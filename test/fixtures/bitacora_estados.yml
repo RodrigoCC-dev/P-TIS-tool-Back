@@ -2,10 +2,12 @@
 
 one:
   activo: false
+  revidado: false
   minuta: one
-  estado: one
+  tipo_estado: one
 
 two:
   activo: false
+  revisado: false
   minuta: two
-  estado: two
+  tipo_estado: two
