@@ -1,3 +1,3 @@
 class Objetivo < ApplicationRecord
-  belongs_to :minuta
+  belongs_to :bitacora_revision
 end
