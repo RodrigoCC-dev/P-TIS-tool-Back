@@ -10,5 +10,7 @@ class Usuario < ApplicationRecord
   has_one :profesor
 
   # validaciones
+  validates_uniqueness_of :rut
+  validates_uniqueness_of :correo_elec
 
 end
