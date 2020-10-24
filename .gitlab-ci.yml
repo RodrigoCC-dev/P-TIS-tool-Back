@@ -1,0 +1,112 @@
+stages:
+  - build
+  - test
+  - static code analisys
+  - deploy
+
+only:
+  - tags
+  - master
+
+build:
+  image: ruby:2.6.6
+  cache:
+    key: ptis-tool-back
+    paths:
+      - apt-cache
+      - vendor/ruby
+      - node_modules/
+    policy: pull
+  services:
+    - postgres:10.14
+  variables:
+    POSTGRES_USER: root
+    POSTGRES_PASSWORD: ''
+    DB_USERNAME: root
+    DB_PASSWORD: postgres
+    DB_HOST: postgres
+    POSTGRES_HOST_AUTH_METHOD: trust
+    RAILS_ENV: production
+    DISABLE_SPRING: 1
+    BUNDLE_PATH: vendor/bundle
+  stage: build
+  script:
+    - bundle install --deployment --without development test
+    - SECRET_ENV_VAR=$(bundle exec rails secret)
+    - echo -e "production:\n  secret_key_base:" > ./config/.example_secrets.yml
+    - echo "$(cat ./config/.example_secrets.yml) $SECRET_ENV_VAR" > ./config/secrets.yml
+    - cat ./config/secrets.yml
+    - bundle exec rails db:create db:migrate db:seed RAILS_ENV=production --trace
+    - bundle exec passenger start
+  before_script:
+    - export APT_CACHE_DIR=`pwd`/apt-cache && mkdir -pv $APT_CACHE_DIR
+    - apt update -qq && apt -o dir::cache::archives="$APT_CACHE_DIR" install -yqq nodejs
+    - gem install bundler --no-document
+    - bundle install --jobs $(nproc) "${FLAGS[@]}" --path=vendor
+
+minitest:
+  image: ruby:2.6.6
+  stage: test
+  cache:
+    key: ptis-tool-back
+    paths:
+      - apt-cache
+      - vendor/ruby
+      - node_modules/
+    policy: pull-push
+  services:
+    - postgres:10.14
+  variables:
+    POSTGRES_USER: root
+    POSTGRES_PASSWORD: ''
+    DB_USERNAME: root
+    DB_PASSWORD: postgres
+    DB_HOST: postgres
+    POSTGRES_HOST_AUTH_METHOD: trust
+    RAILS_ENV: test
+    DISABLE_SPRING: 1
+    BUNDLE_PATH: vendor/bundle
+  artifacts:
+    name: coverage
+    paths:
+      - coverage/
+  script:
+    - bundle exec rails db:test:prepare
+    - bundle exec rails test
+  before_script:
+    - export APT_CACHE_DIR=`pwd`/apt-cache && mkdir -pv $APT_CACHE_DIR
+    - apt update -qq && apt -o dir::cache::archives="$APT_CACHE_DIR" install -yqq nodejs
+    - gem install bundler --no-document
+    - bundle install --jobs $(nproc) "${FLAGS[@]}" --path=vendor
+    - bundle exec rails db:create db:migrate db:schema:load --trace
+
+sonarqube:
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  stage: static code analisys
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar" #Define la ubicación del caché de análisis de Sonarqube
+    GIT_DEPTH: "0" #Tell git to fetch all branches of the project, required by the analisys task
+  cache:
+    key: "${CI_JOB_NAME}"
+    paths:
+      - .sonar/cache
+  script:
+    - sonar-scanner -Dsonar.qualitygate.wait=true
+  allow_failure: true
+  only:
+    - master
+
+deploy:
+  image: docker:latest
+  extends: build
+  stage: deploy
+  services:
+    - docker:dind
+  before_script:
+    - echo $CI_BUILD_TOKEN | docker login -u "$CI_REGISTRY_USER" --password-stdin $CI_REGISTRY
+  script:
+    - echo "deploying to Docker start..."
+    - docker build --pull -t "$CI_REGISTRY_IMAGE" .
+    - docker push "$CI_REGISTRY_IMAGE"

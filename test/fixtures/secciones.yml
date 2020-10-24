@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  codigo: MyString
+  jornada: one
+  semestre: one
+  curso: one
+  borrado: 
+  deleted_at: 2020-10-19 01:08:23
+
+two:
+  codigo: MyString
+  jornada: two
+  semestre: two
+  curso: two
+  borrado: 
+  deleted_at: 2020-10-19 01:08:23
