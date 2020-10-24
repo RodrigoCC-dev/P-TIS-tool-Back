@@ -1,4 +1,4 @@
-class CreateTipoMinutas < ActiveRecord::Migration[6.0]
+class CreateTipoMinuta < ActiveRecord::Migration[6.0]
   def change
     create_table :tipo_minutas do |t|
       t.string :tipo
