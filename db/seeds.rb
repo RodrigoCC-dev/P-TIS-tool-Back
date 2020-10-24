@@ -70,6 +70,9 @@ Curso.create!([
 ])
 
 # Seeder para crear secciones
+jornadas = Jornada.all
+semestres = Semestre.all
+cursos = Curso.all
 Seccion.create!([
   {
     "codigo" => "V21",
@@ -98,6 +101,7 @@ Seccion.create!([
 ])
 
 # Seeder para crear usuarios
+roles = Rol.all
 Usuario.create!([
   {
     "nombre" => "Hector",
