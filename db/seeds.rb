@@ -365,3 +365,11 @@ TipoActividad.create!([
     "identificador" => "RE3"
   }
 ])
+
+# Seeder para agregar grupo por defecto
+Grupo.create!([
+  {
+    "nombre" => "SG",
+    "proyecto" => "Sin asignación"
+  }
+])
