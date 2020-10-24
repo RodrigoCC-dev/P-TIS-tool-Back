@@ -2,6 +2,7 @@ class CreateMinutas < ActiveRecord::Migration[6.0]
   def change
     create_table :minutas do |t|
       t.integer :correlativo
+      t.string :codigo
       t.datetime :fecha_reunion
       t.time :h_inicio
       t.time :h_termino

@@ -3,6 +3,7 @@ class CreateTipoActividades < ActiveRecord::Migration[6.0]
     create_table :tipo_actividades do |t|
       t.string :actividad
       t.string :descripcion
+      t.string :identificador
       t.boolean :borrado, default: false
       t.datetime :deleted_at
 

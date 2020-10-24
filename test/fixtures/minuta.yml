@@ -2,6 +2,7 @@
 
 one:
   correlativo: 1
+  codigo: 'MINUTA_G01_01_2020-2_0929'
   fecha_reunion: 2020-10-19 17:40:28
   h_inicio: 2020-10-19 17:40:28
   h_termino: 2020-10-19 17:40:28
@@ -9,11 +10,12 @@ one:
   estudiante: one
   tipo_minuta: one
   clasificacion: one
-  borrado: 
+  borrado:
   deleted_at: 2020-10-19 17:40:28
 
 two:
-  correlativo: 1
+  correlativo: 2
+  codigo: 'MINUTA_G01_02_2020-2_1008'
   fecha_reunion: 2020-10-19 17:40:28
   h_inicio: 2020-10-19 17:40:28
   h_termino: 2020-10-19 17:40:28
@@ -21,5 +23,5 @@ two:
   estudiante: two
   tipo_minuta: two
   clasificacion: two
-  borrado: 
+  borrado:
   deleted_at: 2020-10-19 17:40:28

@@ -3,6 +3,7 @@ class CreateItems < ActiveRecord::Migration[6.0]
     create_table :items do |t|
       t.string :descripcion
       t.integer :correlativo
+      t.datetime :fecha
       t.boolean :resuelto
       t.bigint :resuelto_por
       t.datetime :resuelto_el

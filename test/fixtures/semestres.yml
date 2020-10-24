@@ -3,17 +3,17 @@
 one:
   numero: 1
   agno: 1
-  activo: 
+  activo:
   inicio: 2020-10-19 01:03:25
   fin: 2020-10-19 01:03:25
-  borrado: 
+  borrado: false
   deleted_at: 2020-10-19 01:03:25
 
 two:
   numero: 1
   agno: 1
-  activo: 
+  activo:
   inicio: 2020-10-19 01:03:25
   fin: 2020-10-19 01:03:25
-  borrado: 
+  borrado: false
   deleted_at: 2020-10-19 01:03:25

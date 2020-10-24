@@ -5,3 +5,359 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+# Seeder para Roles
+Rol.create!([
+  {
+    "rol" => "Coordinador",
+    "rango" => 1
+  },
+  {
+    "rol" => "Profesor",
+    "rango" => 2
+  },
+  {
+    "rol" => "Estudiante",
+    "rango" => 3
+  },
+  {
+    "rol" => "Stakeholder",
+    "rango" => 4
+  }
+])
+
+# Seeder para agregar Jornadas
+Jornada.create!([
+  {
+    "nombre" => "Diurna",
+    "identificador" => 1
+  },
+  {
+    "nombre" => "Vespertina",
+    "identificador" => 2
+  }
+])
+
+# Seeder para agregar Semestres
+Semestre.create!([
+  {
+    "numero" => 2,
+    "agno" => 2020,
+    "activo" => true,
+    "inicio" => "2020-09-28",
+    "fin" => "2021-01-29"
+  }
+])
+
+# Seeder para agregar Cursos
+Curso.create!([
+  {
+    "nombre" => "Proyecto de Ingenieria de Software",
+    "codigo" => "13168"
+  },
+  {
+    "nombre" => "Proyecto de Ingenieria Informatica",
+    "codigo" => "13126"
+  },
+  {
+    "nombre" => "Proyecto de Ingenieria de Software",
+    "codigo" => "13267"
+  },
+  {
+    "nombre" => "Taller de Ingenieria de Software",
+    "codigo" => "13230"
+  }
+])
+
+# Seeder para crear secciones
+Seccion.create!([
+  {
+    "codigo" => "V21",
+    "jornada" => jornadas.find_by(identificador: 2),
+    "semestre" => semestres.first,
+    "curso" => cursos.find_by(codigo: '13168')
+  },
+  {
+    "codigo" => "V35",
+    "jornada" => jornadas.find_by(identificador: 2),
+    "semestre" => semestres.first,
+    "curso" => cursos.find_by(codigo: '13126')
+  },
+  {
+    "codigo" => "A1",
+    "jornada" => jornadas.find_by(identificador: 1),
+    "semestre" => semestres.first,
+    "curso" => cursos.find_by(codigo: '13267')
+  },
+  {
+    "codigo" => "B2",
+    "jornada" => jornadas.find_by(identificador: 1),
+    "semestre" => semestres.first,
+    "curso" => cursos.find_by(codigo: '13230')
+  }
+])
+
+# Seeder para crear usuarios
+Usuario.create!([
+  {
+    "nombre" => "Hector",
+    "apellido_paterno" => "Antillanca",
+    "apellido_materno" => "Espina",
+    "correo_elec" => "hector.antillanca@usach.cl",
+    "password" => "secret",
+    "password_confirmation" => "secret",
+    "rol" => roles.find_by(rango: 1)
+  },
+  {
+    "nombre" => "Maria Carolina",
+    "apellido_paterno" => "Chamorro",
+    "apellido_materno" => "Ahumada",
+    "correo_elec" => "mcchamorro@gmail.com",
+    "password" => "secret",
+    "password_confirmation" => "secret",
+    "rol" => roles.find_by(rango: 2)
+  }
+])
+
+# Seeder para agregar tipos de minutas
+TipoMinuta.create!([
+  {
+    "tipo" => "Coordinacion",
+    "descripcion" => "Minuta para reunión entre los estudiantes de un grupo de trabajo"
+  },
+  {
+    "tipo" => "Cliente",
+    "descripcion" => "Minuta para reunión del grupo de trabajo con los stakeholders"
+  },
+  {
+    "tipo" => "Semanal",
+    "descripcion" => "Minuta para reunión semanal para señalar logros y metas"
+  }
+])
+
+# Seeder para agregar tipos de asistencia
+TipoAsistencia.create!([
+  {
+    "tipo" => "PRE",
+    "descripcion" => "Presente"
+  },
+  {
+    "tipo" => "AUS",
+    "descripcion" => "Ausente"
+  },
+  {
+    "tipo" => "ACA",
+    "descripcion" => "Ausente con aviso"
+  }
+])
+
+# Seeder para agregar tipos de ítems
+TipoItem.create!([
+  {
+    "tipo" => "Agenda",
+    "descripcion" => "Comprimiso con fecha y responsable"
+  },
+  {
+    "tipo" => "Decision",
+    "descripcion" => "Acuerdo de trabajo"
+  },
+  {
+    "tipo" => "Hecho",
+    "descripcion" => "Tarea terminada"
+  },
+  {
+    "tipo" => "Info",
+    "descripcion" => "Item informativo"
+  },
+  {
+    "tipo" => "Idea",
+    "descripcion" => "Propuesta formulada en la reunión"
+  },
+  {
+    "tipo" => "Por hacer",
+    "descripcion" => "Tarea por realizar"
+  }
+])
+
+# Seeder para agregar motivos de revisión
+Motivo.create!([
+  {
+    "motivo" => "Emitida para coordinación interna"
+  },
+  {
+    "motivo" => "Emitida para revisión del cliente"
+  },
+  {
+    "motivo" => "Emitida para aprobación del cliente"
+  },
+  {
+    "motivo" => "Emisión final"
+  }
+])
+
+# Seeder para agregar Tipos de estados
+TipoEstado.create!([
+  {
+    "abreviacion" => "BOR",
+    "descripcion" => "Borrador"
+  },
+  {
+    "abreviacion" => "CIG",
+    "descripcion" => "Comentada por integrante del grupo"
+  },
+  {
+    "abreviacion" => "CSK",
+    "descripcion" => "Comentada por Stakeholder"
+  },
+  {
+    "abreviacion" => "RIG",
+    "descripcion" => "Respondida por integrante del grupo"
+  },
+  {
+    "abreviacion" => "RSK",
+    "descripcion" => "Respondida por Stakeholder"
+  },
+  {
+    "abreviacion" => "CER",
+    "descripcion" => "Cerrada"
+  }
+])
+
+# Seeder para agregar Tipos de actividades
+TipoActividad.create!([
+  {
+    "actividad" => "Crear minuta",
+    "descripcion" => "Se creó una nueva minuta de reunión",
+    "identificador" => "M1"
+  },
+  {
+    "actividad" => "Ingresar datos de reunión",
+    "descripcion" => "Se registran los datos de la reunión en la minuta",
+    "identificador" => "M2"
+  },
+  {
+    "actividad" => "Ingresar tema de reunión",
+    "descripcion" => "Se ingresa el tema de la reunión a tratar",
+    "identificador" => "T1"
+  },
+  {
+    "actividad" => "Modifica tema de reunión",
+    "descripcion" => "Se cambia el tema de la reunión de la minuta",
+    "identificador" => "T2"
+  },
+  {
+    "actividad" => "Ingresar asistencia",
+    "descripcion" => "Se ingresa los asistentes de la reunión",
+    "identificador" => "M3"
+  },
+  {
+    "actividad" => "Ingresar calificación",
+    "descripcion" => "Se ingresa la clasificación de la reunión",
+    "identificador" => "M4"
+  },
+  {
+    "actividad" => "Ingresar objetivo",
+    "descripcion" => "Se ingresa un objetivo de la reunión",
+    "identificador" => "O1"
+  },
+  {
+    "actividad" => "Editar objetivo",
+    "descripcion" => "Se cambia objetivo de la reunión",
+    "identificador" => "O2"
+  },
+  {
+    "actividad" => "Eliminar objetivo",
+    "descripcion" => "Se quita objetivo de la reunión",
+    "identificador" => "O3"
+  },
+  {
+    "actividad" => "Ingresar conclusión",
+    "descripcion" => "Se ingresa una conclusión de la reunión",
+    "identificador" => "C1"
+  },
+  {
+    "actividad" => "Editar conclusión",
+    "descripcion" => "Se cambia conclusión de la reunión",
+    "identificador" => "C2"
+  },
+  {
+    "actividad" => "Eliminar conclusión",
+    "descripcion" => "Se quita conclusión de la reunión",
+    "identificador" => "C3"
+  },
+  {
+    "actividad" => "Ingresar item",
+    "descripcion" => "Se ingresa un nuevo item a la reunión",
+    "identificador" => "M5"
+  },
+  {
+    "actividad" => "Asignar responsable",
+    "descripcion" => "Se indica responsable del item",
+    "identificador" => "R1"
+  },
+  {
+    "actividad" => "Ingresar fecha",
+    "descripcion" => "Se agrega fecha de cumplimiento del compromiso",
+    "identificador" => "F1"
+  },
+  {
+    "actividad" => "Modificar item",
+    "descripcion" => "Se cambia descripción del item",
+    "identificador" => "M6"
+  },
+  {
+    "actividad" => "Cambiar responsable",
+    "descripcion" => "Se cambia el responsable del item",
+    "identificador" => "R2"
+  },
+  {
+    "actividad" => "Cambiar fecha",
+    "descripcion" => "Se cambia fecha del compromiso",
+    "identificador" => "F2"
+  },
+  {
+    "actividad" => "Eliminar item",
+    "descripcion" => "Se elmina el item",
+    "identificador" => "M7"
+  },
+  {
+    "actividad" => "Quitar responsable",
+    "descripcion" => "Se quita el responsable del item",
+    "identificador" => "R3"
+  },
+  {
+    "actividad" => "Quitar fecha",
+    "descripcion" => "Se quita la fecha de cumplimento del compromiso",
+    "identificador" => "F3"
+  },
+  {
+    "actividad" => "Agrega comentario",
+    "descripcion" => "Se agrega comentario a un item",
+    "identificador" => "COM1"
+  },
+  {
+    "actividad" => "Editar comentario",
+    "descripcion" => "Se cambia un comentario a un item",
+    "identificador" => "COM2"
+  },
+  {
+    "actividad" => "Eliminar comentario",
+    "descripcion" => "Se elimina el comentario del item",
+    "identificador" => "COM3"
+  },
+  {
+    "actividad" => "Agregar respuesta",
+    "descripcion" => "Se agrega respuesta a un comentario",
+    "identificador" => "RE1"
+  },
+  {
+    "actividad" => "Editar respuesta",
+    "descripcion" => "Se cambia respuesta a un comentario",
+    "identificador" => "RE2"
+  },
+  {
+    "actividad" => "Eliminar respuesta",
+    "descripcion" => "Se quita respuesta a un comentario",
+    "identificador" => "RE3"
+  }
+])
