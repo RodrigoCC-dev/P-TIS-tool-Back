@@ -107,7 +107,7 @@ Usuario.create!([
     "nombre" => "Hector",
     "apellido_paterno" => "Antillanca",
     "apellido_materno" => "Espina",
-    "correo_elec" => "hector.antillanca@usach.cl",
+    "email" => "hector.antillanca@usach.cl",
     "password" => "secret",
     "password_confirmation" => "secret",
     "rol" => roles.find_by(rango: 1)
@@ -116,7 +116,7 @@ Usuario.create!([
     "nombre" => "Maria Carolina",
     "apellido_paterno" => "Chamorro",
     "apellido_materno" => "Ahumada",
-    "correo_elec" => "mcchamorro@gmail.com",
+    "email" => "mcchamorro@gmail.com",
     "password" => "secret",
     "password_confirmation" => "secret",
     "rol" => roles.find_by(rango: 2)

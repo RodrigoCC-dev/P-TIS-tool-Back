@@ -320,7 +320,7 @@ ActiveRecord::Schema.define(version: 2020_10_24_032214) do
     t.string "apellido_paterno"
     t.string "apellido_materno"
     t.string "run"
-    t.string "correo_elec", null: false
+    t.string "email", null: false
     t.string "password_digest", null: false
     t.boolean "borrado", default: false
     t.datetime "deleted_at"
