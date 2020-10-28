@@ -10,5 +10,6 @@ class Usuario < ApplicationRecord
   has_one :profesor
 
   # validaciones
+  validates_uniqueness_of :email
 
 end
