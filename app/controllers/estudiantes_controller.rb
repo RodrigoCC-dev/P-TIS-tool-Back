@@ -12,10 +12,10 @@ class EstudiantesController < ApplicationController
     grupo_por_defecto = Grupo.find_by(nombre: 'SG')
     estudiante.grupo_id = grupo_por_defecto.id
     rol_estudiante = Rol.find_by(rol: 'Estudiante')
-    estudiante.rol_id = rol_estudiante.id
+    estudiante.usuario.rol_id = rol_estudiante.id
     estudiante.assign_attributes(estudiantes_params)
-    estudiante.password = 'pass'
-    estudiante.password_confirmation = 'pass'
+    estudiante.usuario.password = 'pass'
+    estudiante.usuario.password_confirmation = 'pass'
     if estudiante.valid?
       estudiante.save!
     else
@@ -25,7 +25,7 @@ class EstudiantesController < ApplicationController
 
   private
   def estudiantes_params
-    params.require(:estudiante).permit(:seccion_id, usuario_attributes: [:nombre, :apellido_paterno, :apellido_materno, :run, :correo_elec])
+    params.require(:estudiante).permit(:seccion_id, usuario_attributes: [:nombre, :apellido_paterno, :apellido_materno, :run, :email])
   end
 
   def obtener_iniciales(usuario)
