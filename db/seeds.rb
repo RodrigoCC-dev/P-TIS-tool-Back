@@ -373,3 +373,18 @@ Grupo.create!([
     "proyecto" => "Sin asignación"
   }
 ])
+
+# Seeder para crear profesores
+usuarios = Usuario.all
+Profesor.create!([
+  {
+    "usuario" => usuarios.find_by(email: 'mcchamorro@gmail.com')
+  }
+])
+
+# Seeder para asignar secciones a los profesores
+profesores = Profesor.all
+profesor_uno = profesores.first
+secciones = Seccion.joins(:jornada)
+profesor_uno.secciones << secciones.where('jornadas.identificador =?', 2)
+profesor_uno.save!
