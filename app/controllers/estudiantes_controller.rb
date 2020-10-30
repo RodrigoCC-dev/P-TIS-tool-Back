@@ -1,7 +1,34 @@
 class EstudiantesController < ApplicationController
   before_action :authenticate_usuario
+  include JsonFormat
 
   def index
+    semestreActual = Semestre.where('activo = ? AND borrado = ?', true, false).last
+    usuario = Usuario.find(current_usuario.id)
+    if usuario.rol.rango == 1
+      estudiantes = Estudiante.joins(:usuario).joins(seccion: :jornada).joins(seccion: :semestre).where(
+        'semestres.id = ? AND usuarios.borrado = ?', semestreActual.id, false).select('
+          estudiantes.id,
+          usuarios.run AS run_est,
+          usuarios.nombre AS nombre_est,
+          usuarios.apellido_paterno AS apellido1,
+          usuarios.apellido_materno AS apellido2,
+          secciones.codigo AS codigo_seccion,
+          jornadas.nombre AS jornada
+          ')
+    elsif usuario.rol.rango == 2
+      estudiantes = Estudiante.joins(:usuario).joins(seccion: :profesores).joins(seccion: :jornada).joins(seccion: :semestre).where(
+        'semestres.id = ? AND usuarios.borrado = ? AND profesores.usuario_id = ?', semestreActual.id, false, usuario.id).select('
+          estudiantes.id,
+          usuarios.run AS run_est,
+          usuarios.nombre AS nombre_est,
+          usuarios.apellido_paterno AS apellido1,
+          usuarios.apellido_materno AS apellido2,
+          secciones.codigo AS codigo_seccion,
+          jornadas.nombre AS jornada
+          ')
+    end
+    render json: estudiantes.as_json(json_data)
   end
 
   def create
