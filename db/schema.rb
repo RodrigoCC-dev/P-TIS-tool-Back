@@ -107,6 +107,7 @@ ActiveRecord::Schema.define(version: 2020_10_29_231604) do
   create_table "grupos", force: :cascade do |t|
     t.string "nombre"
     t.string "proyecto"
+    t.integer "correlativo"
     t.boolean "borrado", default: false
     t.datetime "delete_at"
     t.datetime "created_at", precision: 6, null: false
