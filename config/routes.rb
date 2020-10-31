@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   resources :estudiantes, only: [:index, :create]
   get 'estudiantes/sin_grupo', to: 'estudiantes#sin_grupo'
 
+  resources :grupos
+
   get 'login/user', to: 'usuarios#user'
 
   scope 'auth' do
