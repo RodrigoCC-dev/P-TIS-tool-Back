@@ -1,13 +1,13 @@
 class EstudiantesController < ApplicationController
   before_action :authenticate_usuario
+  before_action :semestre_actual, only: [:index, :sin_grupo]
+  before_action :usuario_actual, only: [:index, :sin_grupo]
   include JsonFormat
 
   def index
-    semestreActual = Semestre.where('activo = ? AND borrado = ?', true, false).last
-    usuario = Usuario.find(current_usuario.id)
-    if usuario.rol.rango == 1
+    if @usuario.rol.rango == 1
       estudiantes = Estudiante.joins(:usuario).joins(seccion: :jornada).joins(seccion: :semestre).where(
-        'semestres.id = ? AND usuarios.borrado = ?', semestreActual.id, false).select('
+        'semestres.id = ? AND usuarios.borrado = ?', @semestreActual.id, false).select('
           estudiantes.id,
           usuarios.run AS run_est,
           usuarios.nombre AS nombre_est,
@@ -16,9 +16,9 @@ class EstudiantesController < ApplicationController
           secciones.codigo AS codigo_seccion,
           jornadas.nombre AS jornada
           ')
-    elsif usuario.rol.rango == 2
+    elsif @usuario.rol.rango == 2
       estudiantes = Estudiante.joins(:usuario).joins(seccion: :profesores).joins(seccion: :jornada).joins(seccion: :semestre).where(
-        'semestres.id = ? AND usuarios.borrado = ? AND profesores.usuario_id = ?', semestreActual.id, false, usuario.id).select('
+        'semestres.id = ? AND usuarios.borrado = ? AND profesores.usuario_id = ?', @semestreActual.id, false, @usuario.id).select('
           estudiantes.id,
           usuarios.run AS run_est,
           usuarios.nombre AS nombre_est,
@@ -50,6 +50,36 @@ class EstudiantesController < ApplicationController
     end
   end
 
+  def show
+  end
+
+  def sin_grupo
+    if @usuario.rol.rango == 1
+      estudiantes = Estudiante.joins(:usuario).joins(seccion: :jornada).joins(seccion: :semestre).joins(:grupo).where(
+        'semestres.id = ? AND usuarios.borrado = ? AND grupos.nombre = ?', @semestreActual.id, false, 'SG').select('
+          estudiantes.id,
+          usuarios.run AS run_est,
+          usuarios.nombre AS nombre_est,
+          usuarios.apellido_paterno AS apellido1,
+          usuarios.apellido_materno AS apellido2,
+          secciones.codigo AS codigo_seccion,
+          jornadas.nombre AS jornada
+          ')
+    elsif @usuario.rol.rango == 2
+      estudiantes = Estudiante.joins(:usuario).joins(seccion: :profesores).joins(seccion: :jornada).joins(seccion: :semestre).joins(:grupo).where(
+        'semestres.id = ? AND usuarios.borrado = ? AND profesores.usuario_id = ? AND grupos.nombre = ?', @semestreActual.id, false, @usuario.id, 'SG').select('
+          estudiantes.id,
+          usuarios.run AS run_est,
+          usuarios.nombre AS nombre_est,
+          usuarios.apellido_paterno AS apellido1,
+          usuarios.apellido_materno AS apellido2,
+          secciones.codigo AS codigo_seccion,
+          jornadas.nombre AS jornada
+          ')
+    end
+    render json: estudiantes.as_json(json_data)
+  end
+
   private
   def estudiantes_params
     params.require(:estudiante).permit(:seccion_id, usuario_attributes: [:nombre, :apellido_paterno, :apellido_materno, :run, :email])
@@ -61,5 +91,13 @@ class EstudiantesController < ApplicationController
     iniciales += usuario.apellido_paterno.chr.upcase
     iniciales += usuario.apellido_materno.chr.upcase
     return iniciales
+  end
+
+  def semestre_actual
+    @semestreActual = Semestre.where('activo = ? AND borrado = ?', true, false).last
+  end
+
+  def usuario_actual
+    @usuario = Usuario.find(current_usuario.id)
   end
 end
