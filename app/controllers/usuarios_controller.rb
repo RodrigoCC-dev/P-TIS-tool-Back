@@ -1,5 +1,6 @@
 class UsuariosController < ApplicationController
   before_action :authenticate_usuario
+  include JsonFormat
 
   def user
     render json: current_usuario.as_json(
@@ -10,11 +11,9 @@ class UsuariosController < ApplicationController
     )
   end
 
+  private
   def json_user
     { except: %i[created_at updated_at password_digest], :include => {:rol => {except: %i[created_at updated_at]} } }
   end
 
-  def json_data
-    { except: %i[created_at updated_at borrado deleted_at] }
-  end
 end

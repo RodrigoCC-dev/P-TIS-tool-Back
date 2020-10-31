@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_24_032214) do
+ActiveRecord::Schema.define(version: 2020_10_29_231604) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -107,6 +107,7 @@ ActiveRecord::Schema.define(version: 2020_10_24_032214) do
   create_table "grupos", force: :cascade do |t|
     t.string "nombre"
     t.string "proyecto"
+    t.integer "correlativo"
     t.boolean "borrado", default: false
     t.datetime "delete_at"
     t.datetime "created_at", precision: 6, null: false
@@ -128,6 +129,13 @@ ActiveRecord::Schema.define(version: 2020_10_24_032214) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["bitacora_revision_id"], name: "index_items_on_bitacora_revision_id"
     t.index ["tipo_item_id"], name: "index_items_on_tipo_item_id"
+  end
+
+  create_table "items_responsables", id: false, force: :cascade do |t|
+    t.bigint "item_id", null: false
+    t.bigint "responsable_id", null: false
+    t.index ["item_id"], name: "index_items_responsables_on_item_id"
+    t.index ["responsable_id"], name: "index_items_responsables_on_responsable_id"
   end
 
   create_table "jornadas", force: :cascade do |t|
@@ -178,11 +186,16 @@ ActiveRecord::Schema.define(version: 2020_10_24_032214) do
 
   create_table "profesores", force: :cascade do |t|
     t.bigint "usuario_id", null: false
-    t.bigint "seccion_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["seccion_id"], name: "index_profesores_on_seccion_id"
     t.index ["usuario_id"], name: "index_profesores_on_usuario_id"
+  end
+
+  create_table "profesores_secciones", id: false, force: :cascade do |t|
+    t.bigint "profesor_id", null: false
+    t.bigint "seccion_id", null: false
+    t.index ["profesor_id"], name: "index_profesores_secciones_on_profesor_id"
+    t.index ["seccion_id"], name: "index_profesores_secciones_on_seccion_id"
   end
 
   create_table "registros", force: :cascade do |t|
@@ -196,12 +209,10 @@ ActiveRecord::Schema.define(version: 2020_10_24_032214) do
   end
 
   create_table "responsables", force: :cascade do |t|
-    t.bigint "item_id", null: false
     t.bigint "asistencia_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["asistencia_id"], name: "index_responsables_on_asistencia_id"
-    t.index ["item_id"], name: "index_responsables_on_item_id"
   end
 
   create_table "respuestas", force: :cascade do |t|
@@ -344,16 +355,18 @@ ActiveRecord::Schema.define(version: 2020_10_24_032214) do
   add_foreign_key "estudiantes", "usuarios"
   add_foreign_key "items", "bitacora_revisiones"
   add_foreign_key "items", "tipo_items"
+  add_foreign_key "items_responsables", "items"
+  add_foreign_key "items_responsables", "responsables"
   add_foreign_key "minutas", "clasificaciones"
   add_foreign_key "minutas", "estudiantes"
   add_foreign_key "minutas", "tipo_minutas"
   add_foreign_key "objetivos", "bitacora_revisiones"
-  add_foreign_key "profesores", "secciones"
   add_foreign_key "profesores", "usuarios"
+  add_foreign_key "profesores_secciones", "profesores"
+  add_foreign_key "profesores_secciones", "secciones"
   add_foreign_key "registros", "minutas"
   add_foreign_key "registros", "tipo_actividades"
   add_foreign_key "responsables", "asistencias"
-  add_foreign_key "responsables", "items"
   add_foreign_key "respuestas", "asistencias"
   add_foreign_key "respuestas", "comentarios"
   add_foreign_key "secciones", "cursos"
