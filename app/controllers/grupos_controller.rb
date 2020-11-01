@@ -9,9 +9,10 @@ class GruposController < ApplicationController
     grupo = Grupo.new(grupo_params)
     if grupo.valid?
       grupo.save!
-      estudiantes = Estudiante.where(params[:estudiantes])
+      estudiantes = Estudiante.where(id: params[:estudiantes])
       estudiantes.each do |e|
         e.grupo_id = grupo.id
+        e.save!
       end
     else
       render json: ['error': 'Información del grupo no es válida'], status: :unprocessable_entity
@@ -30,7 +31,7 @@ class GruposController < ApplicationController
 
   private
   def grupo_params
-    params.require(:grupos).permit(:nombre, :proyecto, :correlativo)
+    params.require(:grupo).permit(:nombre, :proyecto, :correlativo)
   end
 
 end
