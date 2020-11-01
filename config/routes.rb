@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   get 'estudiantes/sin_grupo', to: 'estudiantes#sin_grupo'
 
   resources :grupos, only: [:index]
-  post 'grupos/por_jornada', to: 'grupos#por_jornada'
+  post 'grupos/ultimo_grupo', to: 'grupos#ultimo_grupo'
 
   resources :jornadas, only: [:index]
 

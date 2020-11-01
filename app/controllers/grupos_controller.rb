@@ -5,8 +5,8 @@ class GruposController < ApplicationController
   def index
   end
 
-  # Servicio que entrega los grupos de estudiantes disponibles asociados a una jornada
-  def por_jornada
+  # Servicio que entrega el último grupo de estudiantes disponibles asociados a una jornada
+  def ultimo_grupo
     grupo = Estudiante.joins(:grupo).joins(seccion: :jornada).where('grupos.borrado = ? AND grupos.nombre <> ? AND jornadas.nombre = ?', false, 'SG', params[:jornada]).select('
       grupos.id,
       grupos.nombre,
