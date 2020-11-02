@@ -23,10 +23,10 @@ class Usuario < ApplicationRecord
 
   private
   def downcase_fields
-    self.nombre = self.nombre.titleize
-    self.apellido_paterno = self.apellido_paterno.titleize
-    self.apellido_materno = self.apellido_materno.titleize
-    self.email = self.email.downcase
+    self.nombre = self.nombre.titleize.strip
+    self.apellido_paterno = self.apellido_paterno.titleize.strip
+    self.apellido_materno = self.apellido_materno.titleize.strip
+    self.email = self.email.downcase.strip
   end
 
   def run_nil?

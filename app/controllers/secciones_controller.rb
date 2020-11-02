@@ -2,6 +2,7 @@ class SeccionesController < ApplicationController
   before_action :authenticate_usuario
   include JsonFormat
 
+  # Servicio que entrega las secciones asignadas a un profesor para el semestre activo
   def index
     semestreActual = Semestre.where('activo = ? AND borrado = ?', true, false).last
     usuario = Usuario.find(current_usuario.id)

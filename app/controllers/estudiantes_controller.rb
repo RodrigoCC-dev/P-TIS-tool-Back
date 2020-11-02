@@ -4,6 +4,7 @@ class EstudiantesController < ApplicationController
   before_action :usuario_actual, only: [:index, :sin_grupo]
   include JsonFormat
 
+  # Servicio que muestra los estudiantes ingresados en el sistema según las secciones asignadas al profesor
   def index
     if @usuario.rol.rango == 1
       estudiantes = Estudiante.joins(:usuario).joins(seccion: :jornada).joins(seccion: :semestre).where(
@@ -31,6 +32,7 @@ class EstudiantesController < ApplicationController
     render json: estudiantes.as_json(json_data)
   end
 
+  # Servicio que permite crear un estudiante en el sistema
   def create
     estudiante = Estudiante.new
     estudiante.build_usuario
@@ -53,6 +55,7 @@ class EstudiantesController < ApplicationController
   def show
   end
 
+  # Servicio que entrega el listado de estudiantes sin asignación de grupo en el sistema, según las secciones asignadas al profesor
   def sin_grupo
     if @usuario.rol.rango == 1
       estudiantes = Estudiante.joins(:usuario).joins(seccion: :jornada).joins(seccion: :semestre).joins(:grupo).where(
