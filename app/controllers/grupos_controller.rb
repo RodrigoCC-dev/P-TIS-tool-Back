@@ -2,9 +2,34 @@ class GruposController < ApplicationController
   before_action :authenticate_usuario
   include JsonFormat
 
+  # Servicio que muestra el listado de grupos en el sistema
   def index
+    grupos = Grupo.where('borrado = ? AND nombre <> ?', false, 'SG')
+    estudiantes = Estudiante.joins(:grupo).joins(:usuario).joins(seccion: :jornada).where('grupos.borrado = ? AND grupos.nombre <> ?', false, 'SG').select('
+      estudiantes.id,
+      usuarios.nombre AS nombre_est,
+      usuarios.apellido_paterno AS apellido1,
+      usuarios.apellido_materno AS apellido2,
+      usuarios.run AS run_est,
+      usuarios.email AS email_est,
+      jornadas.nombre AS jornada,
+      grupos.id AS id_grupo
+    ')
+    @grupos = []
+    grupos.each do |g|
+      est_asignados = asignados(g.id, estudiantes)
+      if est_asignados.size > 0
+        jornada = est_asignados[0].jornada
+      else
+        jornada = ''
+      end
+      h = {id: g.id, nombre: g.nombre, proyecto: g.proyecto, correlativo: g.correlativo, jornada: jornada, estudiantes: est_asignados}
+      @grupos << h
+    end
+    render json: @grupos.as_json
   end
 
+  # Servicio para crear un nuevo grupo de estudiantes en el sistema
   def create
     grupo = Grupo.new(grupo_params)
     if grupo.valid?
@@ -32,6 +57,16 @@ class GruposController < ApplicationController
   private
   def grupo_params
     params.require(:grupo).permit(:nombre, :proyecto, :correlativo)
+  end
+
+  def asignados(grupo_id, estudiantes)
+    lista = []
+    estudiantes.each do |e|
+      if e.id_grupo == grupo_id
+        lista << e
+      end
+    end
+    return lista
   end
 
 end
