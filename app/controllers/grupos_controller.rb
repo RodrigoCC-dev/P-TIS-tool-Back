@@ -2,7 +2,7 @@ class GruposController < ApplicationController
   before_action :authenticate_usuario
   include JsonFormat
 
-  # Servicio que muestra el listado de grupos en el sistema
+  # Servicio que muestra el listado de grupos en el sistema y los estudiantes asignados
   def index
     grupos = Grupo.where('borrado = ? AND nombre <> ?', false, 'SG')
     estudiantes = Estudiante.joins(:grupo).joins(:usuario).joins(seccion: :jornada).where('grupos.borrado = ? AND grupos.nombre <> ?', false, 'SG').select('
