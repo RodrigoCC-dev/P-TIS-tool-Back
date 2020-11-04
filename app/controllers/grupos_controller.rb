@@ -44,6 +44,7 @@ class GruposController < ApplicationController
     end
   end
 
+  # Servicio que entrega los estudiantes de un grupo en particular
   def show
     grupo = Grupo.find(params[:id])
     if grupo
