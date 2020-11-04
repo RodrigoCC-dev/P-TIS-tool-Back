@@ -1,0 +1,2 @@
+class TipoMinutasController < ApplicationController
+end
