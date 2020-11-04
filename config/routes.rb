@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   post 'grupos/ultimo_grupo', to: 'grupos#ultimo_grupo'
 
   resources :jornadas, only: [:index]
+  resources :tipo_minutas
+  resources :tipo_asistencias
 
   get 'login/user', to: 'usuarios#user'
 
