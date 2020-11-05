@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   resources :usuarios
   resources :secciones
-  resources :estudiantes, only: [:index, :create]
+  resources :estudiantes, only: [:index, :create, :show]
   get 'estudiantes/sin_grupo', to: 'estudiantes#sin_grupo'
 
   resources :grupos, only: [:index, :create, :show]

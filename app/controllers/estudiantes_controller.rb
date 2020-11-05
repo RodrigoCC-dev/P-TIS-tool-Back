@@ -53,6 +53,14 @@ class EstudiantesController < ApplicationController
   end
 
   def show
+    estudiante = Estudiante.find_by(usuario_id: params[:id])
+    render json: estudiante.as_json(
+      {except: [:created_at, :updated_at], :include => {
+        :usuario => user_data
+        }
+      }
+    )
+
   end
 
   # Servicio que entrega el listado de estudiantes sin asignación de grupo en el sistema, según las secciones asignadas al profesor
