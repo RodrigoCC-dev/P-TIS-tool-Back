@@ -15,8 +15,9 @@ Rails.application.routes.draw do
   resources :tipo_items, only: [:index]
   resources :tipo_estados, only: [:index]
   resources :motivos, only: [:index]
-  resources :minutas, only: [:create]
   resources :semestres, only: [:index]
+  resources :minutas, only: [:create]
+  get 'minutas/correlativo/:id', to: 'minutas#correlativo'
 
   get 'login/user', to: 'usuarios#user'
 
