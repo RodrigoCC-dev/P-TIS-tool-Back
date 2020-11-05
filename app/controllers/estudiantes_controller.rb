@@ -52,6 +52,7 @@ class EstudiantesController < ApplicationController
     end
   end
 
+  # Servicio que muestra la información de un estudiante según su 'id' de usuario
   def show
     estudiante = Estudiante.find_by(usuario_id: params[:id])
     render json: estudiante.as_json(
