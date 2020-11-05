@@ -206,6 +206,10 @@ TipoEstado.create!([
     "descripcion" => "Borrador"
   },
   {
+    "abreviacion" => "EMI",
+    "descripcion" => "Emitida"
+  },
+  {
     "abreviacion" => "CIG",
     "descripcion" => "Comentada por integrante del grupo"
   },
