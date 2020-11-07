@@ -1,7 +1,16 @@
 require 'test_helper'
 
 class UsuariosControllerTest < ActionDispatch::IntegrationTest
-  # test "the truth" do
-  #   assert true
-  # end
+
+  # Revisión del servicio 'user'
+
+  test "Debería poder obtener la información del usuario 'coordinador'" do
+    get login_user_url, headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
+    assert_response :success
+  end
+
+  test "Debería poder obtener la información del usuario 'profesor'" do
+    get login_user_url, headers: authenticated_header(usuarios(:profesor), 'profe')
+    assert_response :success
+  end
 end
