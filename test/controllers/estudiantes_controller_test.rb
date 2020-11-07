@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'net/http'
 
 class EstudiantesControllerTest < ActionDispatch::IntegrationTest
 
@@ -30,15 +31,13 @@ class EstudiantesControllerTest < ActionDispatch::IntegrationTest
 
   # Revisión del funcionamiento de index
 
-  def coodinador_header
-    token = Knock::AuthToken.new(payload: {sub: usuarios(:one).id}).token
-    {
-      'Authorization': "Bearer #{token}"
-    }
+  test "Debería obtener 'index' según usuario coodinador" do
+    get estudiantes_url, headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
+    assert_response :success
   end
 
-  test "Debería obtener 'index' según secciones de un usuario" do
-    get estudiantes_url, headers: coodinador_header
+  test "Debería obtener 'index' con usuario profesor" do
+    get estudiantes_url, headers: authenticated_header(usuarios(:profesor), 'profe')
     assert_response :success
   end
 

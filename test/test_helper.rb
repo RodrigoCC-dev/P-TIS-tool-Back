@@ -11,15 +11,17 @@ class ActiveSupport::TestCase
 
   # Add more helper methods to be used by all tests here...
   module HeadersHelper
-    
-
-    def profesor_header
-      token = Knock::AuthToken.new(payload: {sub: usuarios(:profesor).id}).token
-      {
-        'Authorization': "Bearer #{token}"
+    def authenticated_header(usuario, password)
+      post login_url, params:{ auth: {
+        email: usuario.email,
+        password: password
+        }
       }
+      respuesta = JSON.parse(response.body)
+      token = respuesta['jwt']
+      header = { 'Authorization': "Bearer #{token}"}
+      return header
     end
-  end
 
   class ActionDispatch::IntegrationTest
     include HeadersHelper
