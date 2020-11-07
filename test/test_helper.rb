@@ -22,6 +22,7 @@ class ActiveSupport::TestCase
       header = { 'Authorization': "Bearer #{token}"}
       return header
     end
+  end
 
   class ActionDispatch::IntegrationTest
     include HeadersHelper

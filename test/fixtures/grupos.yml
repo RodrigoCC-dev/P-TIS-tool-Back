@@ -11,3 +11,9 @@ two:
   proyecto: MyString
   borrado:
   deleted_at: 2020-10-19 00:59:42
+
+defecto:
+  nombre: SG
+  proyecto: SinAsignacion
+  borrado: false
+  deleted_at: 2020-10-19 00:59:42
