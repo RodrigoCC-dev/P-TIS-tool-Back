@@ -30,4 +30,16 @@ class EstudiantesControllerTest < ActionDispatch::IntegrationTest
 
   # Revisión del funcionamiento de index
 
+  def coodinador_header
+    token = Knock::AuthToken.new(payload: {sub: usuarios(:one).id}).token
+    {
+      'Authorization': "Bearer #{token}"
+    }
+  end
+
+  test "Debería obtener 'index' según secciones de un usuario" do
+    get estudiantes_url, headers: coodinador_header
+    assert_response :success
+  end
+
 end

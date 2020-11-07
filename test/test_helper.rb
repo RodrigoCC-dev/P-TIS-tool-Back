@@ -10,4 +10,18 @@ class ActiveSupport::TestCase
   fixtures :all
 
   # Add more helper methods to be used by all tests here...
+  module HeadersHelper
+    
+
+    def profesor_header
+      token = Knock::AuthToken.new(payload: {sub: usuarios(:profesor).id}).token
+      {
+        'Authorization': "Bearer #{token}"
+      }
+    end
+  end
+
+  class ActionDispatch::IntegrationTest
+    include HeadersHelper
+  end
 end

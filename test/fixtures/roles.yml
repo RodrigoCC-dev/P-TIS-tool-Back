@@ -3,11 +3,23 @@
 one:
   rol: MyString
   rango: 1
-  borrado: 
+  borrado:
   deleted_at: 2020-10-19 00:34:26
 
 two:
   rol: MyString
   rango: 1
-  borrado: 
+  borrado:
+  deleted_at: 2020-10-19 00:34:26
+
+coordinador:
+  rol: Coordinador
+  rango: 1
+  borrado: false
+  deleted_at: 2020-10-19 00:34:26
+
+profesor:
+  rol: Profesor
+  rango: 2
+  borrado: false
   deleted_at: 2020-10-19 00:34:26
