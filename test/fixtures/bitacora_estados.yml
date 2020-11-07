@@ -2,7 +2,7 @@
 
 one:
   activo: false
-  revidado: false
+  revisado: false
   minuta: one
   tipo_estado: one
 

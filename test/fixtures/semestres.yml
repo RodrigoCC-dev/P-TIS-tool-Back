@@ -3,7 +3,7 @@
 one:
   numero: 1
   agno: 1
-  activo:
+  activo: true
   inicio: 2020-10-19 01:03:25
   fin: 2020-10-19 01:03:25
   borrado: false
@@ -12,7 +12,7 @@ one:
 two:
   numero: 1
   agno: 1
-  activo:
+  activo: false
   inicio: 2020-10-19 01:03:25
   fin: 2020-10-19 01:03:25
   borrado: false

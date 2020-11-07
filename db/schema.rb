@@ -109,7 +109,7 @@ ActiveRecord::Schema.define(version: 2020_10_29_231604) do
     t.string "proyecto"
     t.integer "correlativo"
     t.boolean "borrado", default: false
-    t.datetime "delete_at"
+    t.datetime "deleted_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

@@ -5,7 +5,7 @@ one:
   jornada: one
   semestre: one
   curso: one
-  borrado: 
+  borrado: false
   deleted_at: 2020-10-19 01:08:23
 
 two:
@@ -13,5 +13,21 @@ two:
   jornada: two
   semestre: two
   curso: two
-  borrado: 
+  borrado: false
+  deleted_at: 2020-10-19 01:08:23
+
+three:
+  codigo: MyString
+  jornada: two
+  semestre: one
+  curso: three
+  borrado: false
+  deleted_at: 2020-10-19 01:08:23
+
+four:
+  codigo: MyString
+  jornada: one
+  semestre: one
+  curso: four
+  borrado: false
   deleted_at: 2020-10-19 01:08:23

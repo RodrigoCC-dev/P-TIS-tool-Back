@@ -10,4 +10,21 @@ class ActiveSupport::TestCase
   fixtures :all
 
   # Add more helper methods to be used by all tests here...
+  module HeadersHelper
+    def authenticated_header(usuario, password)
+      post login_url, params:{ auth: {
+        email: usuario.email,
+        password: password
+        }
+      }
+      respuesta = JSON.parse(response.body)
+      token = respuesta['jwt']
+      header = { 'Authorization': "Bearer #{token}"}
+      return header
+    end
+  end
+
+  class ActionDispatch::IntegrationTest
+    include HeadersHelper
+  end
 end
