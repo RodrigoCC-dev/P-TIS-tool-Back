@@ -43,5 +43,19 @@ class GruposControllerTest < ActionDispatch::IntegrationTest
   end
 
 
-  #
+  # Revisión de funcionamiento servicio 'ultimo_grupo'
+
+  test "Debería poder obtener último grupo como 'coordinador'" do
+    post grupos_ultimo_grupo_url, params: {
+      jornada: jornadas(:one).nombre
+    }, headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
+    assert_response :success
+  end
+
+  test "Debería poder obtener último grupo como 'profesor'" do
+    post grupos_ultimo_grupo_url, params: {
+      jornada: jornadas(:two).nombre
+    }, headers: authenticated_header(usuarios(:profesor), 'profe')
+    assert_response :success
+  end
 end
