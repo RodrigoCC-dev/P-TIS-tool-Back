@@ -5,9 +5,9 @@ one:
   apellido_paterno: MyString
   apellido_materno: MyString
   run: MyString
-  correo_elec: MyString
-  password: MyString
-  borrado: 
+  email: MyString
+  password_digest: <%= BCrypt::Password.create('MyString') %>
+  borrado:
   deleted_at: 2020-10-19 00:58:53
   rol: one
 
@@ -16,8 +16,19 @@ two:
   apellido_paterno: MyString
   apellido_materno: MyString
   run: MyString
-  correo_elec: MyString
-  password: MyString
-  borrado: 
+  email: MyString
+  password_digest: <%= BCrypt::Password.create('MyString') %>
+  borrado:
+  deleted_at: 2020-10-19 00:58:53
+  rol: two
+
+Pablo:
+  nombre: Pablo
+  apellido_paterno: Castro
+  apellido_materno: Norambuena
+  run: '10234533-9'
+  email: pablo.castro@usach.cl
+  password_digest: <%= BCrypt::Password.create('pablo123') %>
+  borrado: false
   deleted_at: 2020-10-19 00:58:53
   rol: two

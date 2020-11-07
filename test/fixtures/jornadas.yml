@@ -2,12 +2,12 @@
 
 one:
   nombre: MyString
-  identificado: 1
-  borrado: 
+  identificador: 1
+  borrado: false
   deleted_at: 2020-10-19 01:05:18
 
 two:
   nombre: MyString
-  identificado: 1
-  borrado: 
+  identificador: 1
+  borrado: false
   deleted_at: 2020-10-19 01:05:18

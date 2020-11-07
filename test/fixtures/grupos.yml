@@ -3,11 +3,11 @@
 one:
   nombre: MyString
   proyecto: MyString
-  borrado: 
-  delete_at: 2020-10-19 00:59:42
+  borrado:
+  deleted_at: 2020-10-19 00:59:42
 
 two:
   nombre: MyString
   proyecto: MyString
-  borrado: 
-  delete_at: 2020-10-19 00:59:42
+  borrado:
+  deleted_at: 2020-10-19 00:59:42
