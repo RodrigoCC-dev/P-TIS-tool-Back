@@ -8,6 +8,8 @@ class Minuta < ApplicationRecord
   has_many :bitacora_estados
   has_many :bitacora_revisiones
 
+  accepts_nested_attributes_for :clasificacion
+
   # validaciones
 
 end
