@@ -11,3 +11,9 @@ two:
   usuario: two
   seccion: two
   grupo: two
+
+Pablo:
+  iniciales: PCN
+  usuario: Pablo
+  seccion: one
+  grupo: defecto
