@@ -32,13 +32,14 @@ build:
     - echo -e "production:\n  secret_key_base:" > ./config/.example_secrets.yml
     - echo "$(cat ./config/.example_secrets.yml) $SECRET_ENV_VAR" > ./config/secrets.yml
     - cat ./config/secrets.yml
-    - bundle exec rails db:create db:migrate db:seed RAILS_ENV=production --trace
+    - bundle exec rails db:create db:migrate db:seed --trace
     - bundle exec passenger start
   before_script:
     - export APT_CACHE_DIR=`pwd`/apt-cache && mkdir -pv $APT_CACHE_DIR
     - apt update -qq && apt -o dir::cache::archives="$APT_CACHE_DIR" install -yqq nodejs
     - gem install bundler --no-document
     - bundle install --jobs $(nproc) "${FLAGS[@]}" --path=vendor
+    - RAILS_ENV=production
 
 minitest:
   image: ruby:2.6.6
@@ -67,7 +68,7 @@ minitest:
     paths:
       - coverage/
   script:
-    - bundle exec rails db:test:prepare
+    - bundle exec rails db:prepare
     - bundle exec rails test
   before_script:
     - export APT_CACHE_DIR=`pwd`/apt-cache && mkdir -pv $APT_CACHE_DIR
@@ -75,6 +76,8 @@ minitest:
     - gem install bundler --no-document
     - bundle install --jobs $(nproc) "${FLAGS[@]}" --path=vendor
     - bundle exec rails db:create db:migrate db:schema:load --trace
+    - RAILS_ENV=test
+    - bundle exec rails db:test:purge
 
 sonarqube:
   image:
