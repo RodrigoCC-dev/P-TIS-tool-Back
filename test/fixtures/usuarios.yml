@@ -1,0 +1,56 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  nombre: MyString
+  apellido_paterno: MyString
+  apellido_materno: MyString
+  run: MyString
+  email: MyString
+  password_digest: <%= BCrypt::Password.create('MyString') %>
+  borrado:
+  deleted_at: 2020-10-19 00:58:53
+  rol: one
+
+two:
+  nombre: MyString
+  apellido_paterno: MyString
+  apellido_materno: MyString
+  run: MyString
+  email: MyString
+  password_digest: <%= BCrypt::Password.create('MyString') %>
+  borrado:
+  deleted_at: 2020-10-19 00:58:53
+  rol: two
+
+Pablo:
+  nombre: Pablo
+  apellido_paterno: Castro
+  apellido_materno: Norambuena
+  run: '10234533-9'
+  email: pablo.castro@usach.cl
+  password_digest: <%= BCrypt::Password.create('pablo123') %>
+  borrado: false
+  deleted_at: 2020-10-19 00:58:53
+  rol: two
+
+coordinador:
+  nombre: Coordinador
+  apellido_paterno: Proyecto
+  apellido_materno: IngeSoft
+  run: nil
+  email: coordinador.proyecto@usach.cl
+  password_digest: <%= BCrypt::Password.create('coordinacion') %>
+  borrado: false
+  deleted_at: 2020-10-19 00:58:53
+  rol: coordinador
+
+profesor:
+  nombre: Pedro
+  apellido_paterno: Garmendia
+  apellido_materno: Soto
+  run: nil
+  email: pedro.garmendia@gmail.com
+  password_digest: <%= BCrypt::Password.create('profe') %>
+  borrado: false
+  deleted_at: 2020-10-19 00:58:53
+  rol: profesor

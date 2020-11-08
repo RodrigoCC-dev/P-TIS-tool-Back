@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  actividad: MyString
+  descripcion: MyString
+  identificador: 'M1'
+  borrado: false
+  deleted_at: 2020-10-19 21:21:09
+
+two:
+  actividad: MyString
+  descripcion: MyString
+  identificador: 'M2'
+  borrado: false
+  deleted_at: 2020-10-19 21:21:09

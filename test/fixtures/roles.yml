@@ -1,0 +1,31 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  rol: MyString
+  rango: 1
+  borrado:
+  deleted_at: 2020-10-19 00:34:26
+
+two:
+  rol: MyString
+  rango: 1
+  borrado:
+  deleted_at: 2020-10-19 00:34:26
+
+coordinador:
+  rol: Coordinador
+  rango: 1
+  borrado: false
+  deleted_at: 2020-10-19 00:34:26
+
+profesor:
+  rol: Profesor
+  rango: 2
+  borrado: false
+  deleted_at: 2020-10-19 00:34:26
+
+estudiante:
+  rol: Estudiante
+  rango: 3
+  borrado: false
+  deleted_at: 2020-10-19 00:34:26
