@@ -182,7 +182,7 @@ La aplicación se iniciará en el puerto 8080 del servidor.
 
 ### Cambiar la configuración de la ejecución de la aplicación en producción
 La configuración de la ejecución de la aplicación en entorno de producción se encuentra definida en el archivo Passengerfile.json que se encuentra en el directorio raíz de la aplicación. La estructura del archivo de configuración de Passenger es la siguiente:
-```
+```json
 {
   "environment": "production",   // Se indica el entorno que se ejecutará
   "port": 8080,                  // Se indica el puerto de trabajo
