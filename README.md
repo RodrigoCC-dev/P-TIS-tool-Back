@@ -1,4 +1,4 @@
-# Herramienta de apoyo a los cursos de Proyecto y Taller de Ingeniería de Software del Departamento de Ingeniería Informática de la USACH
+# API Backend de la Herramienta de apoyo a los cursos de Proyecto y Taller de Ingeniería de Software del Departamento de Ingeniería Informática de la USACH
 
 ## Entorno de desarrollor
 
@@ -68,6 +68,62 @@ curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
 echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
 sudo apt-get update && sudo apt-get install yarn
 ```
+### Postgres
+Instalar postgres en el sistema:
+```
+sudo apt install postgresql postgresql-contrib libpq-dev
+```
+ingresar como usuario postgres
+```
+sudo su - postgres
+psql
+```
+crear un rol para tu usuario actual, su base de datos por defecto y su password de acceso:
+```
+create role 'tu_usuario' with createdb login password 'tu_password';
+```
+salir de la consola
+```
+\q
+```
+### Instalar gema bundler
+```
+gem update --system
+gem install bundler
+```
+### Clonar, instalar dependencias y desplegar
+Clonar repositorio e ingresar a su directorio:
+```
+git clone https://github.com/RodrigoCC-dev/P-TIS-tool-Back.git ptis-back
+cd ptis-back
+```
+Generar archivo de variables de entorno para la aplicación copiando archivo .env.example a .env y editarlo:
+```
+cp .env.example .env
+nano .env
+```
+cambiar valores de variables de entorno, ejemplo:
+```
+DB_USERNAME='tu_usuario_BD'
+DB_PASSWORD='tu_password_BD'
+DB_HOST='el_host_de_tu_BD' # ejemplo: localhost
+CORS_ORIGINS='' # Origenes permitidos para el uso de la API separados por coma, ejemplo: *
+```
+Instalar las dependencias:
+```
+bundle install
+```
+Generar la base de datos:
+```
+rails db:create db:migrate db:seed
+```
+Desplegar la aplicación en entorno de desarrollo:
+```
+rails server
+```
+
+## Testeo
+
 
 # README
 
