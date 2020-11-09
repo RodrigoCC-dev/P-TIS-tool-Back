@@ -367,12 +367,10 @@ TipoActividad.create!([
 ])
 
 # Seeder para agregar grupo por defecto
-Grupo.create!([
-  {
-    "nombre" => "SG",
-    "proyecto" => "Sin asignación"
-  }
-])
+grupo = Grupo.new
+grupo.nombre = 'SG'
+grupo.proyecto = 'Sin asignacion'
+grupo.save(validate: false)
 
 # Seeder para crear profesores
 usuarios = Usuario.all
