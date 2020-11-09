@@ -4,10 +4,6 @@ stages:
   - static code analisys
   - deploy
 
-only:
-  - tags
-  - master
-
 build:
   image: ruby:2.6.6
   cache:
@@ -43,6 +39,7 @@ build:
     - apt update -qq && apt -o dir::cache::archives="$APT_CACHE_DIR" install -yqq nodejs
     - gem install bundler --no-document
     - bundle install --jobs $(nproc) "${FLAGS[@]}" --path=vendor
+    - echo -e "DB_USERNAME='root'\nDB_PASSWORD='postgres'\nDB_HOST='localhost'\nCORS_ORIGINS='*'" > .env
 
 minitest:
   image: ruby:2.6.6
@@ -71,14 +68,16 @@ minitest:
     paths:
       - coverage/
   script:
-    - bundle exec rails db:test:prepare
-    - bundle exec rails test
+    - bundle exec rails db:test:purge RAILS_ENV=test
+    - bundle exec rails db:prepare RAILS_ENV=test
+    - bundle exec rails test RAILS_ENV=test
   before_script:
     - export APT_CACHE_DIR=`pwd`/apt-cache && mkdir -pv $APT_CACHE_DIR
     - apt update -qq && apt -o dir::cache::archives="$APT_CACHE_DIR" install -yqq nodejs
     - gem install bundler --no-document
     - bundle install --jobs $(nproc) "${FLAGS[@]}" --path=vendor
-    - bundle exec rails db:create db:migrate db:schema:load --trace
+    - echo -e "DB_USERNAME='root'\nDB_PASSWORD='postgres'\nDB_HOST='localhost'\nCORS_ORIGINS='*'" > .env
+  #  - bundle exec rails db:create db:migrate db:schema:load --trace
 
 sonarqube:
   image:
