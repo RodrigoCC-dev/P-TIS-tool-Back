@@ -134,7 +134,7 @@ rails test
 ```
 
 ## Despliegue en producción
-La siguiente descripción del despliegue de la aplicación se realiza para un servidor con Ubuntu 18.04. Para otras versiones de distribución pueden haber variaciones en los comandos indicados. Se considera que ya se encuentran instaladas las dependencias necesarias. Para su instalación, ver el apartado de Instalación.
+La siguiente descripción del despliegue de la aplicación se realiza para un servidor con Ubuntu 18.04. Para otras versiones de distribución pueden haber variaciones en los comandos indicados. Se considera que ya se encuentran instaladas las dependencias necesarias. Para su instalación, ver el apartado de __Instalación__.
 
 ### Instalación en producción con la configuración actual
 Igresar al directorio de trabajo. Para ejemplificar se utiliza la carpeta /opt del sistema. Clonar el repositorio con permisos de superusuario:
