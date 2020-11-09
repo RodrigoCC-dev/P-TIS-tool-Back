@@ -5,7 +5,7 @@ class CreateGrupos < ActiveRecord::Migration[6.0]
       t.string :proyecto
       t.integer :correlativo
       t.boolean :borrado, default:false
-      t.datetime :delete_at
+      t.datetime :deleted_at
 
       t.timestamps
     end
