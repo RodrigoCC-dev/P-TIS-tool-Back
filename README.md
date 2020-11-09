@@ -123,29 +123,89 @@ rails server
 ```
 
 ## Testeo
+Para ejecutar las pruebas automatizadas de la aplicación, es necesario generar la base de datos de testeo con los siguientes comandos:
+```
+rails db:test:purge
+rails db:prepare
+```
+Luego, ejecutar los test:
+```
+rails test
+```
 
+## Despliegue en producción
+La siguiente descripción del despliegue de la aplicación se realiza para un servidor con Ubuntu 18.04. Para otras versiones de distribución pueden haber variaciones en los comandos indicados. Se considera que ya se encuentran instaladas las dependencias necesarias. Para su instalación, ver el apartado de Instalación.
 
-# README
+### Instalación en producción con la configuración actual
+Igresar al directorio de trabajo. Para ejemplificar se utiliza la carpeta /opt del sistema. Clonar el repositorio con permisos de superusuario:
+```
+cd /opt
+sudo git clone https://github.com/RodrigoCC-dev/P-TIS-tool-Back.git ptis-back
+```
+Cambiar los permisos de acceso a la carpeta de la aplicación e ingresar al directorio de la aplicación:
+```
+sudo chown -R tu-usuario.tu-usuario ptis-back
+sudo chmod -R 775 ptis-back
+cd ptis-back
+```
+Crear el archivo de variables de entorno de la aplicación:
+```
+cp .env.example .env
+nano .env
+```
+Cambiar valores por parámetros de producción:
+```
+DB_USERNAME='usuario_BD_produccion'
+DB_PASSWORD='password_BD_produccion'
+DB_HOST='host_BD_produccion'
+CORS_ORIGINS='' # Origenes permitidos para el uso de la API separados por coma, ejemplo: *
+```
+Generar la clave secreta de Rails para el entorno de producción:
+```
+SECRET_ENV_VAR=$(bundle exec rails secret)
+echo -e "production:\n  secret_key_base:" > ./config/.example_secrets.yml
+echo "$(cat ./config/.example_secrets.yml) $SECRET_ENV_VAR" > ./config/secrets.yml
+```
+Instalar las dependencias de la aplicación en entorno de producción:
+```
+bundle install --deployment --without development test
+```
+Inicializar la base de datos en producción
+```
+bundle exec rails db:create db:migrate db:seed RAILS_ENV=production
+```
+Arrancar la aplicación en producción:
+```
+rvmsudo bundle exec passenger start
+```
+La aplicación se iniciará en el puerto 8080 del servidor.
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+### Cambiar la configuración de la ejecución de la aplicación en producción
+La configuración de la ejecución de la aplicación en entorno de producción se encuentra definida en el archivo Passengerfile.json que se encuentra en el directorio raíz de la aplicación. La estructura del archivo de configuración de Passenger es la siguiente:
+```
+{
+  "environment": "production",   // Se indica el entorno que se ejecutará
+  "port": 8080,                  // Se indica el puerto de trabajo
+  "daemonize": true,             // Se indica que debe correr en modo 'demonio'
+  "user": "tu-usuario"           // Se indica el usuario que hará uso de la aplicación
+}
+```
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+### Actualizar la aplicación
+Para actualizar la aplicación a su versión más reciente, ingresar a la carpeta raiz y ejecutar:
+```
+cd /opt/ptis-back
+git pull
+```
+Instalar las nuevas dependencias de la aplicación
+```
+bundle install --deployment --without development test
+```
+Volver a compilar e instalar las nuevas migraciones
+```
+bundle exec rails db:migrate RAILS_ENV=production
+```
+Reiniciar la aplicación:
+```
+bundle exec passenger-config restart-app $(pwd)
+```
