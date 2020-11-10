@@ -1,6 +1,6 @@
 # API Backend de la Herramienta de apoyo a los cursos de Proyecto y Taller de Ingeniería de Software del Departamento de Ingeniería Informática de la USACH
 
-## Entorno de desarrollor
+## Entorno de desarrollo
 
 * Ubuntu 18.04
 * rvm 1.29.10
