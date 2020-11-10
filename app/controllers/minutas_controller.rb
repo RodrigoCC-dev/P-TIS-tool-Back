@@ -6,7 +6,7 @@ class MinutasController < ApplicationController
   def create
     bitacora = BitacoraRevision.new
     bitacora.build_minuta(minuta_params)
-    bitacora.minuta.build_clasificacion(clasificacion_params[:clasificacion_attributes])
+    bitacora.minuta.build_clasificacion(clasificacion_params)
     bitacora.build_tema
     bitacora.tema.tema = params[:tema]
     bitacora.assign_attributes(revision_params)
@@ -89,7 +89,7 @@ class MinutasController < ApplicationController
   end
 
   def clasificacion_params
-    params.require(:minuta).permit(clasificacion_attributes: [:informativa, :avance, :coordinacion, :decision, :otro])
+    params.require(:clasificacion).permit(:informativa, :avance, :coordinacion, :decision, :otro)
   end
 
   def revision_params
