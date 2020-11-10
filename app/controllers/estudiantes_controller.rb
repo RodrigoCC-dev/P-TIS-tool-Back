@@ -8,7 +8,7 @@ class EstudiantesController < ApplicationController
   def index
     if @usuario.rol.rango == 1
       estudiantes = Estudiante.joins(:usuario).joins(seccion: :jornada).joins(seccion: :semestre).where(
-        'semestres.id = ? AND usuarios.borrado = ?', @semestreActual.id, false).select('
+        'semestres.id = ? AND usuarios.borrado = ?', @semestre_actual.id, false).select('
           estudiantes.id,
           usuarios.run AS run_est,
           usuarios.nombre AS nombre_est,
@@ -19,7 +19,7 @@ class EstudiantesController < ApplicationController
           ')
     elsif @usuario.rol.rango == 2
       estudiantes = Estudiante.joins(:usuario).joins(seccion: :profesores).joins(seccion: :jornada).joins(seccion: :semestre).where(
-        'semestres.id = ? AND usuarios.borrado = ? AND profesores.usuario_id = ?', @semestreActual.id, false, @usuario.id).select('
+        'semestres.id = ? AND usuarios.borrado = ? AND profesores.usuario_id = ?', @semestre_actual.id, false, @usuario.id).select('
           estudiantes.id,
           usuarios.run AS run_est,
           usuarios.nombre AS nombre_est,
@@ -61,14 +61,13 @@ class EstudiantesController < ApplicationController
         }
       }
     )
-
   end
 
   # Servicio que entrega el listado de estudiantes sin asignación de grupo en el sistema, según las secciones asignadas al profesor
   def sin_grupo
     if @usuario.rol.rango == 1
       estudiantes = Estudiante.joins(:usuario).joins(seccion: :jornada).joins(seccion: :semestre).joins(:grupo).where(
-        'semestres.id = ? AND usuarios.borrado = ? AND grupos.nombre = ?', @semestreActual.id, false, 'SG').select('
+        'semestres.id = ? AND usuarios.borrado = ? AND grupos.nombre = ?', @semestre_actual.id, false, 'SG').select('
           estudiantes.id,
           usuarios.run AS run_est,
           usuarios.nombre AS nombre_est,
@@ -79,7 +78,7 @@ class EstudiantesController < ApplicationController
           ')
     elsif @usuario.rol.rango == 2
       estudiantes = Estudiante.joins(:usuario).joins(seccion: :profesores).joins(seccion: :jornada).joins(seccion: :semestre).joins(:grupo).where(
-        'semestres.id = ? AND usuarios.borrado = ? AND profesores.usuario_id = ? AND grupos.nombre = ?', @semestreActual.id, false, @usuario.id, 'SG').select('
+        'semestres.id = ? AND usuarios.borrado = ? AND profesores.usuario_id = ? AND grupos.nombre = ?', @semestre_actual.id, false, @usuario.id, 'SG').select('
           estudiantes.id,
           usuarios.run AS run_est,
           usuarios.nombre AS nombre_est,
@@ -106,7 +105,7 @@ class EstudiantesController < ApplicationController
   end
 
   def semestre_actual
-    @semestreActual = Semestre.where('activo = ? AND borrado = ?', true, false).last
+    @semestre_actual = Semestre.where('activo = ? AND borrado = ?', true, false).last
   end
 
   def usuario_actual
