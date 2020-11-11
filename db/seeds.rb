@@ -166,6 +166,10 @@ TipoItem.create!([
     "descripcion" => "Acuerdo de trabajo"
   },
   {
+    "tipo" => "Compromiso",
+    "descripcion" => "Acuerdo de trabajo con responsabilidad"
+  },
+  {
     "tipo" => "Hecho",
     "descripcion" => "Tarea terminada"
   },
