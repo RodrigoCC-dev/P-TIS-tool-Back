@@ -1,7 +1,16 @@
 require 'test_helper'
 
 class ObjetivoTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  test "Objetivo sin 'descripcion' no se guarda" do
+    objetivo = Objetivo.new(bitacora_revision_id: bitacora_revisiones(:one).id)
+    assert_not objetivo.save
+  end
+
+  test "Objetivo con descripcion se guarda" do
+    objetivo = Objetivo.new(
+      descripcion: 'Este es un nuevo objetivo',
+      bitacora_revision_id: bitacora_revisiones(:one).id
+    )
+    assert objetivo.save
+  end
 end
