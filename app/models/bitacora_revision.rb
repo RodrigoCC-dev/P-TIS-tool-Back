@@ -5,4 +5,13 @@ class BitacoraRevision < ApplicationRecord
   has_many :items
   has_many :conclusiones
   has_many :objetivos
+  before_save :revision_mayuscula
+
+  # Validaciones
+  validates :revision, format: {with: /\A([A-Z0-9]{1})\z/}, presence: true
+
+  private
+  def revision_mayuscula
+    self.revision = self.revision.to_s.upcase
+  end
 end

@@ -162,8 +162,12 @@ TipoItem.create!([
     "descripcion" => "Comprimiso con fecha y responsable"
   },
   {
-    "tipo" => "Decision",
+    "tipo" => "Decisión",
     "descripcion" => "Acuerdo de trabajo"
+  },
+  {
+    "tipo" => "Compromiso",
+    "descripcion" => "Acuerdo de trabajo con responsabilidad"
   },
   {
     "tipo" => "Hecho",
@@ -204,6 +208,10 @@ TipoEstado.create!([
   {
     "abreviacion" => "BOR",
     "descripcion" => "Borrador"
+  },
+  {
+    "abreviacion" => "EMI",
+    "descripcion" => "Emitida"
   },
   {
     "abreviacion" => "CIG",
@@ -255,7 +263,7 @@ TipoActividad.create!([
     "identificador" => "M3"
   },
   {
-    "actividad" => "Ingresar calificación",
+    "actividad" => "Ingresar clasificación",
     "descripcion" => "Se ingresa la clasificación de la reunión",
     "identificador" => "M4"
   },
