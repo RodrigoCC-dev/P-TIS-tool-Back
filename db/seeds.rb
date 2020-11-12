@@ -263,7 +263,7 @@ TipoActividad.create!([
     "identificador" => "M3"
   },
   {
-    "actividad" => "Ingresar calificación",
+    "actividad" => "Ingresar clasificación",
     "descripcion" => "Se ingresa la clasificación de la reunión",
     "identificador" => "M4"
   },
