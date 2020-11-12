@@ -11,17 +11,42 @@ class MinutasController < ApplicationController
     bitacora.tema.tema = params[:tema].to_s
     bitacora.assign_attributes(revision_params)
     tipo_estado = TipoEstado.find(params[:tipo_estado])
-    if tipo_estado.abreviacion == 'EMI'
+    if tipo_estado.abreviacion.eql?('EMI')
       bitacora.emitida = true
     end
     if bitacora.valid?
       bitacora.save!
+      nueva_actividad = Registro.create!(
+        realizada_por: current_usuario.id,
+        minuta_id: bitacora.minuta_id,
+        tipo_actividad_id: TipoActividad.find_by(identificador: 'M1').id
+      )
+      nueva_actividad = Registro.create!(
+        realizada_por: current_usuario.id,
+        minuta_id: bitacora.minuta_id,
+        tipo_actividad_id: TipoActividad.find_by(identificador: 'M2').id
+      )
+      nueva_actividad = Registro.create!(
+        realizada_por: current_usuario.id,
+        minuta_id: bitacora.minuta_id,
+        tipo_actividad_id: TipoActividad.find_by(identificador: 'T1').id
+      )
+      nueva_actividad = Registro.create!(
+        realizada_por: current_usuario.id,
+        minuta_id: bitacora.minuta_id,
+        tipo_actividad_id: TipoActividad.find_by(identificador: 'M4').id
+      )
       params[:objetivos].each do |obj|
         objetivo = Objetivo.new
         objetivo.descripcion = obj
         objetivo.bitacora_revision_id = bitacora.id
         if objetivo.valid?
           objetivo.save!
+          nueva_actividad = Registro.create!(
+            realizada_por: current_usuario.id,
+            minuta_id: bitacora.minuta_id,
+            tipo_actividad_id: TipoActividad.find_by(identificador: 'O1').id
+          )
         end
       end
       params[:conclusiones].each do |con|
@@ -30,6 +55,11 @@ class MinutasController < ApplicationController
         conclusion.bitacora_revision_id = bitacora.id
         if conclusion.valid?
           conclusion.save!
+          nueva_actividad = Registro.create!(
+            realizada_por: current_usuario.id,
+            minuta_id: bitacora.minuta_id,
+            tipo_actividad_id: TipoActividad.find_by(identificador: 'C1').id
+          )
         end
       end
       params[:asistencia].each do |a|
@@ -43,6 +73,11 @@ class MinutasController < ApplicationController
           asistencia.save!
         end
       end
+      nueva_actividad = Registro.create!(
+        realizada_por: current_usuario.id,
+        minuta_id: bitacora.minuta_id,
+        tipo_actividad_id: TipoActividad.find_by(identificador: 'M3').id
+      )
       asistencias = Asistencia.where('minuta_id = ?', bitacora.minuta.id)
       params[:items].each do |i|
         item = Item.new
@@ -53,16 +88,35 @@ class MinutasController < ApplicationController
         unless i[:fecha] == ''
           item.fecha = i[:fecha]
         end
-        unless (i[:responsables].nil? || i[:responsables] == '' || i[:responsables] == 0)
-          responsable = Responsable.new
-          responsable.asistencia_id = asistencias.find_by(id_estudiante: i[:responsables]).id
-          if responsable.valid?
-            responsable.save!
-            item.responsables << responsable
+        i[:responsables].each do |resp|
+          unless (resp.nil? || resp == '' || resp == 0)
+            responsable = Responsable.new
+            responsable.asistencia_id = asistencias.find_by(id_estudiante: resp).id
+            if responsable.valid?
+              responsable.save!
+              item.responsables << responsable
+              nueva_actividad = Registro.create!(
+                realizada_por: current_usuario.id,
+                minuta_id: bitacora.minuta_id,
+                tipo_actividad_id: TipoActividad.find_by(identificador: 'R1').id
+              )
+            end
           end
         end
         if item.valid?
           item.save!
+          nueva_actividad = Registro.create!(
+            realizada_por: current_usuario.id,
+            minuta_id: bitacora.minuta_id,
+            tipo_actividad_id: TipoActividad.find_by(identificador: 'M5').id
+          )
+          unless i[:fecha] == ''
+            nueva_actividad = Registro.create!(
+              realizada_por: current_usuario.id,
+              minuta_id: bitacora.minuta_id,
+              tipo_actividad_id: TipoActividad.find_by(identificador: 'F1').id
+            )
+          end
         end
       end
       bitacora_estado = BitacoraEstado.new
