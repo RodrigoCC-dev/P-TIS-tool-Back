@@ -3,5 +3,5 @@ class Conclusion < ApplicationRecord
 
   # Validaciones
 
-  validates :descripcion, precense: true
+  validates :descripcion, presence: true
 end

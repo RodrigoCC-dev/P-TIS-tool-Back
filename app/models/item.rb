@@ -4,6 +4,6 @@ class Item < ApplicationRecord
   has_and_belongs_to_many :responsables
 
   # Validaciones
-  validates :descripcion, :correlativo, precense: true
+  validates :descripcion, :correlativo, presence: true
   validates :correlativo, :resuelto_por, numericality: {only_integer: true, greater_than: 0}
 end
