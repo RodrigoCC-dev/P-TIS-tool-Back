@@ -8,7 +8,7 @@ class BitacoraRevision < ApplicationRecord
   before_save :revision_mayuscula
 
   # Validaciones
-  validates :revision, format: {with: /\A([A-Z0-9]{1})\z/}, precense: true
+  validates :revision, format: {with: /\A([A-Z0-9]{1})\z/}, presence: true
 
   private
   def revision_mayuscula

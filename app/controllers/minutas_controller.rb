@@ -8,8 +8,12 @@ class MinutasController < ApplicationController
     bitacora.build_minuta(minuta_params)
     bitacora.minuta.build_clasificacion(clasificacion_params)
     bitacora.build_tema
-    bitacora.tema.tema = params[:tema]
+    bitacora.tema.tema = params[:tema].to_s
     bitacora.assign_attributes(revision_params)
+    tipo_estado = TipoEstado.find(params[:tipo_estado])
+    if tipo_estado.abreviacion == 'EMI'
+      bitacora.emitida = true
+    end
     if bitacora.valid?
       bitacora.save!
       params[:objetivos].each do |obj|
@@ -63,7 +67,7 @@ class MinutasController < ApplicationController
       end
       bitacora_estado = BitacoraEstado.new
       bitacora_estado.minuta_id = bitacora.minuta.id
-      bitacora_estado.tipo_estado_id = params[:tipo_estado]
+      bitacora_estado.tipo_estado_id = tipo_estado.id
       if bitacora_estado.valid?
         bitacora_estado.save!
       end

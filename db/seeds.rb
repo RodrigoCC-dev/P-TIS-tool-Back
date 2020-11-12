@@ -162,7 +162,7 @@ TipoItem.create!([
     "descripcion" => "Comprimiso con fecha y responsable"
   },
   {
-    "tipo" => "Decision",
+    "tipo" => "Decisión",
     "descripcion" => "Acuerdo de trabajo"
   },
   {
