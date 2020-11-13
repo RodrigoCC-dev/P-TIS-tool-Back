@@ -24,10 +24,16 @@ class EstudiantesControllerTest < ActionDispatch::IntegrationTest
     assert_response 401
   end
 
+  test "Debería obtener código '401' al tratar de obtener 'show'" do
+    get estudiante_url(id: usuarios(:Pablo).id)
+    assert_response 401
+  end
+
   test "Debería obtener código '401' al tratar de obtener 'sin_grupo'" do
     get estudiantes_sin_grupo_url
     assert_response 401
   end
+
 
   # Revisión del funcionamiento de 'index'
 
@@ -40,6 +46,7 @@ class EstudiantesControllerTest < ActionDispatch::IntegrationTest
     get estudiantes_url, headers: authenticated_header(usuarios(:profesor), 'profe')
     assert_response :success
   end
+
 
   # Revisión del funcionamiento de 'create'
 
@@ -74,6 +81,14 @@ class EstudiantesControllerTest < ActionDispatch::IntegrationTest
         }
       }, headers: authenticated_header(usuarios(:profesor), 'profe')
     end
+    assert_response :success
+  end
+
+
+  # Revisión del funcionamiento del servicio 'show'
+
+  test "Debería poder obtener la información de un estudiante" do
+    get estudiante_url(id: usuarios(:Pablo).id), headers: authenticated_header(usuarios(:Pablo), 'pablo123')
     assert_response :success
   end
 
