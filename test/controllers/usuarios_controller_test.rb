@@ -4,6 +4,11 @@ class UsuariosControllerTest < ActionDispatch::IntegrationTest
 
   # Revisión del servicio 'user'
 
+  test "Debería obtener código '401' al tratar de obtener info usuario sin autenticación" do
+    get login_user_url
+    assert_response 401
+  end
+
   test "Debería poder obtener la información del usuario 'coordinador'" do
     get login_user_url, headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
     assert_response :success
