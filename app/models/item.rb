@@ -5,5 +5,6 @@ class Item < ApplicationRecord
 
   # Validaciones
   validates :descripcion, :correlativo, presence: true
-  validates :correlativo, :resuelto_por, numericality: {only_integer: true, greater_than: 0}
+  validates :correlativo, numericality: {only_integer: true, greater_than: 0}
+  validates :resuelto_por, numericality: {only_integer: true, greater_than: 0}, allow_nil: true
 end

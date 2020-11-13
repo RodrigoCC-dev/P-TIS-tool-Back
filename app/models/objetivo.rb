@@ -3,5 +3,4 @@ class Objetivo < ApplicationRecord
 
   # Validaciones
   validates :descripcion, presence: true
-
 end

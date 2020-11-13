@@ -89,7 +89,7 @@ class MinutasController < ApplicationController
           item.fecha = i[:fecha]
         end
         i[:responsables].each do |resp|
-          unless (resp.nil? || resp == '' || resp == 0)
+          unless (resp.nil? || resp == '' || resp.to_i == 0)
             responsable = Responsable.new
             responsable.asistencia_id = asistencias.find_by(id_estudiante: resp).id
             if responsable.valid?

@@ -9,6 +9,7 @@ class BitacoraRevision < ApplicationRecord
 
   # Validaciones
   validates :revision, format: {with: /\A([A-Z0-9]{1})\z/}, presence: true
+  validates :emitida, inclusion: {in: [true, false]}
 
   private
   def revision_mayuscula
