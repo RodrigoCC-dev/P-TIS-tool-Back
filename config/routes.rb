@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   resources :semestres, only: [:index]
   resources :minutas, only: [:create]
   get 'minutas/correlativo/:id', to: 'minutas#correlativo'
+  get 'minutas/grupo/:id', to: 'minutas#por_grupo'
 
   get 'login/user', to: 'usuarios#user'
 
