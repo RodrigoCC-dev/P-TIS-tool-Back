@@ -124,6 +124,20 @@ class MinutasControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+
+  # Revisión de funcionamiento del servicio 'show'
+
+  test "Debería obtener código '401' al tratar de obtener 'show'" do
+    get minuta_url(id: minutas(:one).id)
+    assert_response 401
+  end
+
+  test "Debería poder obtener la minuta seleccionada" do
+    get minuta_url(id: minutas(:one).id), headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
+    assert_response :success
+  end
+
+
   # Revisión de funcionamiento del servicio 'correlativo'
 
   test "Debería obtener código '401' al tratar de obtener correlativo sin autenticación" do
@@ -134,6 +148,20 @@ class MinutasControllerTest < ActionDispatch::IntegrationTest
   test "Debería obtener el número correlativo siguiente para el grupo" do
     get '/minutas/correlativo/' + grupos(:one).id.to_s,
       headers: authenticated_header(usuarios(:Pablo), 'pablo123')
+    assert_response :success
+  end
+
+
+  # Revisión del funcionamiento del servicio 'por_grupo'
+
+  test "Debería obtener código '401' al tratar de obtener las minutas de un grupo sin autenticación" do
+    get '/minutas/grupo/' + grupos(:one).id.to_s
+    assert_response 401
+  end
+
+  test "Debería obtener el listado de minutas de un grupo" do
+    get '/minutas/grupo/' + grupos(:one).id.to_s,
+      headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
     assert_response :success
   end
 end
