@@ -153,12 +153,12 @@ class MinutasController < ApplicationController
       clasificaciones.otro AS otro_min
       ').find(params[:id])
     asistencia = Asistencia.joins(:tipo_asistencia).select('
-      asistencias.id AS id_asist,
+      asistencias.id,
       asistencias.id_estudiante AS id_est,
       asistencias.id_stakeholder AS id_stake,
       tipo_asistencias.tipo AS tipo_abrev,
       tipo_asistencias.descripcion AS tipo_desc
-      ').where(minuta_id: bitacora.id_minuta)
+      ').where('minuta_id = ?', bitacora.id_minuta)
     lista_asistencia = []
     asistencia.each do |asis|
       unless asis.id_est.nil?
@@ -171,7 +171,7 @@ class MinutasController < ApplicationController
         end
       end
       unless participante.nil?
-        a = {id: asis.id_asist, iniciales: participante.iniciales, tipo: asis.tipo_abrev, descripcion: asis.tipo_desc}
+        a = {id: asis.id, iniciales: participante.iniciales, tipo: asis.tipo_abrev, descripcion: asis.tipo_desc}
       end
       lista_asistencia << a
     end
