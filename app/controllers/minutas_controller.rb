@@ -139,6 +139,7 @@ class MinutasController < ApplicationController
       temas.tema AS tema_min,
       minutas.id AS id_minuta,
       minutas.codigo AS codigo_min,
+      minutas.correlativo AS correlativo_min,
       minutas.fecha_reunion AS fecha_min,
       minutas.h_inicio AS hora_ini,
       minutas.h_termino AS hora_ter,
@@ -193,7 +194,7 @@ class MinutasController < ApplicationController
     h = {
       id: bitacora.id_bitacora, revision: bitacora.rev_min, motivo: bitacora.motivo_min,
       minuta: {
-        id: bitacora.id_minuta, codigo: bitacora.codigo_min, tema: bitacora.tema_min, creada_por: bitacora.iniciales_est, creada_el: bitacora.creada_el, tipo: bitacora.tipo_min,
+        id: bitacora.id_minuta, codigo: bitacora.codigo_min, correlativo: bitacora.correlativo_min, tema: bitacora.tema_min, creada_por: bitacora.iniciales_est, creada_el: bitacora.creada_el, tipo: bitacora.tipo_min,
         fecha_reunion: bitacora.fecha_min, h_inicio: bitacora.hora_ini, h_termino: bitacora.hora_ter,
         clasificacion: {
           informativa: bitacora.informativa_min, avance: bitacora.avance_min, coordinacion: bitacora.coordinacion_min, decision: bitacora.decision_min, otro: bitacora.otro_min
