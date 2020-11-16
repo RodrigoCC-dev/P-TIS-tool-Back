@@ -130,6 +130,80 @@ class MinutasController < ApplicationController
     end
   end
 
+  # Servicio que entrega la información de una minuta a partir del 'id' de su bitácora de revisión
+  def show
+    bitacora = BitacoraRevision.joins(minuta: {estudiante: :grupo}).joins(minuta: :tipo_minuta).joins(minuta: :clasificacion).joins(:motivo).joins(:tema).select('
+      bitacora_revisiones.id AS id_bitacora,
+      bitacora_revisiones.revision AS rev_min,
+      motivos.motivo AS motivo_min,
+      temas.tema AS tema_min,
+      minutas.id AS id_minuta,
+      minutas.codigo AS codigo_min,
+      minutas.correlativo AS correlativo_min,
+      minutas.fecha_reunion AS fecha_min,
+      minutas.h_inicio AS hora_ini,
+      minutas.h_termino AS hora_ter,
+      minutas.created_at AS creada_el,
+      estudiantes.iniciales AS iniciales_est,
+      tipo_minutas.tipo AS tipo_min,
+      clasificaciones.informativa AS informativa_min,
+      clasificaciones.avance AS avance_min,
+      clasificaciones.coordinacion AS coordinacion_min,
+      clasificaciones.decision AS decision_min,
+      clasificaciones.otro AS otro_min
+      ').find(params[:id])
+    asistencia = Asistencia.joins(:tipo_asistencia).select('
+      asistencias.id,
+      asistencias.id_estudiante AS id_est,
+      asistencias.id_stakeholder AS id_stake,
+      tipo_asistencias.tipo AS tipo_abrev,
+      tipo_asistencias.descripcion AS tipo_desc
+      ').where('minuta_id = ?', bitacora.id_minuta)
+    lista_asistencia = []
+    asistencia.each do |asis|
+      unless asis.id_est.nil?
+        participante = Estudiante.find(asis.id_est)
+      else
+        unless asis.id_stake.nil?
+          participante = Stakeholder.find(asis.id_stake)
+        else
+          participante = nil
+        end
+      end
+      unless participante.nil?
+        a = {id: asis.id, iniciales: participante.iniciales, tipo: asis.tipo_abrev, descripcion: asis.tipo_desc}
+      end
+      lista_asistencia << a
+    end
+    objetivos = Objetivo.where(bitacora_revision_id: bitacora.id_bitacora)
+    objetivos_json = objetivos.as_json(json_data)
+    conclusiones = Conclusion.where(bitacora_revision_id: bitacora.id_bitacora)
+    conclusiones_json = conclusiones.as_json(json_data)
+    items = Item.joins(:tipo_item).select('
+      items.id,
+      tipo_items.tipo AS item_tipo,
+      items.correlativo AS corr_item,
+      items.descripcion AS cuerpo_item,
+      items.fecha AS fecha_item').where(bitacora_revision_id: bitacora.id_bitacora)
+    lista_items = []
+    items.each do |i|
+      responsables = i.responsables.as_json(json_data)
+      item = {id: i.id, tipo: i.item_tipo, correlativo: i.corr_item, descripcion: i.cuerpo_item, fecha: i.fecha_item, responsables: responsables}
+      lista_items << item
+    end
+    h = {
+      id: bitacora.id_bitacora, revision: bitacora.rev_min, motivo: bitacora.motivo_min,
+      minuta: {
+        id: bitacora.id_minuta, codigo: bitacora.codigo_min, correlativo: bitacora.correlativo_min, tema: bitacora.tema_min, creada_por: bitacora.iniciales_est, creada_el: bitacora.creada_el, tipo: bitacora.tipo_min,
+        fecha_reunion: bitacora.fecha_min, h_inicio: bitacora.hora_ini, h_termino: bitacora.hora_ter,
+        clasificacion: {
+          informativa: bitacora.informativa_min, avance: bitacora.avance_min, coordinacion: bitacora.coordinacion_min, decision: bitacora.decision_min, otro: bitacora.otro_min
+        }, objetivos: objetivos_json, conclusiones: conclusiones_json, asistencia: lista_asistencia, items: lista_items
+      }
+    }
+    render json: h.as_json
+  end
+
   # Servicio que entrega el número correlativo siguiente para la nueva minuta del grupo
   def correlativo
     ultima = Minuta.joins(estudiante: :grupo).where('grupos.id = ? AND minutas.borrado = ?', params[:id], false).last
@@ -139,6 +213,31 @@ class MinutasController < ApplicationController
       correlativo = ultima.correlativo + 1
     end
     render json: correlativo.as_json
+  end
+
+  # Servicio que entrega la lista de minutas emitidas por un grupo
+  def por_grupo
+    bitacoras = BitacoraRevision.joins(minuta: {estudiante: :grupo}).joins(minuta: :tipo_minuta).joins(:motivo).select('
+      bitacora_revisiones.id AS id_bitacora,
+      bitacora_revisiones.revision AS rev_min,
+      motivos.motivo AS motivo_min,
+      minutas.id AS id_minuta,
+      minutas.codigo AS codigo_min,
+      minutas.created_at AS creada_el,
+      estudiantes.iniciales AS iniciales_est,
+      tipo_minutas.tipo AS tipo_min
+      ').where('grupos.id = ? AND minutas.borrado = ? AND bitacora_revisiones.emitida = ?', params[:id], false, true)
+    minutas = []
+    bitacoras.each do |bit|
+      h = {
+        id: bit.id_bitacora, revision: bit.rev_min, motivo: bit.motivo_min,
+        minuta: {
+          id: bit.id_minuta, codigo: bit.codigo_min, creada_por: bit.iniciales_est, creada_el: bit.creada_el, tipo: bit.tipo_min,
+        }
+      }
+      minutas << h
+    end
+    render json: minutas.as_json
   end
 
   private
