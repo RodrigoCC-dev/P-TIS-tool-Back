@@ -180,7 +180,7 @@ class MinutasController < ApplicationController
     conclusiones = Conclusion.where(bitacora_revision_id: bitacora.id_bitacora)
     conclusiones_json = conclusiones.as_json(json_data)
     items = Item.joins(:tipo_item).select('
-      items.id AS id_item,
+      items.id,
       tipo_items.tipo AS item_tipo,
       items.correlativo AS corr_item,
       items.descripcion AS cuerpo_item,
@@ -188,7 +188,7 @@ class MinutasController < ApplicationController
     lista_items = []
     items.each do |i|
       responsables = i.responsables.as_json(json_data)
-      item = {id: i.id_item, tipo: i.item_tipo, correlativo: i.corr_item, descripcion: i.cuerpo_item, fecha: i.fecha_item, responsables: responsables}
+      item = {id: i.id, tipo: i.item_tipo, correlativo: i.corr_item, descripcion: i.cuerpo_item, fecha: i.fecha_item, responsables: responsables}
       lista_items << item
     end
     h = {
