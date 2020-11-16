@@ -7,6 +7,7 @@ class GruposController < ApplicationController
     grupos = Grupo.where('borrado = ? AND nombre <> ?', false, 'SG')
     estudiantes = Estudiante.joins(:grupo).joins(:usuario).joins(seccion: :jornada).where('grupos.borrado = ? AND grupos.nombre <> ?', false, 'SG').select('
       estudiantes.id,
+      estudiantes.iniciales AS iniciales_est,
       usuarios.nombre AS nombre_est,
       usuarios.apellido_paterno AS apellido1,
       usuarios.apellido_materno AS apellido2,
