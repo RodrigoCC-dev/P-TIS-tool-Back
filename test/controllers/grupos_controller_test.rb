@@ -19,6 +19,7 @@ class GruposControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+
   # Revisión del servicio de creación de grupos
 
   test "Debería obtener código '401' al postear 'create' sin autenticación" do
@@ -70,6 +71,7 @@ class GruposControllerTest < ActionDispatch::IntegrationTest
     get grupos_url(id: grupos(:one).id), headers: authenticated_header(usuarios(:Pablo), 'pablo123')
     assert_response :success
   end
+
 
   # Revisión de funcionamiento del servicio 'ultimo_grupo'
 

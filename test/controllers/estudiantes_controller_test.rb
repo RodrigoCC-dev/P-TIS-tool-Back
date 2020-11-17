@@ -92,6 +92,7 @@ class EstudiantesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+
   # Revisión del funcionamiento del servicio 'sin_grupo'
 
   test "Debería obtener los estudiantes sin grupo como coordinador" do
