@@ -172,6 +172,7 @@ ActiveRecord::Schema.define(version: 2020_10_29_231604) do
     t.datetime "deleted_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "identificador"
   end
 
   create_table "objetivos", force: :cascade do |t|

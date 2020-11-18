@@ -190,16 +190,20 @@ TipoItem.create!([
 # Seeder para agregar motivos de revisión
 Motivo.create!([
   {
-    "motivo" => "Emitida para coordinación interna"
+    "motivo" => "Emitida para coordinación interna",
+    "identificador" => "ECI"
   },
   {
-    "motivo" => "Emitida para revisión del cliente"
+    "motivo" => "Emitida para revisión del cliente",
+    "identificador" => "ERC"
   },
   {
-    "motivo" => "Emitida para aprobación del cliente"
+    "motivo" => "Emitida para aprobación del cliente",
+    "identificador" => "EAC"
   },
   {
-    "motivo" => "Emisión final"
+    "motivo" => "Emisión final",
+    "identificador" => "EF"
   }
 ])
 
