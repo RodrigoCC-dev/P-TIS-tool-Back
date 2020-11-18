@@ -240,6 +240,41 @@ class MinutasController < ApplicationController
     render json: minutas.as_json
   end
 
+  # Servicio que entrega el listado de minutas de un estudiante según sus estados de revisión
+  def por_estados
+    bitacoras = BitacoraRevision.joins('INNER JOIN motivos ON motivos.id = bitacora_revisiones.motivo_id INNER JOIN minutas ON bitacora_revisiones.minuta_id = minutas.id
+      INNER JOIN bitacora_estados ON bitacora_estados.minuta_id = minutas.id INNER JOIN tipo_estados ON tipo_estados.id = bitacora_estados.tipo_estado_id
+      INNER JOIN tipo_minutas ON tipo_minutas.id = minutas.tipo_minuta_id INNER JOIN estudiantes ON estudiantes.id = minutas.estudiante_id').where('
+      minutas.borrado = ? AND estudiantes.usuario_id = ? AND bitacora_revisiones.activa = ?', false, current_usuario.id, true).select('
+      bitacora_revisiones.id,
+      bitacora_revisiones.revision AS revision_min,
+      motivos.motivo AS motivo_min,
+      tipo_minutas.tipo AS tipo_min,
+      minutas.id AS id_minuta,
+      minutas.codigo AS codigo_min,
+      minutas.correlativo AS correlativo_min,
+      minutas.fecha_reunion AS fecha_min,
+      minutas.created_at AS creada_el,
+      bitacora_estados.id AS id_estado,
+      tipo_estados.abreviacion AS abrev_estado,
+      tipo_estados.descripcion AS desc_estado,
+      estudiantes.iniciales AS iniciales_est
+      ')
+    lista_bitacoras = []
+    bitacoras.each do |bit|
+      h = {id: bit.id, motivo: bit.motivo_min, revision: bit.revision_min,
+        minuta: {
+          id: bit.id_minuta, codigo: bit.codigo_min, correlativo: bit.correlativo_min, fecha_reunion: bit.fecha_min, tipo_minuta: bit.tipo_min, creada_por: bit.iniciales_est, creada_el: bit.creada_el
+        },
+        estado: {
+          id: bit.id_estado, abreviacion: bit.abrev_estado, descripcion: bit.desc_estado
+        }
+      }
+      lista_bitacoras << h
+    end
+    render json: lista_bitacoras.as_json(json_data)
+  end
+
   private
   def minuta_params
     params.require(:minuta).permit(:estudiante_id, :correlativo, :codigo, :fecha_reunion, :h_inicio, :h_termino, :tipo_minuta_id)
