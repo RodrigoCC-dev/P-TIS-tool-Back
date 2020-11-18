@@ -22,5 +22,6 @@ module Funciones
       }
       lista << h
     end
+    return lista
   end
 end
