@@ -1,6 +1,7 @@
 class MinutasController < ApplicationController
   before_action :authenticate_usuario
   include JsonFormat
+  include Funciones
 
   # Servicio que crea una minuta en el sistema
   def create
@@ -297,20 +298,11 @@ class MinutasController < ApplicationController
       tipo_estados.descripcion AS desc_estado,
       estudiantes.iniciales AS iniciales_est
       ')
-    lista_bitacoras = []
-    bitacoras.each do |bit|
-      h = {id: bit.id, motivo: bit.motivo_min, revision: bit.revision_min,
-        minuta: {
-          id: bit.id_minuta, codigo: bit.codigo_min, correlativo: bit.correlativo_min, fecha_reunion: bit.fecha_min, tipo_minuta: bit.tipo_min, creada_por: bit.iniciales_est, creada_el: bit.creada_el
-        },
-        estado: {
-          id: bit.id_estado, abreviacion: bit.abrev_estado, descripcion: bit.desc_estado
-        }
-      }
-      lista_bitacoras << h
-    end
+    lista_bitacoras = bitacoras_json(bitacoras)
     render json: lista_bitacoras.as_json(json_data)
   end
+
+
 
   private
   def minuta_params
