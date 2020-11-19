@@ -296,31 +296,35 @@ class MinutasController < ApplicationController
 
   # Servicio que entrega las minutas a revisar por un stakeholder
   def revision_cliente
-    stakeholder = Stakeholder.find_by(usuario_id: current_usuario.id)
-    bitacoras = BitacoraRevision.joins('INNER JOIN motivos ON motivos.id = bitacora_revisiones.motivo_id INNER JOIN minutas ON bitacora_revisiones.minuta_id = minutas.id
-      INNER JOIN bitacora_estados ON bitacora_estados.minuta_id = minutas.id INNER JOIN tipo_estados ON tipo_estados.id = bitacora_estados.tipo_estado_id
-      INNER JOIN tipo_minutas ON tipo_minutas.id = minutas.tipo_minuta_id INNER JOIN estudiantes ON estudiantes.id = minutas.estudiante_id
-      INNER JOIN grupos ON grupos.id = estudiantes.grupo_id').where('minutas.borrado = ? AND bitacora_revisiones.activa = ? AND grupos.id = ? AND motivos.identificador <> ?
-      AND tipo_estados.abreviacion = ? AND tipo_estados.abreviacion = ? AND tipo_estados.abreviacion = ? AND tipo_estados.abreviacion = ? AND
-      tipo_estados.abreviacion = ? tipo_minutas.tipo <> ? AND bitacora_revisiones.emitida = ?',
-      false, true, stakeholder.grupo_id, 'ECI', 'RIG', 'RSK', 'CER', 'EMI', 'CSK', 'Semanal', true).select('
-      bitacora_revisiones.id,
-      bitacora_revisiones.revision AS revision_min,
-      bitacora_revisiones.fecha_emision AS fecha_emi,
-      motivos.motivo AS motivo_min,
-      tipo_minutas.tipo AS tipo_min,
-      minutas.id AS id_minuta,
-      minutas.codigo AS codigo_min,
-      minutas.correlativo AS correlativo_min,
-      minutas.fecha_reunion AS fecha_min,
-      minutas.created_at AS creada_el,
-      bitacora_estados.id AS id_estado,
-      tipo_estados.abreviacion AS abrev_estado,
-      tipo_estados.descripcion AS desc_estado,
-      estudiantes.iniciales AS iniciales_est
-      ')
-    lista_bitacoras = bitacoras_json(bitacoras)
-    render json: lista_bitacoras.as_json(json_data)
+    if current_usuario.rol.rango == 4
+      stakeholder = Stakeholder.find_by(usuario_id: current_usuario.id)
+      bitacoras = BitacoraRevision.joins('INNER JOIN motivos ON motivos.id = bitacora_revisiones.motivo_id INNER JOIN minutas ON bitacora_revisiones.minuta_id = minutas.id
+        INNER JOIN bitacora_estados ON bitacora_estados.minuta_id = minutas.id INNER JOIN tipo_estados ON tipo_estados.id = bitacora_estados.tipo_estado_id
+        INNER JOIN tipo_minutas ON tipo_minutas.id = minutas.tipo_minuta_id INNER JOIN estudiantes ON estudiantes.id = minutas.estudiante_id
+        INNER JOIN grupos ON grupos.id = estudiantes.grupo_id').where('minutas.borrado = ? AND bitacora_revisiones.activa = ? AND grupos.id = ? AND motivos.identificador <> ?
+        AND tipo_estados.abreviacion = ? AND tipo_estados.abreviacion = ? AND tipo_estados.abreviacion = ? AND tipo_estados.abreviacion = ? AND
+        tipo_estados.abreviacion = ? AND tipo_minutas.tipo <> ? AND bitacora_revisiones.emitida = ?',
+        false, true, stakeholder.grupo_id, 'ECI', 'RIG', 'RSK', 'CER', 'EMI', 'CSK', 'Semanal', true).select('
+          bitacora_revisiones.id,
+          bitacora_revisiones.revision AS revision_min,
+          bitacora_revisiones.fecha_emision AS fecha_emi,
+          motivos.motivo AS motivo_min,
+          tipo_minutas.tipo AS tipo_min,
+          minutas.id AS id_minuta,
+          minutas.codigo AS codigo_min,
+          minutas.correlativo AS correlativo_min,
+          minutas.fecha_reunion AS fecha_min,
+          minutas.created_at AS creada_el,
+          bitacora_estados.id AS id_estado,
+          tipo_estados.abreviacion AS abrev_estado,
+          tipo_estados.descripcion AS desc_estado,
+          estudiantes.iniciales AS iniciales_est
+        ')
+      lista_bitacoras = bitacoras_json(bitacoras)
+      render json: lista_bitacoras.as_json(json_data)
+    else
+      render json: ['error': 'No es un usuario autorizado para este servicio'], status: :unprocessable_entity
+    end
   end
 
   private
