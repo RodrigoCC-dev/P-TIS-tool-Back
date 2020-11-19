@@ -31,7 +31,7 @@ Pablo:
   password_digest: <%= BCrypt::Password.create('pablo123') %>
   borrado: false
   deleted_at: 2020-10-19 00:58:53
-  rol: two
+  rol: estudiante
 
 coordinador:
   nombre: Coordinador
@@ -54,3 +54,14 @@ profesor:
   borrado: false
   deleted_at: 2020-10-19 00:58:53
   rol: profesor
+
+stakeholder:
+  nombre: Gabriela
+  apellido_paterno: Martinez
+  apellido_materno: Astudillo
+  run: nil
+  email: gabriela.martinez@algo.com
+  password_digest: <%= BCrypt::Password.create('cliente') %>
+  borrado: false
+  deleted_at: 2020-10-19 00:58:53
+  rol: stakeholder

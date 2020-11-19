@@ -164,4 +164,88 @@ class MinutasControllerTest < ActionDispatch::IntegrationTest
       headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
     assert_response :success
   end
+
+
+  # Revisión del funcionamiento del servicion 'por_estados'
+
+  test "Debería obtener código '401' al tratar de obtener 'por_estados' sin autenticación" do
+    get '/minutas/revision/estados'
+    assert_response 401
+  end
+
+  test "Debería obtener código '422' al tratar de obtener 'por_estados' como coodinador" do
+    get '/minutas/revision/estados', headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
+    assert_response 422
+  end
+
+  test "Debería obtener código '422' al tratar de obtener 'por_estados' como profesor" do
+    get '/minutas/revision/estados', headers: authenticated_header(usuarios(:profesor), 'profe')
+    assert_response 422
+  end
+
+  test "Debería obtener código '422' al tratar de obtener 'por_estados' como stakeholder" do
+    get '/minutas/revision/estados', headers: authenticated_header(usuarios(:stakeholder), 'cliente')
+    assert_response 422
+  end
+
+  test "Debería obener el listado de minutas de un estudiante" do
+    get '/minutas/revision/estados', headers: authenticated_header(usuarios(:Pablo), 'pablo123')
+    assert_response :success
+  end
+
+
+  # Revision del funcionamiento del servicio 'revision_grupo'
+
+  test "Debería obtener código '401' al tratar de obtener 'revision_grupo' sin autenticación" do
+    get '/minutas/revision/grupo'
+    assert_response 401
+  end
+
+  test "Debería obtener código '422' al tratar de obtener 'revision_grupo' como coordinador" do
+    get '/minutas/revision/grupo', headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
+    assert_response 422
+  end
+
+  test "Debería obtener código '422' al tratar de obtener 'revision_grupo' como profesor" do
+    get '/minutas/revision/grupo', headers: authenticated_header(usuarios(:profesor), 'profe')
+    assert_response 422
+  end
+
+  test "Debería obtener código '422' al tratar de obtener 'revision_grupo' como stakeholder" do
+    get '/minutas/revision/grupo', headers: authenticated_header(usuarios(:stakeholder), 'cliente')
+    assert_response 422
+  end
+
+  test "Debería obtener el listado de minutas a revisar por un estudiante" do
+    get '/minutas/revision/grupo', headers: authenticated_header(usuarios(:Pablo), 'pablo123')
+    assert_response :success
+  end
+
+
+  # Revisión del funcionamiento del servicio 'revision_cliente'
+
+  test "Debería obtener código '401' al tratar de obtener 'revision_cliente' sin autenticación" do
+    get '/minutas/revision/cliente'
+    assert_response 401
+  end
+
+  test "Debería obtener código '422' al tratar de obtener 'revision_cliente' como 'estudiante'" do
+    get '/minutas/revision/cliente', headers: authenticated_header(usuarios(:Pablo), 'pablo123')
+    assert_response 422
+  end
+
+  test "Debería obtener código '422' al tratar de obtener 'revision_cliente' como 'profeosr'" do
+    get '/minutas/revision/cliente', headers: authenticated_header(usuarios(:profesor), 'profe')
+    assert_response 422
+  end
+
+  test "Debería obtener código '422' al tratar de obtener 'revision_cliente' como 'coordinador'" do
+    get '/minutas/revision/cliente', headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
+    assert_response 422
+  end
+
+  test "Debería obtener el listado de minutas a revisar por un stakeholder" do
+    get '/minutas/revision/cliente', headers: authenticated_header(usuarios(:stakeholder), 'cliente')
+    assert_response :success
+  end
 end
