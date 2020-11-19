@@ -61,17 +61,23 @@ class StakeholdersController < ApplicationController
     stakeholder = Stakeholder.new
     stakeholder.build_usuario
     stakeholder.usuario.assign_attributes(stakeholders_params[:usuario_attributes])
-    stakeholder.iniciales = obtener_iniciales(stakeholder.usuario)
     stakeholder.assign_attributes(stakeholders_params)
+    busqueda = Usuario.find_by(email: stakeholder.usuario.email)
+    unless busqueda.nil?
+      stakeholder.usuario = busqueda
+    end
+    stakeholder.iniciales = obtener_iniciales(stakeholder.usuario)
     if stakeholder.grupo_id == 0 || stakeholder.grupo_id == nil
       grupo_por_defecto = Grupo.find_by(nombre: 'SG')
       stakeholder.grupo_id = grupo_por_defecto.id
     end
-    rol_stakeholder = Rol.find_by(rol: 'Stakeholder')
-    stakeholder.usuario.rol_id = rol_stakeholder.id
-    nueva_password = stakeholder.usuario.nombre.titleize.split(' ').join
-    stakeholder.usuario.password = nueva_password
-    stakeholder.usuario.password_confirmation = nueva_password
+    if busqueda.nil?
+      rol_stakeholder = Rol.find_by(rol: 'Stakeholder')
+      stakeholder.usuario.rol_id = rol_stakeholder.id
+      nueva_password = stakeholder.usuario.nombre.titleize.split(' ').join + '123'
+      stakeholder.usuario.password = nueva_password
+      stakeholder.usuario.password_confirmation = nueva_password
+    end
     if stakeholder.valid?
       stakeholder.save!
     else
