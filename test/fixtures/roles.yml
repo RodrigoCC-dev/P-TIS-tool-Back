@@ -29,3 +29,9 @@ estudiante:
   rango: 3
   borrado: false
   deleted_at: 2020-10-19 00:34:26
+
+stakeholder:
+  rol: Stakeholder
+  rango: 4
+  borrado: false
+  deleted_at: 2020-10-19 00:34:26
