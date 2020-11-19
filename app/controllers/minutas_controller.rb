@@ -14,6 +14,7 @@ class MinutasController < ApplicationController
     tipo_estado = TipoEstado.find(params[:tipo_estado])
     if tipo_estado.abreviacion.eql?('EMI')
       bitacora.emitida = true
+      bitacora.fecha_emision = Time.now
     end
     if bitacora.valid?
       bitacora.save!
