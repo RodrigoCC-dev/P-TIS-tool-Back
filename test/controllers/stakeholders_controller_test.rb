@@ -2,6 +2,24 @@ require 'test_helper'
 
 class StakeholdersControllerTest < ActionDispatch::IntegrationTest
 
+  # Revision del funcionamiento del servicio 'index'
+
+  test "Debería obtener código '401' al tratra de obtener 'index' sin autenticación" do
+    get stakeholders_url
+    assert_response 401
+  end
+
+  test "Debería poder obtener los stakeholders como coordinador" do
+    get stakeholders_url, headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
+    assert_response :success
+  end
+
+  test "Debería poder obtener los stakeholders como profesor" do
+    get stakeholders_url, headers: authenticated_header(usuarios(:profesor), 'profe')
+    assert_response :success
+  end
+
+
   # Revisión del funcionamiento del servicio 'create'
 
   test "Debería obtener código '401' al tratar de postear 'create'" do
