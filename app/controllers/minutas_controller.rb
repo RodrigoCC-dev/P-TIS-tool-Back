@@ -277,7 +277,7 @@ class MinutasController < ApplicationController
       grupos.id = ? AND motivos.identificador = ? AND tipo_minutas.tipo <> ? AND bitacora_revisiones.emitida = ?', false, current_usuario.id, true, estudiante.grupo_id, 'ECI', 'Semanal', true).select('
       bitacora_revisiones.id,
       bitacora_revisiones.revision AS revision_min,
-      bitacora.revisiones.fecha_emision AS fecha_emi,
+      bitacora_revisiones.fecha_emision AS fecha_emi,
       motivos.motivo AS motivo_min,
       tipo_minutas.tipo AS tipo_min,
       minutas.id AS id_minuta,

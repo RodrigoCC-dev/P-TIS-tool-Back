@@ -164,4 +164,30 @@ class MinutasControllerTest < ActionDispatch::IntegrationTest
       headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
     assert_response :success
   end
+
+
+  # Revisión del funcionamiento del servicion 'por_estados'
+
+  test "Debería obtener código '401' al tratar de obtener 'por_estados' sin autenticación" do
+    get '/minutas/revision/estados'
+    assert_response 401
+  end
+
+  test "Debería obener el listado de minutas de un estudiante" do
+    get '/minutas/revision/estados', headers: authenticated_header(usuarios(:Pablo), 'pablo123')
+    assert_response :success
+  end
+
+
+  # Revision del funcionamiento del servicio 'revision_grupo'
+
+  test "Debería obtener código '401' al tratar de obtener 'revision_grupo' sin autenticación" do
+    get '/minutas/revision/grupo'
+    assert_response 401
+  end
+
+  test "Debería obtener el listado de minutas a revisar por un estudiante" do
+    get '/minutas/revision/grupo', headers: authenticated_header(usuarios(:Pablo), 'pablo123')
+    assert_response :success
+  end
 end
