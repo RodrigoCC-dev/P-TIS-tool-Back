@@ -173,6 +173,21 @@ class MinutasControllerTest < ActionDispatch::IntegrationTest
     assert_response 401
   end
 
+  test "Debería obtener código '422' al tratar de obtener 'por_estados' como coodinador" do
+    get '/minutas/revision/estados', headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
+    assert_response 422
+  end
+
+  test "Debería obtener código '422' al tratar de obtener 'por_estados' como profesor" do
+    get '/minutas/revision/estados', headers: authenticated_header(usuarios(:profesor), 'profe')
+    assert_response 422
+  end
+
+  test "Debería obtener código '422' al tratar de obtener 'por_estados' como stakeholder" do
+    get '/minutas/revision/estados', headers: authenticated_header(usuarios(:stakeholder), 'cliente')
+    assert_response 422
+  end
+
   test "Debería obener el listado de minutas de un estudiante" do
     get '/minutas/revision/estados', headers: authenticated_header(usuarios(:Pablo), 'pablo123')
     assert_response :success
