@@ -45,6 +45,7 @@ ActiveRecord::Schema.define(version: 2020_10_29_231604) do
     t.boolean "activa", default: true
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "fecha_emision"
     t.index ["minuta_id"], name: "index_bitacora_revisiones_on_minuta_id"
     t.index ["motivo_id"], name: "index_bitacora_revisiones_on_motivo_id"
   end
@@ -172,6 +173,7 @@ ActiveRecord::Schema.define(version: 2020_10_29_231604) do
     t.datetime "deleted_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "identificador"
   end
 
   create_table "objetivos", force: :cascade do |t|

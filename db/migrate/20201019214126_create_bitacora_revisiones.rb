@@ -6,6 +6,7 @@ class CreateBitacoraRevisiones < ActiveRecord::Migration[6.0]
       t.references :minuta, null: false, foreign_key: true
       t.boolean :emitida, default: false
       t.boolean :activa, default: true
+      t.datetime :fecha_emision
 
       t.timestamps
     end

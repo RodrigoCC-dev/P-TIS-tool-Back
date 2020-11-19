@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   get 'minutas/grupo/:id', to: 'minutas#por_grupo'
   get 'minutas/revision/estados', to: 'minutas#por_estados'
   get 'minutas/revision/grupo', to: 'minutas#revision_grupo'
+  get 'minutas/revision/cliente', to: 'minutas#revision_cliente'
 
   get 'login/user', to: 'usuarios#user'
 
