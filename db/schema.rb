@@ -154,7 +154,6 @@ ActiveRecord::Schema.define(version: 2020_10_29_231604) do
     t.datetime "fecha_reunion"
     t.time "h_inicio"
     t.time "h_termino"
-    t.string "tema"
     t.bigint "estudiante_id", null: false
     t.bigint "tipo_minuta_id", null: false
     t.bigint "clasificacion_id", null: false
