@@ -3,13 +3,27 @@ Rails.application.routes.draw do
 
   resources :usuarios, only: [:index]
   resources :secciones, only: [:index]
-  resources :estudiantes, only: [:index, :create]
+  resources :estudiantes, only: [:index, :create, :show]
   get 'estudiantes/sin_grupo', to: 'estudiantes#sin_grupo'
 
-  resources :grupos, only: [:index, :create]
+  resources :stakeholders, only: [:index, :create]
+
+  resources :grupos, only: [:index, :create, :show]
   post 'grupos/ultimo_grupo', to: 'grupos#ultimo_grupo'
 
   resources :jornadas, only: [:index]
+  resources :tipo_minutas, only: [:index]
+  resources :tipo_asistencias, only: [:index]
+  resources :tipo_items, only: [:index]
+  resources :tipo_estados, only: [:index]
+  resources :motivos, only: [:index]
+  resources :semestres, only: [:index]
+  resources :minutas, only: [:create, :show]
+  get 'minutas/correlativo/:id', to: 'minutas#correlativo'
+  get 'minutas/grupo/:id', to: 'minutas#por_grupo'
+  get 'minutas/revision/estados', to: 'minutas#por_estados'
+  get 'minutas/revision/grupo', to: 'minutas#revision_grupo'
+  get 'minutas/revision/cliente', to: 'minutas#revision_cliente'
 
   get 'login/user', to: 'usuarios#user'
 

@@ -9,3 +9,8 @@ two:
   iniciales: MyString
   usuario: two
   grupo: two
+
+Gabriela:
+  iniciales: 'GMA'
+  usuario: stakeholder
+  grupo: one

@@ -6,7 +6,6 @@ class CreateMinutas < ActiveRecord::Migration[6.0]
       t.datetime :fecha_reunion
       t.time :h_inicio
       t.time :h_termino
-      t.string :tema
       t.references :estudiante, null: false, foreign_key: true
       t.references :tipo_minuta, null: false, foreign_key: true
       t.references :clasificacion, null: false, foreign_key: true

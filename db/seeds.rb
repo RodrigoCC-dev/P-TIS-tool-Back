@@ -162,8 +162,12 @@ TipoItem.create!([
     "descripcion" => "Comprimiso con fecha y responsable"
   },
   {
-    "tipo" => "Decision",
+    "tipo" => "Decisión",
     "descripcion" => "Acuerdo de trabajo"
+  },
+  {
+    "tipo" => "Compromiso",
+    "descripcion" => "Acuerdo de trabajo con responsabilidad"
   },
   {
     "tipo" => "Hecho",
@@ -186,16 +190,20 @@ TipoItem.create!([
 # Seeder para agregar motivos de revisión
 Motivo.create!([
   {
-    "motivo" => "Emitida para coordinación interna"
+    "motivo" => "Emitida para coordinación interna",
+    "identificador" => "ECI"
   },
   {
-    "motivo" => "Emitida para revisión del cliente"
+    "motivo" => "Emitida para revisión del cliente",
+    "identificador" => "ERC"
   },
   {
-    "motivo" => "Emitida para aprobación del cliente"
+    "motivo" => "Emitida para aprobación del cliente",
+    "identificador" => "EAC"
   },
   {
-    "motivo" => "Emisión final"
+    "motivo" => "Emisión final",
+    "identificador" => "EF"
   }
 ])
 
@@ -204,6 +212,10 @@ TipoEstado.create!([
   {
     "abreviacion" => "BOR",
     "descripcion" => "Borrador"
+  },
+  {
+    "abreviacion" => "EMI",
+    "descripcion" => "Emitida"
   },
   {
     "abreviacion" => "CIG",
@@ -255,7 +267,7 @@ TipoActividad.create!([
     "identificador" => "M3"
   },
   {
-    "actividad" => "Ingresar calificación",
+    "actividad" => "Ingresar clasificación",
     "descripcion" => "Se ingresa la clasificación de la reunión",
     "identificador" => "M4"
   },
