@@ -30,7 +30,7 @@ class EstudiantesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "Debería obtener código '401' al tratar de obtener 'sin_grupo'" do
-    get estudiantes_sin_grupo_url
+    get estudiantes_asignacion_sin_grupo_url
     assert_response 401
   end
 
@@ -96,12 +96,12 @@ class EstudiantesControllerTest < ActionDispatch::IntegrationTest
   # Revisión del funcionamiento del servicio 'sin_grupo'
 
   test "Debería obtener los estudiantes sin grupo como coordinador" do
-    get estudiantes_sin_grupo_url, headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
+    get estudiantes_asignacion_sin_grupo_url, headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
     assert_response :success
   end
 
   test "Debería obtener los estudiantes sin grupo como profesor" do
-    get estudiantes_sin_grupo_url, headers: authenticated_header(usuarios(:profesor), 'profe')
+    get estudiantes_asignacion_sin_grupo_url, headers: authenticated_header(usuarios(:profesor), 'profe')
     assert_response :success
   end
 end
