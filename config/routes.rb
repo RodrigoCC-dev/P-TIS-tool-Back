@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   resources :usuarios, only: [:index]
   resources :secciones, only: [:index]
   resources :estudiantes, only: [:index, :create, :show]
-  get 'estudiantes/sin_grupo', to: 'estudiantes#sin_grupo'
+  get 'estudiantes/asignacion/sin_grupo', to: 'estudiantes#sin_grupo'
 
   resources :stakeholders, only: [:index, :create]
 
