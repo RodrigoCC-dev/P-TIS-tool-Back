@@ -73,8 +73,8 @@ class GruposController < ApplicationController
       grupos.id,
       grupos.nombre,
       grupos.correlativo
-      ').last
-    render json: grupo.as_json(json_data)
+      ').order('grupos.correlativo DESC').limit(1)
+    render json: grupo[0].as_json(json_data)
   end
 
   private
