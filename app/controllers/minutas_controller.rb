@@ -169,15 +169,17 @@ class MinutasController < ApplicationController
     asistencia.each do |asis|
       unless asis.id_est.nil?
         participante = Estudiante.find(asis.id_est)
+        a = {id: asis.id, iniciales: participante.iniciales, id_estudiante: participante.id, id_stakeholder: nil, tipo: asis.tipo_abrev, descripcion: asis.tipo_desc}
       else
         unless asis.id_stake.nil?
           participante = Stakeholder.find(asis.id_stake)
+          a = {id: asis.id, iniciales: participante.iniciales, id_estudiante: nil, id_stakeholder: participante.id, tipo: asis.tipo_abrev, descripcion: asis.tipo_desc}
         else
           participante = nil
         end
       end
-      unless participante.nil?
-        a = {id: asis.id, iniciales: participante.iniciales, tipo: asis.tipo_abrev, descripcion: asis.tipo_desc}
+      if participante.nil?
+        a = {id: asis.id, iniciales: participante.iniciales, id_estudiante: nil, id_stakeholder: nil, tipo: asis.tipo_abrev, descripcion: asis.tipo_desc}
       end
       lista_asistencia << a
     end
