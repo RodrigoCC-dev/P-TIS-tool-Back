@@ -40,7 +40,7 @@ class MinutasController < ApplicationController
       )
       params[:objetivos].each do |obj|
         objetivo = Objetivo.new
-        objetivo.descripcion = obj
+        objetivo.descripcion = obj[:descripcion]
         objetivo.bitacora_revision_id = bitacora.id
         if objetivo.valid?
           objetivo.save!
@@ -53,7 +53,7 @@ class MinutasController < ApplicationController
       end
       params[:conclusiones].each do |con|
         conclusion = Conclusion.new
-        conclusion.descripcion = con
+        conclusion.descripcion = con[:descripcion]
         conclusion.bitacora_revision_id = bitacora.id
         if conclusion.valid?
           conclusion.save!
