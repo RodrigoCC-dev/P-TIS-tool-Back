@@ -183,16 +183,16 @@ class MinutasController < ApplicationController
       end
       lista_asistencia << a
     end
-    objetivos = Objetivo.where(bitacora_revision_id: bitacora.id_bitacora)
+    objetivos = Objetivo.where(bitacora_revision_id: bitacora.id_bitacora, borrado: false)
     objetivos_json = objetivos.as_json(json_data)
-    conclusiones = Conclusion.where(bitacora_revision_id: bitacora.id_bitacora)
+    conclusiones = Conclusion.where(bitacora_revision_id: bitacora.id_bitacora, borrado: false)
     conclusiones_json = conclusiones.as_json(json_data)
     items = Item.joins(:tipo_item).select('
       items.id,
       tipo_items.tipo AS item_tipo,
       items.correlativo AS corr_item,
       items.descripcion AS cuerpo_item,
-      items.fecha AS fecha_item').where(bitacora_revision_id: bitacora.id_bitacora)
+      items.fecha AS fecha_item').where(bitacora_revision_id: bitacora.id_bitacora, borrado: false)
     lista_items = []
     items.each do |i|
       responsables = i.responsables.as_json(json_data)
@@ -210,6 +210,143 @@ class MinutasController < ApplicationController
       }
     }
     render json: h.as_json
+  end
+
+  # Servicio que permite actualizar la información de una minuta de reunión
+  def update
+    bitacora = BitacoraRevision.find(params[:id])
+    bitacora.minuta.assign_attributes(minuta_params)
+    bitacora.minuta.clasificacion.assign_attributes(clasificacion_params)
+    bitacora.tema.tema = params[:tema].to_s
+    tipo_estado = TipoEstado.find(params[:tipo_estado])
+    if tipo_estado.abreviacion.eql?('EMI')
+      bitacora.emitida = true
+      bitacora.fecha_emision = Time.now
+    end
+    if bitacora.minuta.clasificacion.valid?
+      if bitacora.minuta.clasificacion.save!
+        nueva_actividad = Registro.create!(
+          realizada_por: current_usuario.id,
+          minuta_id: bitacora.minuta_id,
+          tipo_actividad_id: TipoActividad.find_by(identificador: 'M9').id
+        )
+      end
+    end
+    if bitacora.minuta.valid?
+      if bitacora.minuta.save!
+        nueva_actividad = Registro.create!(
+          realizada_por: current_usuario.id,
+          minuta_id: bitacora.minuta_id,
+          tipo_actividad_id: TipoActividad.find_by(identificador: 'M8').id
+        )
+      end
+    end
+    if bitacora.tema.valid?
+      if bitacora.tema.save!
+        nueva_actividad = Registro.create!(
+          realizada_por: current_usuario.id,
+          minuta_id: bitacora.minuta_id,
+          tipo_actividad_id: TipoActividad.find_by(identificador: 'T2').id
+        )
+      end
+    end
+    if bitacora.valid?
+      bitacora.save!
+      bitacora.objetivos.each do |objetivo|
+        contador = 0
+        params[:objetivos].each do |obj|
+          if objetivo.id == obj[:id]
+            contador +=1
+          end
+        end
+        if contador == 0
+          objetivo.borrado = true
+          objetivo.deleted_at = Time.now
+          if objetivo.save!
+            nueva_actividad = Registro.create!(
+              realizada_por: current_usuario.id,
+              minuta_id: bitacora.minuta_id,
+              tipo_actividad_id: TipoActividad.find_by(identificador: 'O3').id
+            )
+          end
+        end
+      end
+      params[:objetivos].each do |obj|
+        if obj[:id] != 0
+          objetivo = Objetivo.find(obj[:id])
+          objetivo.descripcion = obj[:descripcion]
+          if objetivo.valid?
+            if objetivo.save!
+              nueva_actividad = Registro.create!(
+                realizada_por: current_usuario.id,
+                minuta_id: bitacora.minuta_id,
+                tipo_actividad_id: TipoActividad.find_by(identificador: 'O2').id
+              )
+            end
+          end
+        else
+          objetivo = Objetivo.new
+          objetivo.descripcion = obj[:descripcion]
+          objetivo.bitacora_revision_id = bitacora.id
+          if objetivo.valid?
+            objetivo.save!
+            nueva_actividad = Registro.create!(
+              realizada_por: current_usuario.id,
+              minuta_id: bitacora.minuta_id,
+              tipo_actividad_id: TipoActividad.find_by(identificador: 'O1').id
+            )
+          end
+        end
+      end
+      bitacora.conclusiones.each do |conclusion|
+        contador = 0
+        params[:conclusiones].each do |con|
+          if conclusion.id == con[:id]
+            contador += 1
+          end
+        end
+        if contador == 0
+          conclusion.borrado = true
+          conclusion.deleted_at = Time.now
+          if conclusion.save!
+            nueva_actividad = Registro.create!(
+              realizada_por: current_usuario.id,
+              minuta_id: bitacora.minuta_id,
+              tipo_actividad_id: TipoActividad.find_by(identificador: 'C3').id
+            )
+          end
+        end
+      end
+      params[:conclusiones].each do |con|
+        if con[:id] != 0
+          conclusion = Conclusion.find(con[:id])
+          conclusion.descripcion = con[:descripcion]
+          if conclusion.valid?
+            if conclusion.save!
+              nueva_actividad = Registro.create!(
+                realizada_por: current_usuario.id,
+                minuta_id: bitacora.minuta_id,
+                tipo_actividad_id: TipoActividad.find_by(identificador: 'C2').id
+              )
+            end
+          end
+        else
+          conclusion = Conclusion.new
+          conclusion.descripcion = con[:descripcion]
+          conclusion.bitacora_revision_id = bitacora.id
+          if conclusion.valid?
+            conclusion.save!
+            nueva_actividad = Registro.create!(
+              realizada_por: current_usuario.id,
+              minuta_id: bitacora.minuta_id,
+              tipo_actividad_id: TipoActividad.find_by(identificador: 'C1').id
+            )
+          end
+        end
+      end
+    end
+
+    render json: ['info': 'Información recibida'], status: :success
   end
 
   # Servicio que entrega el número correlativo siguiente para la nueva minuta del grupo
