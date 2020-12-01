@@ -246,7 +246,7 @@ class MinutasController < ApplicationController
     end
     if bitacora.valid?
       bitacora.save!
-      bitacora.objetivos.each do |objetivo|
+      bitacora.objetivos.where(borrado: false).each do |objetivo|
         contador = 0
         params[:objetivos].each do |obj|
           if objetivo.id == obj[:id]
@@ -281,7 +281,7 @@ class MinutasController < ApplicationController
           end
         end
       end
-      bitacora.conclusiones.each do |conclusion|
+      bitacora.conclusiones.where(borrado: false).each do |conclusion|
         contador = 0
         params[:conclusiones].each do |con|
           if conclusion.id == con[:id]
@@ -453,7 +453,7 @@ class MinutasController < ApplicationController
           end
         end
       end
-      unless bitacora.minuta.bitacora_estados.where(activo: true).last.tipo_estado_id = tipo_estado.id
+      unless bitacora.minuta.bitacora_estados.where(activo: true).last.tipo_estado_id == tipo_estado.id
         bitacora.minuta.bitacora_estados.each do |bit|
           bit.activo = false
           bit.save!
@@ -512,7 +512,7 @@ class MinutasController < ApplicationController
       bitacoras = BitacoraRevision.joins('INNER JOIN motivos ON motivos.id = bitacora_revisiones.motivo_id INNER JOIN minutas ON bitacora_revisiones.minuta_id = minutas.id
         INNER JOIN bitacora_estados ON bitacora_estados.minuta_id = minutas.id INNER JOIN tipo_estados ON tipo_estados.id = bitacora_estados.tipo_estado_id
         INNER JOIN tipo_minutas ON tipo_minutas.id = minutas.tipo_minuta_id INNER JOIN estudiantes ON estudiantes.id = minutas.estudiante_id').where('
-        minutas.borrado = ? AND estudiantes.usuario_id = ? AND bitacora_revisiones.activa = ? AND tipo_minutas.tipo <> ?', false, current_usuario.id, true, 'Semanal').select('
+        minutas.borrado = ? AND estudiantes.usuario_id = ? AND bitacora_revisiones.activa = ? AND tipo_minutas.tipo <> ? AND bitacora_estados.activo = ?', false, current_usuario.id, true, 'Semanal', true).select('
           bitacora_revisiones.id,
           bitacora_revisiones.revision AS revision_min,
           bitacora_revisiones.fecha_emision AS fecha_emi,
