@@ -70,6 +70,9 @@ class MinutasController < ApplicationController
         unless a[:estudiante] == ''
           asistencia.id_estudiante = a[:estudiante]
         end
+        unless a[:stakeholder] == ''
+          asistencia.id_stakeholder = a[:stakeholder]
+        end
         asistencia.tipo_asistencia_id = a[:asistencia]
         if asistencia.valid?
           asistencia.save!
@@ -344,9 +347,201 @@ class MinutasController < ApplicationController
           end
         end
       end
+      bitacora.asistencias.each do |asistencia|
+        if asistencia.id_estudiante != ''
+          params[:asistencia].each do |a|
+            if asistencia.id_estudiante == a[:estudiante]
+              asistencia.tipo_asistencia_id = a[:asistencia]
+              if asistencia.save!
+                nueva_actividad = Registro.create!(
+                  realizada_por: current_usuario.id,
+                  minuta_id: bitacora.minuta_id,
+                  tipo_actividad_id: TipoActividad.find_by(identificador: 'M10').id
+                )
+              end
+            end
+          end
+        else
+          if asistencia.id_stakeholder != ''
+            params[:asistencia].each do |a|
+              if asistencia.id_stakeholder == a[:stakeholder]
+                asistencia.tipo_asistencia_id = a[:asistencia]
+                if asistencia.save!
+                  nueva_actividad = Registro.create!(
+                    realizada_por: current_usuario.id,
+                    minuta_id: bitacora.minuta_id,
+                    tipo_actividad_id: TipoActividad.find_by(identificador: 'M10').id
+                  )
+                end
+              end
+            end
+          end
+        end
+      end
+      bitacora.items.each do |item|
+        contador = 0
+        params[:items].each do |i|
+          if item.correlativo == i[:correlativo]
+            contador += 1
+          end
+        end
+        if contador == 0
+          item.borrado = true
+          item.deleted_at = Time.now
+          if item.save!
+            nueva_actividad = Registro.create!(
+              realizada_por: current_usuario.id
+              minuta_id: bitacora.minuta_id,
+              tipo_actividad_id: TipoActividad.find_by(identificador: 'M7').id
+            )
+          end
+        end
+      end
+      params[:items].each do |i|
+        aux = bitacora.items.where(correlativo: i[:correlativo], borrado: false).last
+        if aux.nil?
+          item = Item.new
+          item.descripcion = i[:descripcion]
+          item.correlativo = i[:correlativo]
+          item.bitacora_revision_id = bitacora.id
+          item.tipo_item_id = i[:tipo_item_id]
+          unless i[:fecha] == ''
+            item.fecha = i[:fecha]
+          end
+          i[:responsables].each do |resp|
+            unless (resp.nil? || resp == '' || resp[:id] == 0)
+              responsable = Responsable.new
+              if resp[:tipo] == 'est'
+                responsable.asistencia_id = bitacora.minuta.asistencias.find_by(id_estudiante: resp[:id]).id
+              elsif resp[:tipo] == 'stk'
+                responsable.asistencia_id = bitacora.minuta.asistencias.find_by(id_stakeholder: resp[:id]).id
+              end
+              if responsable.valid?
+                responsable.save!
+                item.responsables << responsable
+                nueva_actividad = Registro.create!(
+                  realizada_por: current_usuario.id,
+                  minuta_id: bitacora.minuta_id,
+                  tipo_actividad_id: TipoActividad.find_by(identificador: 'R1').id
+                )
+              end
+            end
+          end
+          if item.valid?
+            item.save!
+            nueva_actividad = Registro.create!(
+              realizada_por: current_usuario.id,
+              minuta_id: bitacora.minuta_id,
+              tipo_actividad_id: TipoActividad.find_by(identificador: 'M5').id
+            )
+            unless i[:fecha] == ''
+              nueva_actividad = Registro.create!(
+                realizada_por: current_usuario.id,
+                minuta_id: bitacora.minuta_id,
+                tipo_actividad_id: TipoActividad.find_by(identificador: 'F1').id
+              )
+            end
+          end
+        else
+          aux.descripcion = i[:descripcion]
+          if aux.valid?
+            if aux.save!
+              nueva_actividad = Registro.create!(
+                realizada_por: current_usuario.id,
+                minuta_id: bitacora.minuta_id,
+                tipo_actividad_id: TipoActividad.find_by(identificador: 'M6').id
+              )
+            end
+          end
+          aux.tipo_item_id = i[:tipo_item_id]
+          aux.save
+          unless i[:fecha] == ''
+            aux.fecha = i[:fecha]
+            if aux.valid?
+              if aux.save!
+                nueva_actividad = Registro.create!(
+                  realizada_por: current_usuario.id,
+                  minuta_id: bitacora.minuta_id,
+                  tipo_actividad_id: TipoActividad.find_by(identificador: 'F2').id
+                )
+              end
+            end
+          else
+            if aux.fecha != nil
+              aux.fecha = nil
+              if aux.valid?
+                if aux.save!
+                  nueva_actividad = Registro.create!(
+                    realizada_por: current_usuario.id,
+                    minuta_id: bitacora.minuta_id,
+                    tipo_actividad_id: TipoActividad.find_by(identificador: 'F3').id
+                  )
+                end
+              end
+            end
+          end
+          i[:responsables].each do |resp|
+            unless (resp.nil? || resp == '' || resp[:id] == 0)
+              if aux.responsables.last.nil?
+                responsable = Responsable.new
+                if resp[:tipo] == 'est'
+                  responsable.asistencia_id = bitacora.minuta.asistencias.find_by(id_estudiante: resp[:id]).id
+                elsif resp[:tipo] == 'stk'
+                  responsable.asistencia_id = bitacora.minuta.asistencias.find_by(id_stakeholder: resp[:id]).id
+                end
+                if responsable.valid?
+                  responsable.save!
+                  aux.responsables << responsable
+                  if aux.save!
+                    nueva_actividad = Registro.create!(
+                      realizada_por: current_usuario.id,
+                      minuta_id: bitacora.minuta_id,
+                      tipo_actividad_id: TipoActividad.find_by(identificador: 'R1').id
+                    )
+                  end
+                end
+              else
+                if resp[:tipo] == 'est'
+                  aux.responsables.last.asistencia_id = bitacora.minuta.asistencias.find_by(id_estudiante: resp[:id]).id
+                elsif resp[:tipo] == 'stk'
+                  aux.responsables.last.asistencia_id = bitacora.minuta.asistencias.find_by(id_stakeholder: resp[:id]).id
+                end
+                if aux.save!
+                  nueva_actividad = Registro.create!(
+                    realizada_por: current_usuario.id,
+                    minuta_id: bitacora.minuta_id,
+                    tipo_actividad_id: TipoActividad.find_by(identificador: 'R2').id
+                  )
+                end
+              end
+            else
+              unless aux.responsables.last.nil?
+                aux.responsables.delete(aux.responsables.last)
+                nueva_actividad = Registro.create!(
+                  realizada_por: current_usuario.id,
+                  minuta_id: bitacora.minuta_id,
+                  tipo_actividad_id: TipoActividad.find_by(identificador: 'R3').id
+                )
+              end
+            end
+          end
+        end
+      end
+      unless bitacora.minuta.bitacora_estados.where(activo: true).last.tipo_estado_id = tipo_estado.id
+        bitacora.minuta.bitacora_estados.each do |bit|
+          bit.activo = false
+          bit.save!
+        end
+        bitacora_estado = BitacoraEstado.new
+        bitacora_estado.minuta_id = bitacora.minuta_id
+        bitacora_estado.tipo_estado_id = tipo_estado.id
+        if bitacora_estado.valid?
+          bitacora_estado.save!
+        end
+      end
+    else
+      render json: ['error': 'Información de la minuta no es válida'], status: :unprocessable_entity
     end
-
-    render json: ['info': 'Información recibida'], status: :success
   end
 
   # Servicio que entrega el número correlativo siguiente para la nueva minuta del grupo
