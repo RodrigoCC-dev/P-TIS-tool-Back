@@ -385,6 +385,11 @@ TipoActividad.create!([
     "actividad" => "Modifica clasificación",
     "descripcion" => "Se actualiza la clasificación de la minuta",
     "identificador" => "M9"
+  },
+  {
+    "actividad" => "Modifica asistencia",
+    "descripcion" => "Se actualiza la asistencia de la minuta",
+    "identificador" => "M10"
   }
 ])
 
