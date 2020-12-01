@@ -227,30 +227,21 @@ class MinutasController < ApplicationController
       bitacora.fecha_emision = Time.now
     end
     if bitacora.minuta.clasificacion.valid?
-      if bitacora.minuta.clasificacion.save!
-        nueva_actividad = Registro.create!(
-          realizada_por: current_usuario.id,
-          minuta_id: bitacora.minuta_id,
-          tipo_actividad_id: TipoActividad.find_by(identificador: 'M9').id
-        )
+      if clasificacion_cambio?(bitacora.minuta.clasificacion)
+        bitacora.minuta.clasificacion.save!
+        nueva_actividad(bitacora.minuta_id, 'M9')
       end
     end
     if bitacora.minuta.valid?
-      if bitacora.minuta.save!
-        nueva_actividad = Registro.create!(
-          realizada_por: current_usuario.id,
-          minuta_id: bitacora.minuta_id,
-          tipo_actividad_id: TipoActividad.find_by(identificador: 'M8').id
-        )
+      if minuta_cambio?(bitacora.minuta)
+        bitacora.minuta.save
+        nueva_actividad(bitacora.minuta_id, 'M8')
       end
     end
     if bitacora.tema.valid?
-      if bitacora.tema.save!
-        nueva_actividad = Registro.create!(
-          realizada_por: current_usuario.id,
-          minuta_id: bitacora.minuta_id,
-          tipo_actividad_id: TipoActividad.find_by(identificador: 'T2').id
-        )
+      if bitacora.tema.tema_changed?
+        bitacora.tema.save!
+        nueva_actividad(bitacora.minuta_id, 'T2')
       end
     end
     if bitacora.valid?
@@ -259,32 +250,25 @@ class MinutasController < ApplicationController
         contador = 0
         params[:objetivos].each do |obj|
           if objetivo.id == obj[:id]
-            contador +=1
+            contador += 1
           end
         end
         if contador == 0
           objetivo.borrado = true
           objetivo.deleted_at = Time.now
           if objetivo.save!
-            nueva_actividad = Registro.create!(
-              realizada_por: current_usuario.id,
-              minuta_id: bitacora.minuta_id,
-              tipo_actividad_id: TipoActividad.find_by(identificador: 'O3').id
-            )
+            nueva_actividad(bitacora.minuta_id, 'O3')
           end
         end
       end
       params[:objetivos].each do |obj|
         if obj[:id] != 0
-          objetivo = Objetivo.find(obj[:id])
+          objetivo = bitacora.objetivos.find(obj[:id])
           objetivo.descripcion = obj[:descripcion]
           if objetivo.valid?
-            if objetivo.save!
-              nueva_actividad = Registro.create!(
-                realizada_por: current_usuario.id,
-                minuta_id: bitacora.minuta_id,
-                tipo_actividad_id: TipoActividad.find_by(identificador: 'O2').id
-              )
+            if objetivo.descripcion_changed?
+              objetivo.save!
+              nueva_actividad(bitacora.minuta_id, 'O2')
             end
           end
         else
@@ -293,11 +277,7 @@ class MinutasController < ApplicationController
           objetivo.bitacora_revision_id = bitacora.id
           if objetivo.valid?
             objetivo.save!
-            nueva_actividad = Registro.create!(
-              realizada_por: current_usuario.id,
-              minuta_id: bitacora.minuta_id,
-              tipo_actividad_id: TipoActividad.find_by(identificador: 'O1').id
-            )
+            nueva_actividad(bitacora.minuta_id, 'O1')
           end
         end
       end
@@ -311,26 +291,19 @@ class MinutasController < ApplicationController
         if contador == 0
           conclusion.borrado = true
           conclusion.deleted_at = Time.now
-          if conclusion.save!
-            nueva_actividad = Registro.create!(
-              realizada_por: current_usuario.id,
-              minuta_id: bitacora.minuta_id,
-              tipo_actividad_id: TipoActividad.find_by(identificador: 'C3').id
-            )
+          if conclusion.save
+            nueva_actividad(bitacora.minuta_id, 'C3')
           end
         end
       end
       params[:conclusiones].each do |con|
         if con[:id] != 0
-          conclusion = Conclusion.find(con[:id])
+          conclusion = bitacora.conclusiones.find(con[:id])
           conclusion.descripcion = con[:descripcion]
           if conclusion.valid?
-            if conclusion.save!
-              nueva_actividad = Registro.create!(
-                realizada_por: current_usuario.id,
-                minuta_id: bitacora.minuta_id,
-                tipo_actividad_id: TipoActividad.find_by(identificador: 'C2').id
-              )
+            if conclusion.descripcion_changed?
+              conclusion.save!
+              nueva_actividad(bitacora.minuta_id, 'C2')
             end
           end
         else
@@ -339,25 +312,18 @@ class MinutasController < ApplicationController
           conclusion.bitacora_revision_id = bitacora.id
           if conclusion.valid?
             conclusion.save!
-            nueva_actividad = Registro.create!(
-              realizada_por: current_usuario.id,
-              minuta_id: bitacora.minuta_id,
-              tipo_actividad_id: TipoActividad.find_by(identificador: 'C1').id
-            )
+            nueva_actividad(bitacora.minuta_id, 'C1')
           end
         end
       end
-      bitacora.asistencias.each do |asistencia|
+      bitacora.minuta.asistencias.each do |asistencia|
         if asistencia.id_estudiante != ''
           params[:asistencia].each do |a|
             if asistencia.id_estudiante == a[:estudiante]
               asistencia.tipo_asistencia_id = a[:asistencia]
-              if asistencia.save!
-                nueva_actividad = Registro.create!(
-                  realizada_por: current_usuario.id,
-                  minuta_id: bitacora.minuta_id,
-                  tipo_actividad_id: TipoActividad.find_by(identificador: 'M10').id
-                )
+              if asistencia.tipo_asistencia_id_changed?
+                asistencia.save!
+                nueva_actividad(bitacora.minuta_id, 'M10')
               end
             end
           end
@@ -366,12 +332,9 @@ class MinutasController < ApplicationController
             params[:asistencia].each do |a|
               if asistencia.id_stakeholder == a[:stakeholder]
                 asistencia.tipo_asistencia_id = a[:asistencia]
-                if asistencia.save!
-                  nueva_actividad = Registro.create!(
-                    realizada_por: current_usuario.id,
-                    minuta_id: bitacora.minuta_id,
-                    tipo_actividad_id: TipoActividad.find_by(identificador: 'M10').id
-                  )
+                if asistencia.tipo_asistencia_id_changed?
+                  asistencia.save!
+                  nueva_actividad(bitacora.minuta_id, 'M10')
                 end
               end
             end
@@ -388,12 +351,8 @@ class MinutasController < ApplicationController
         if contador == 0
           item.borrado = true
           item.deleted_at = Time.now
-          if item.save!
-            nueva_actividad = Registro.create!(
-              realizada_por: current_usuario.id
-              minuta_id: bitacora.minuta_id,
-              tipo_actividad_id: TipoActividad.find_by(identificador: 'M7').id
-            )
+          if item.save
+            nueva_actividad(bitacora.minuta_id, 'M7')
           end
         end
       end
@@ -419,38 +378,23 @@ class MinutasController < ApplicationController
               if responsable.valid?
                 responsable.save!
                 item.responsables << responsable
-                nueva_actividad = Registro.create!(
-                  realizada_por: current_usuario.id,
-                  minuta_id: bitacora.minuta_id,
-                  tipo_actividad_id: TipoActividad.find_by(identificador: 'R1').id
-                )
+                nueva_actividad(bitacora.minuta_id, 'R1')
               end
             end
           end
           if item.valid?
             item.save!
-            nueva_actividad = Registro.create!(
-              realizada_por: current_usuario.id,
-              minuta_id: bitacora.minuta_id,
-              tipo_actividad_id: TipoActividad.find_by(identificador: 'M5').id
-            )
+            nueva_actividad(bitacora.minuta_id, 'M5')
             unless i[:fecha] == ''
-              nueva_actividad = Registro.create!(
-                realizada_por: current_usuario.id,
-                minuta_id: bitacora.minuta_id,
-                tipo_actividad_id: TipoActividad.find_by(identificador: 'F1').id
-              )
+              nueva_actividad(bitacora.minuta_id, 'F1')
             end
           end
         else
           aux.descripcion = i[:descripcion]
           if aux.valid?
-            if aux.save!
-              nueva_actividad = Registro.create!(
-                realizada_por: current_usuario.id,
-                minuta_id: bitacora.minuta_id,
-                tipo_actividad_id: TipoActividad.find_by(identificador: 'M6').id
-              )
+            if aux.descripcion_changed?
+              aux.save!
+              nueva_actividad(bitacora.minuta_id, 'M6')
             end
           end
           aux.tipo_item_id = i[:tipo_item_id]
@@ -458,24 +402,17 @@ class MinutasController < ApplicationController
           unless i[:fecha] == ''
             aux.fecha = i[:fecha]
             if aux.valid?
-              if aux.save!
-                nueva_actividad = Registro.create!(
-                  realizada_por: current_usuario.id,
-                  minuta_id: bitacora.minuta_id,
-                  tipo_actividad_id: TipoActividad.find_by(identificador: 'F2').id
-                )
+              if aux.fecha_changed?
+                aux.save!
+                nueva_actividad(bitacora.minuta_id, 'F2')
               end
             end
           else
             if aux.fecha != nil
               aux.fecha = nil
               if aux.valid?
-                if aux.save!
-                  nueva_actividad = Registro.create!(
-                    realizada_por: current_usuario.id,
-                    minuta_id: bitacora.minuta_id,
-                    tipo_actividad_id: TipoActividad.find_by(identificador: 'F3').id
-                  )
+                if aux.save
+                  nueva_actividad(bitacora.minuta_id, 'F3')
                 end
               end
             end
@@ -492,12 +429,8 @@ class MinutasController < ApplicationController
                 if responsable.valid?
                   responsable.save!
                   aux.responsables << responsable
-                  if aux.save!
-                    nueva_actividad = Registro.create!(
-                      realizada_por: current_usuario.id,
-                      minuta_id: bitacora.minuta_id,
-                      tipo_actividad_id: TipoActividad.find_by(identificador: 'R1').id
-                    )
+                  if aux.save
+                    nueva_actividad(bitacora.minuta_id, 'R1')
                   end
                 end
               else
@@ -506,22 +439,15 @@ class MinutasController < ApplicationController
                 elsif resp[:tipo] == 'stk'
                   aux.responsables.last.asistencia_id = bitacora.minuta.asistencias.find_by(id_stakeholder: resp[:id]).id
                 end
-                if aux.save!
-                  nueva_actividad = Registro.create!(
-                    realizada_por: current_usuario.id,
-                    minuta_id: bitacora.minuta_id,
-                    tipo_actividad_id: TipoActividad.find_by(identificador: 'R2').id
-                  )
+                if aux.responsables.last.asistencia_id_changed?
+                  aux.save!
+                  nueva_actividad(bitacora.minuta_id, 'R2')
                 end
               end
             else
               unless aux.responsables.last.nil?
                 aux.responsables.delete(aux.responsables.last)
-                nueva_actividad = Registro.create!(
-                  realizada_por: current_usuario.id,
-                  minuta_id: bitacora.minuta_id,
-                  tipo_actividad_id: TipoActividad.find_by(identificador: 'R3').id
-                )
+                nueva_actividad(bitacora.minuta_id, 'R3')
               end
             end
           end
@@ -684,6 +610,33 @@ class MinutasController < ApplicationController
 
   def revision_params
     params.require(:bitacora_revision).permit(:revision, :motivo_id)
+  end
+
+  def clasificacion_cambio?(clasificacion)
+    cambio = false
+    cambio = cambio || clasificacion.informativa_changed?
+    cambio = cambio || clasificacion.avance_changed?
+    cambio = cambio || clasificacion.coordinacion_changed?
+    cambio = cambio || clasificacion.decision_changed?
+    cambio = cambio || clasificacion.otro_changed?
+    return cambio
+  end
+
+  def minuta_cambio?(minuta)
+    cambio = false
+    cambio = cambio || minuta.codigo_changed?
+    cambio = cambio || minuta.fecha_reunion_changed?
+    cambio = cambio || minuta.h_inicio_changed?
+    cambio = cambio || minuta.h_termino_changed?
+    return cambio
+  end
+
+  def nueva_actividad(minuta_id, identificador)
+    Registro.create!(
+      realizada_por: current_usuario.id,
+      minuta_id: minuta_id,
+      tipo_actividad_id: TipoActividad.find_by(identificador: identificador).id
+    )
   end
 
 end
