@@ -17,6 +17,10 @@ class ProfesoresController < ApplicationController
   # Servicio que permite agregar un nuevo profesor al sistema
   def create
     profesor = Profesor.new(profesor_params)
+    profesor.usuario.password = 'secret'
+    profesor.usuario.password_confirmation = 'secret'
+    profesor.usuario.build_rol
+    profesor.usuario.rol = Rol.find_by(rol: 'Profesor')
     if profesor.valid?
       profesor.save!
       secciones = Seccion.where(id: params[:secciones])
@@ -25,5 +29,10 @@ class ProfesoresController < ApplicationController
     else
       render json: ['error': 'Informacion del profesor no es válida'], status: :unprocessable_entity
     end
+  end
+
+  private
+  def profesor_params
+    params.require(:profesor).permit(usuario_attributes: [:nombre, :apellido_paterno, :apellido_materno, :email])
   end
 end
