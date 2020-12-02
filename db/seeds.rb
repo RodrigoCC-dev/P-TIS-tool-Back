@@ -375,6 +375,21 @@ TipoActividad.create!([
     "actividad" => "Eliminar respuesta",
     "descripcion" => "Se quita respuesta a un comentario",
     "identificador" => "RE3"
+  },
+  {
+    "actividad" => "Modificar datos minuta",
+    "descripcion" => "Se cambian datos de minuta",
+    "identificador" => "M8"
+  },
+  {
+    "actividad" => "Modifica clasificación",
+    "descripcion" => "Se actualiza la clasificación de la minuta",
+    "identificador" => "M9"
+  },
+  {
+    "actividad" => "Modifica asistencia",
+    "descripcion" => "Se actualiza la asistencia de la minuta",
+    "identificador" => "M10"
   }
 ])
 

@@ -60,7 +60,12 @@ class GruposController < ApplicationController
         h = {id: e.id_est, iniciales: e.iniciales_est, nombre: e.nombre_est, apellido_paterno: e.apellido1, apellido_materno: e.apellido2}
         asignados << h
       end
-      datos = {id: grupo.id, nombre: grupo.nombre, proyecto: grupo.proyecto, correlativo: grupo.correlativo, estudiantes: asignados}
+      clientes = []
+      grupo.stakeholders.each do |stk|
+        h = {id: stk.id, iniciales: stk.iniciales, nombre: stk.usuario.nombre, apellido_paterno: stk.usuario.apellido_paterno, apellido_materno: stk.usuario.apellido_materno}
+        clientes << h
+      end
+      datos = {id: grupo.id, nombre: grupo.nombre, proyecto: grupo.proyecto, correlativo: grupo.correlativo, estudiantes: asignados, stakeholders: clientes}
     else
       datos = []
     end
@@ -73,8 +78,8 @@ class GruposController < ApplicationController
       grupos.id,
       grupos.nombre,
       grupos.correlativo
-      ').last
-    render json: grupo.as_json(json_data)
+      ').order('grupos.correlativo DESC').limit(1)
+    render json: grupo[0].as_json(json_data)
   end
 
   private
