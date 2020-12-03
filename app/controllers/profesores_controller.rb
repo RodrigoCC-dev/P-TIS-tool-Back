@@ -7,7 +7,10 @@ class ProfesoresController < ApplicationController
     profesores = Profesor.all
     render json: profesores.as_json(
       { except: %i[created_at updated_at], :include => {
-        :secciones => json_data,
+        :secciones => { except: %i[created_at updated_at borrado deleted_at], :include => {
+          :jornada => json_data
+          }
+        },
         :usuario => user_data
         }
       }
