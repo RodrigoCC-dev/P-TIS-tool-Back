@@ -19,12 +19,20 @@ class GruposController < ApplicationController
     @grupos = []
     grupos.each do |g|
       est_asignados = asignados(g.id, estudiantes)
+      lista_est = []
+      est_asignados.each do |e|
+        h = {id: e.id, iniciales: e.iniciales_est, usuario: {nombre: e.nombre_est, apellido_paterno: e.apellido1, apellido_materno: e.apellido2, run: e.run_est, email: e.email_est}}
+        lista_est << h
+      end
+      stakeholders = Stakeholder.where(grupo_id: g.id)
       if est_asignados.size > 0
         jornada = est_asignados[0].jornada
       else
         jornada = ''
       end
-      h = {id: g.id, nombre: g.nombre, proyecto: g.proyecto, correlativo: g.correlativo, jornada: jornada, estudiantes: est_asignados}
+      h = {id: g.id, nombre: g.nombre, proyecto: g.proyecto, correlativo: g.correlativo, jornada: jornada, estudiantes: lista_est, stakeholders: stakeholders.as_json(
+        {except: %i[usuario_id grupo_id created_at deleted_at], :include => {:usuario => user_data}}
+        )}
       @grupos << h
     end
     render json: @grupos.as_json
