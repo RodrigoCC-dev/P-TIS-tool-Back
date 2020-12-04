@@ -160,15 +160,15 @@ DB_PASSWORD='password_BD_produccion'
 DB_HOST='host_BD_produccion'
 CORS_ORIGINS='' # Origenes permitidos para el uso de la API separados por coma, ejemplo: *
 ```
+Instalar las dependencias de la aplicación en entorno de producción:
+```
+bundle install --deployment --without development test
+```
 Generar la clave secreta de Rails para el entorno de producción:
 ```
 SECRET_ENV_VAR=$(bundle exec rails secret)
 echo -e "production:\n  secret_key_base:" > ./config/.example_secrets.yml
 echo "$(cat ./config/.example_secrets.yml) $SECRET_ENV_VAR" > ./config/secrets.yml
-```
-Instalar las dependencias de la aplicación en entorno de producción:
-```
-bundle install --deployment --without development test
 ```
 Inicializar la base de datos en producción
 ```
