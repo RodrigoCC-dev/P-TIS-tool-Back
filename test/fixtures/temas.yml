@@ -7,3 +7,7 @@ one:
 two:
   tema: MyString
   bitacora_revision: two
+
+three:
+  tema: MyString
+  bitacora_revision: three

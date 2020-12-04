@@ -19,12 +19,20 @@ class GruposController < ApplicationController
     @grupos = []
     grupos.each do |g|
       est_asignados = asignados(g.id, estudiantes)
+      lista_est = []
+      est_asignados.each do |e|
+        h = {id: e.id, iniciales: e.iniciales_est, usuario: {nombre: e.nombre_est, apellido_paterno: e.apellido1, apellido_materno: e.apellido2, run: e.run_est, email: e.email_est}}
+        lista_est << h
+      end
+      stakeholders = Stakeholder.where(grupo_id: g.id)
       if est_asignados.size > 0
         jornada = est_asignados[0].jornada
       else
         jornada = ''
       end
-      h = {id: g.id, nombre: g.nombre, proyecto: g.proyecto, correlativo: g.correlativo, jornada: jornada, estudiantes: est_asignados}
+      h = {id: g.id, nombre: g.nombre, proyecto: g.proyecto, correlativo: g.correlativo, jornada: jornada, estudiantes: lista_est, stakeholders: stakeholders.as_json(
+        {except: %i[usuario_id grupo_id created_at deleted_at], :include => {:usuario => user_data}}
+        )}
       @grupos << h
     end
     render json: @grupos.as_json
@@ -60,7 +68,12 @@ class GruposController < ApplicationController
         h = {id: e.id_est, iniciales: e.iniciales_est, nombre: e.nombre_est, apellido_paterno: e.apellido1, apellido_materno: e.apellido2}
         asignados << h
       end
-      datos = {id: grupo.id, nombre: grupo.nombre, proyecto: grupo.proyecto, correlativo: grupo.correlativo, estudiantes: asignados}
+      clientes = []
+      grupo.stakeholders.each do |stk|
+        h = {id: stk.id, iniciales: stk.iniciales, nombre: stk.usuario.nombre, apellido_paterno: stk.usuario.apellido_paterno, apellido_materno: stk.usuario.apellido_materno}
+        clientes << h
+      end
+      datos = {id: grupo.id, nombre: grupo.nombre, proyecto: grupo.proyecto, correlativo: grupo.correlativo, estudiantes: asignados, stakeholders: clientes}
     else
       datos = []
     end
@@ -73,8 +86,8 @@ class GruposController < ApplicationController
       grupos.id,
       grupos.nombre,
       grupos.correlativo
-      ').last
-    render json: grupo.as_json(json_data)
+      ').order('grupos.correlativo DESC').limit(1)
+    render json: grupo[0].as_json(json_data)
   end
 
   private

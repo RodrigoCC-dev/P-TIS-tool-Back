@@ -3,13 +3,13 @@
 one:
   nombre: MyString
   proyecto: MyString
-  borrado:
+  borrado: false
   deleted_at: 2020-10-19 00:59:42
 
 two:
   nombre: MyString
   proyecto: MyString
-  borrado:
+  borrado: false
   deleted_at: 2020-10-19 00:59:42
 
 defecto:
