@@ -84,21 +84,27 @@ class MinutasControllerTest < ActionDispatch::IntegrationTest
                               otro: false
                             },
                             tema: 'Minuta de prueba',
-                            objetivos: ['Este es el primer objetivo', 'Este es el segundo objetivo'],
-                            conclusiones: ['Esta es la primera conclusión', 'Esta es la segunda conclusion'],
+                            objetivos: [
+                              {id: 0, descripcion: 'Este es el primer objetivo'},
+                              {id: 0, descripcion: 'Este es el segundo objetivo'}
+                            ],
+                            conclusiones: [
+                              {id: 0, descripcion: 'Esta es la primera conclusión'},
+                              {id: 0, descripcion: 'Esta es la segunda conclusion'}
+                            ],
                             items: [{
                               correlativo: 1,
                               descripcion: 'Primer item',
                               fecha: '',
                               tipo_item_id: tipo_items(:one).id,
-                              responsables: [0]
+                              responsables: [{tipo: '', id: 0}]
                               },
                               {
                                 correlativo: 2,
                                 descripcion: 'Segundo item',
                                 fecha: '2020-12-05',
                                 tipo_item_id: tipo_items(:two).id,
-                                responsables: [estudiantes(:Pablo).id]
+                                responsables: [{tipo: 'est', id: estudiantes(:Pablo).id}]
                               }
                             ],
                             bitacora_revision: {
@@ -133,7 +139,7 @@ class MinutasControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "Debería poder obtener la minuta seleccionada" do
-    get minuta_url(id: minutas(:one).id), headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
+    get minuta_url(id: bitacora_revisiones(:one).id), headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
     assert_response :success
   end
 
