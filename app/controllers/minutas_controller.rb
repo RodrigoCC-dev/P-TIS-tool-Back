@@ -182,7 +182,7 @@ class MinutasController < ApplicationController
         end
       end
       if participante.nil?
-        a = {id: asis.id, iniciales: participante.iniciales, id_estudiante: nil, id_stakeholder: nil, tipo: asis.tipo_abrev, descripcion: asis.tipo_desc}
+        a = {id: asis.id, iniciales: nil, id_estudiante: nil, id_stakeholder: nil, tipo: asis.tipo_abrev, descripcion: asis.tipo_desc}
       end
       lista_asistencia << a
     end

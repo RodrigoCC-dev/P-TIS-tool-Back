@@ -13,3 +13,10 @@ two:
   minuta: two
   emitida:
   activa:
+
+three:
+  revision: A
+  motivo: one
+  minuta: one
+  emitida: false
+  activa: true
