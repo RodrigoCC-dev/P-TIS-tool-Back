@@ -11,3 +11,15 @@ two:
   bitacora_revision: two
   borrado:
   deleted_at: 2020-10-19 17:45:04
+
+three:
+  descripcion: MyText
+  bitacora_revision: three
+  borrado: false
+  deleted_at: 2020-10-19 17:45:04
+
+four:
+  descripcion: MyText
+  bitacora_revision: three
+  borrado: false
+  deleted_at: 2020-10-19 17:45:04

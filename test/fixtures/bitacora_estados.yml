@@ -11,3 +11,9 @@ two:
   revisado: false
   minuta: two
   tipo_estado: two
+
+three:
+  activo: true
+  revisado: false
+  minuta: one
+  tipo_estado: one
