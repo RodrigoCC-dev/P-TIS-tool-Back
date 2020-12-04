@@ -272,9 +272,9 @@ class MinutasControllerTest < ActionDispatch::IntegrationTest
     assert_equal @bitacora.objetivos[1].descripcion, 'Este es el segundo objetivo'
     assert_equal @bitacora.conclusiones[0].descripcion, 'Esta es la primera conclusión'
     assert_equal @bitacora.conclusiones[1].descripcion, 'Esta es la segunda conclusion'
-    assert_equal @bitacora.items[1].descripcion, 'Primer item'
-    assert_equal @bitacora.items[0].descripcion, 'Segundo item'
-    assert_equal @bitacora.items[0].fecha, Date.new(2020,12,5)
+    assert_equal @bitacora.items[0].descripcion, 'Primer item'
+    assert_equal @bitacora.items[1].descripcion, 'Segundo item'
+    assert_equal @bitacora.items[1].fecha, Date.new(2020,12,5)
     assert_response :success
   end
 
