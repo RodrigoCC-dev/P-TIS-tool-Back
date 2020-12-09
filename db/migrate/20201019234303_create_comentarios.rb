@@ -7,7 +7,7 @@ class CreateComentarios < ActiveRecord::Migration[6.0]
       t.boolean :borrado, default: false
       t.datetime :deleted_at
       t.references :asistencia, null: false, foreign_key: true
-      t.references :minuta, null: false, foreign_key: true
+      t.references :bitacora_revision, null: false, foreign_key: true
 
       t.timestamps
     end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_29_231604) do
+ActiveRecord::Schema.define(version: 2020_12_09_062601) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,11 +67,11 @@ ActiveRecord::Schema.define(version: 2020_10_29_231604) do
     t.boolean "borrado", default: false
     t.datetime "deleted_at"
     t.bigint "asistencia_id", null: false
-    t.bigint "minuta_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "bitacora_revision_id", null: false
     t.index ["asistencia_id"], name: "index_comentarios_on_asistencia_id"
-    t.index ["minuta_id"], name: "index_comentarios_on_minuta_id"
+    t.index ["bitacora_revision_id"], name: "index_comentarios_on_bitacora_revision_id"
   end
 
   create_table "conclusiones", force: :cascade do |t|
@@ -349,7 +349,7 @@ ActiveRecord::Schema.define(version: 2020_10_29_231604) do
   add_foreign_key "bitacora_revisiones", "minutas"
   add_foreign_key "bitacora_revisiones", "motivos"
   add_foreign_key "comentarios", "asistencias"
-  add_foreign_key "comentarios", "minutas"
+  add_foreign_key "comentarios", "bitacora_revisiones"
   add_foreign_key "conclusiones", "bitacora_revisiones"
   add_foreign_key "estudiantes", "grupos"
   add_foreign_key "estudiantes", "secciones"
