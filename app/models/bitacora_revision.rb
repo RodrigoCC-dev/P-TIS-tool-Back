@@ -5,6 +5,7 @@ class BitacoraRevision < ApplicationRecord
   has_many :items
   has_many :conclusiones
   has_many :objetivos
+  has_many :comentarios
   before_save :revision_mayuscula
 
   # Validaciones
