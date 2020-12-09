@@ -10,10 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_09_062601) do
+ActiveRecord::Schema.define(version: 2020_12_09_063743) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "aprobaciones", force: :cascade do |t|
+    t.bigint "bitacora_revision_id", null: false
+    t.bigint "asistencia_id", null: false
+    t.bigint "tipo_aprobacion_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["asistencia_id"], name: "index_aprobaciones_on_asistencia_id"
+    t.index ["bitacora_revision_id"], name: "index_aprobaciones_on_bitacora_revision_id"
+    t.index ["tipo_aprobacion_id"], name: "index_aprobaciones_on_tipo_aprobacion_id"
+  end
 
   create_table "asistencias", force: :cascade do |t|
     t.bigint "id_estudiante"
@@ -291,6 +302,15 @@ ActiveRecord::Schema.define(version: 2020_12_09_062601) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "tipo_aprobaciones", force: :cascade do |t|
+    t.string "identificador"
+    t.string "descripcion"
+    t.boolean "borrado"
+    t.datetime "deleted_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "tipo_asistencias", force: :cascade do |t|
     t.string "tipo"
     t.string "descripcion"
@@ -342,6 +362,9 @@ ActiveRecord::Schema.define(version: 2020_12_09_062601) do
     t.index ["rol_id"], name: "index_usuarios_on_rol_id"
   end
 
+  add_foreign_key "aprobaciones", "asistencias"
+  add_foreign_key "aprobaciones", "bitacora_revisiones"
+  add_foreign_key "aprobaciones", "tipo_aprobaciones"
   add_foreign_key "asistencias", "minutas"
   add_foreign_key "asistencias", "tipo_asistencias"
   add_foreign_key "bitacora_estados", "minutas"

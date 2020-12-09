@@ -1,0 +1,2 @@
+class TipoAprobacion < ApplicationRecord
+end
