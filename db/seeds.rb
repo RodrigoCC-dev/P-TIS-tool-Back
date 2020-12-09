@@ -413,3 +413,27 @@ profesor_uno = profesores.first
 secciones = Seccion.joins(:jornada)
 profesor_uno.secciones << secciones.where('jornadas.identificador =?', 2)
 profesor_uno.save!
+
+# Seeder para agregar Tipos de Aprobaciones
+TipoAprobacion.create!([
+  {
+    "identificador" => "A",
+    "descripcion" => "Aprobada"
+  },
+  {
+    "identificador" => "AC",
+    "descripcion" => "Aprobada con comentarios"
+  },
+  {
+    "identificador" => "R",
+    "descripcion" => "Rechazada"
+  },
+  {
+    "identificador" => "RC",
+    "descripcion" => "Rechazada con comentarios"
+  },
+  {
+    "identificador" => "RH",
+    "descripcion" => "Rehacer"
+  }
+  ])
