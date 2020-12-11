@@ -26,6 +26,8 @@ Rails.application.routes.draw do
   get 'minutas/revision/grupo', to: 'minutas#revision_grupo'
   get 'minutas/revision/cliente', to: 'minutas#revision_cliente'
 
+  resources :comentarios, only: [:create]
+
   get 'login/user', to: 'usuarios#user'
 
   scope 'auth' do

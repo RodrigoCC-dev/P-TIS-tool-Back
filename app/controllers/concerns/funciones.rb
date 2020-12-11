@@ -24,4 +24,12 @@ module Funciones
     end
     return lista
   end
+
+  def nueva_actividad(minuta_id, identificador)
+    Registro.create!(
+      realizada_por: current_usuario.id,
+      minuta_id: minuta_id,
+      tipo_actividad_id: TipoActividad.find_by(identificador: identificador).id
+    )
+  end
 end
