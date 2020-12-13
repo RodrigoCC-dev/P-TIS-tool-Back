@@ -561,8 +561,11 @@ class MinutasController < ApplicationController
           estudiantes.iniciales AS iniciales_est
         ').order(created_at: 'asc')
       revisadas = BitacoraRevision.joins(aprobaciones: :asistencia).where('asistencias.id_estudiante = ?', estudiante.id)
-      unless revisadas.nil?
-        filtradas = bitacoras.where('bitacora_revisiones.id <> ?', revisadas.ids)
+      unless revisadas.size == 0
+        filtradas = bitacoras
+        revisadas.each do |r|
+          filtradas = filtradas.select{|b| b.id != r.id}
+        end
       else
         filtradas = bitacoras
       end

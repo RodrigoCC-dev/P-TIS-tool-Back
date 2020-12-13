@@ -27,6 +27,13 @@ class ComentariosController < ApplicationController
         contador += 1
       end
     end
+    aprobacion = Aprobacion.new
+    aprobacion.bitacora_revision_id = bitacora.id
+    aprobacion.asistencia_id = asistencia.id
+    aprobacion.tipo_aprobacion_id = params[:tipo_aprobacion_id]
+    if aprobacion.valid?
+      aprobacion.save!
+    end
     if contador != params[:comentarios].size
       render json: ['error': 'Información de alguno de los comentarios no es válida'], status: :unprocessable_entity
     end
