@@ -73,7 +73,7 @@ ActiveRecord::Schema.define(version: 2020_12_09_063743) do
 
   create_table "comentarios", force: :cascade do |t|
     t.text "comentario"
-    t.boolean "es_item"
+    t.boolean "es_item", default: false
     t.bigint "id_item"
     t.boolean "borrado", default: false
     t.datetime "deleted_at"
@@ -305,7 +305,7 @@ ActiveRecord::Schema.define(version: 2020_12_09_063743) do
   create_table "tipo_aprobaciones", force: :cascade do |t|
     t.string "identificador"
     t.string "descripcion"
-    t.boolean "borrado"
+    t.boolean "borrado", default: false
     t.datetime "deleted_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
