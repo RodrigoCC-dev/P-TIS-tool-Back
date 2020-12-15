@@ -37,17 +37,6 @@ class ComentariosController < ApplicationController
     if contador != params[:comentarios].size
       render json: ['error': 'Información de alguno de los comentarios no es válida'], status: :unprocessable_entity
     end
-  end
-
-  private
-  def to_boolean(obj)
-    if obj.to_s.downcase == 'true'
-      return true
-    elsif obj.to_s.downcase == 'false'
-      return false
-    else
-      return nil
-    end
-  end
+  end  
 
 end

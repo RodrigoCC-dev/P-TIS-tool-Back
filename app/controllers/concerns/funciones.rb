@@ -32,4 +32,14 @@ module Funciones
       tipo_actividad_id: TipoActividad.find_by(identificador: identificador).id
     )
   end
+
+  def to_boolean(obj)
+    if obj.to_s.downcase == 'true'
+      return true
+    elsif obj.to_s.downcase == 'false'
+      return false
+    else
+      return nil
+    end
+  end
 end
