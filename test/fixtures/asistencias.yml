@@ -17,3 +17,9 @@ Pablo:
   id_stakeholder:
   minuta: one
   tipo_asistencia: one
+
+cliente:
+  id_estudiante: nil
+  id_stakeholder: 23462345
+  minuta: one
+  tipo_asistencia: one

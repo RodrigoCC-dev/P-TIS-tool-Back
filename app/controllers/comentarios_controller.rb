@@ -17,7 +17,7 @@ class ComentariosController < ApplicationController
       comentario.comentario = c[:comentario]
       comentario.asistencia_id = asistencia.id
       comentario.bitacora_revision_id = bitacora.id
-      if c[:es_item]
+      if to_boolean(c[:es_item])
         comentario.es_item = true
         comentario.id_item = c[:id_item]
       end
@@ -37,6 +37,6 @@ class ComentariosController < ApplicationController
     if contador != params[:comentarios].size
       render json: ['error': 'Información de alguno de los comentarios no es válida'], status: :unprocessable_entity
     end
-  end
+  end  
 
 end

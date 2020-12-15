@@ -204,7 +204,6 @@ class MinutasControllerTest < ActionDispatch::IntegrationTest
 
   test "Debería poder actualizar la información de una minuta de reunión" do
     @bitacora = bitacora_revisiones(:three)
-
     patch '/minutas/' + bitacora_revisiones(:three).id.to_s, params: {
       id: bitacora_revisiones(:three).id,
       minuta: {
