@@ -29,6 +29,7 @@ Rails.application.routes.draw do
   resources :comentarios, only: [:create]
   resources :tipo_aprobaciones, only: [:index]
 
+  resources :usuarios, only: [:update]
   get 'login/user', to: 'usuarios#user'
 
   scope 'auth' do
