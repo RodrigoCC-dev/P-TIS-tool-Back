@@ -34,9 +34,37 @@ class ComentariosController < ApplicationController
     if aprobacion.valid?
       aprobacion.save!
     end
+    if bitacora.motivo.identificador == 'ECI'
+      revisores = bitacora.minuta.asistencias.where(id_stakeholder: nil).size - bitacora.minuta.asistencias.where(id_estudiante: bitacora.minuta.estudiante_id).size
+    elsif bitacora.motivo.identificador == 'ERC'
+      revisores = bitacora.minuta.asistencias.where(id_estudiante: nil).size
+    end
+    revisiones = bitacora.aprobaciones.size
+    if revisiones == revisores
+      aprobadas_con_com = bitacora.aprobaciones.joins(:tipo_aprobacion).where('tipo_aprobaciones.identificador = ?', 'AC')
+      rechazadas_con_com = bitacora.aprobaciones.joins(:tipo_aprobacion).where('tipo_aprobaciones.identificador = ?', 'RC')
+      bitacora.minuta.bitacora_estados.where(activo: true).each do |bit|
+        bit.activo = false
+        bit.save
+      end
+      bitacora_estado = BitacoraEstado.new
+      bitacora_estado.minuta_id = bitacora.minuta_id
+      if aprobadas_con_com > 0 || rechazadas_con_com > 0
+        if bitacora.motivo.identificador == 'ECI'
+          bitacora_estado.tipo_estado_id = TipoEstado.find_by(abreviacion: 'CIG')
+        elsif bitacora.motivo.identificador == 'ERC'
+          bitacora_estado.tipo_estado_id = TipoEstado.find_by(abreviacion: 'CSK')
+        end
+      else
+        bitacora_estado.tipo_estado_id = TipoEstado.find_by(abreviacion: 'CER')
+      end
+      if bitacora_estado.valid?
+        bitacora_estado.save!
+      end
+    end
     if contador != params[:comentarios].size
       render json: ['error': 'Información de alguno de los comentarios no es válida'], status: :unprocessable_entity
     end
-  end  
+  end
 
 end
