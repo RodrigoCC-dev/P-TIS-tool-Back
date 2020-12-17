@@ -9,3 +9,27 @@ two:
   motivo: MyString
   borrado: false
   deleted_at: 2020-10-19 18:38:43
+
+uno:
+  motivo: Emitida para coordinación interna
+  identificador: ECI
+  borrado: false
+  deleted_at: 2020-10-19 18:38:43
+
+dos:
+  motivo: Emitida para revisión del cliente
+  identificador: ERC
+  borrado: false
+  deleted_at: 2020-10-19 18:38:43
+
+tres:
+  motivo: Emitida para aprobación del cliente
+  identificador: EAC
+  borrado: false
+  deleted_at: 2020-10-19 18:38:43
+
+cuatro:
+  motivo: Emisión Final
+  identificador: EF
+  borrado: false
+  deleted_at: 2020-10-19 18:38:43
