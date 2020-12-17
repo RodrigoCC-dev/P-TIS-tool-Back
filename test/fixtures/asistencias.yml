@@ -2,19 +2,25 @@
 
 one:
   id_estudiante: estudiantes(:one).id
-  id_stakeholder:
+  id_stakeholder: nil
   minuta: one
   tipo_asistencia: one
 
 two:
   id_estudiante:
-  id_stakeholder:
+  id_stakeholder: nil
   minuta: two
   tipo_asistencia: two
 
 Pablo:
   id_estudiante: 262345
-  id_stakeholder:
+  id_stakeholder: nil
+  minuta: one
+  tipo_asistencia: one
+
+Maria:
+  id_estudiante: 234634523
+  id_stakeholder: nil
   minuta: one
   tipo_asistencia: one
 

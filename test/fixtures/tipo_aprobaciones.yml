@@ -11,3 +11,33 @@ two:
   descripcion: MyString
   borrado: false
   deleted_at: 2020-12-09 03:33:46
+
+uno:
+  identificador: A
+  descripcion: Aprobada
+  borrado: false
+  deleted_at: 2020-12-09 03:33:46
+
+dos:
+  identificador: AC
+  descripcion: Aprobada con comentarios
+  borrado: false
+  deleted_at: 2020-12-09 03:33:46
+
+tres:
+  identificador: R
+  descripcion: Rechazada
+  borrado: false
+  deleted_at: 2020-12-09 03:33:46
+
+cuatro:
+  identificador: RC
+  descripcion: Rechazada con comentarios
+  borrado: false
+  deleted_at: 2020-12-09 03:33:46
+
+cinco:
+  identificador: RH
+  descripcion: Rehacer
+  borrado: false
+  deleted_at: 2020-12-09 03:33:46

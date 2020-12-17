@@ -67,4 +67,17 @@ class StakeholdersControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+
+  # Revision del funcionamiento del servicio 'show'
+
+  test "Debería obtener código '401' al tratar de obtener 'show' sin autenticación" do
+    get stakeholder_url(id: usuarios(:stakeholder).id)
+    assert_response 401
+  end
+
+  test "Debería poder obtener la información de un stakeholder" do
+    get stakeholder_url(id: usuarios(:stakeholder).id), headers: authenticated_header(usuarios(:stakeholder), 'cliente')
+    assert_response :success
+  end
+
 end

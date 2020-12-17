@@ -1,7 +1,7 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  iniciales: MyString
+  iniciales: ONE
   usuario: one
   seccion: one
   grupo: one
@@ -18,3 +18,10 @@ Pablo:
   usuario: Pablo
   seccion: one
   grupo: defecto
+
+Maria:
+  id: 234634523
+  iniciales: MFH
+  usuario: Maria
+  seccion: one
+  grupo: one

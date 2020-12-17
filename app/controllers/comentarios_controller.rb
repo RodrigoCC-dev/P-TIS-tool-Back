@@ -35,14 +35,14 @@ class ComentariosController < ApplicationController
       aprobacion.save!
     end
     if bitacora.motivo.identificador == 'ECI'
-      revisores = bitacora.minuta.asistencias.where(id_stakeholder: nil).size - bitacora.minuta.asistencias.where(id_estudiante: bitacora.minuta.estudiante_id).size
+      revisores = bitacora.minuta.asistencias.where(id_stakeholder: nil).where.not(id_estudiante: nil).size - bitacora.minuta.asistencias.where(id_estudiante: bitacora.minuta.estudiante_id).size
     elsif bitacora.motivo.identificador == 'ERC'
-      revisores = bitacora.minuta.asistencias.where(id_estudiante: nil).size
+      revisores = bitacora.minuta.asistencias.where(id_estudiante: nil).where.not(id_stakeholder: nil).size
     end
     revisiones = bitacora.aprobaciones.size
     if revisiones == revisores
-      aprobadas_con_com = bitacora.aprobaciones.joins(:tipo_aprobacion).where('tipo_aprobaciones.identificador = ?', 'AC')
-      rechazadas_con_com = bitacora.aprobaciones.joins(:tipo_aprobacion).where('tipo_aprobaciones.identificador = ?', 'RC')
+      aprobadas_con_com = bitacora.aprobaciones.joins(:tipo_aprobacion).where('tipo_aprobaciones.identificador = ?', 'AC').size
+      rechazadas_con_com = bitacora.aprobaciones.joins(:tipo_aprobacion).where('tipo_aprobaciones.identificador = ?', 'RC').size
       bitacora.minuta.bitacora_estados.where(activo: true).each do |bit|
         bit.activo = false
         bit.save
@@ -51,12 +51,12 @@ class ComentariosController < ApplicationController
       bitacora_estado.minuta_id = bitacora.minuta_id
       if aprobadas_con_com > 0 || rechazadas_con_com > 0
         if bitacora.motivo.identificador == 'ECI'
-          bitacora_estado.tipo_estado_id = TipoEstado.find_by(abreviacion: 'CIG')
+          bitacora_estado.tipo_estado_id = TipoEstado.find_by(abreviacion: 'CIG').id
         elsif bitacora.motivo.identificador == 'ERC'
-          bitacora_estado.tipo_estado_id = TipoEstado.find_by(abreviacion: 'CSK')
+          bitacora_estado.tipo_estado_id = TipoEstado.find_by(abreviacion: 'CSK').id
         end
       else
-        bitacora_estado.tipo_estado_id = TipoEstado.find_by(abreviacion: 'CER')
+        bitacora_estado.tipo_estado_id = TipoEstado.find_by(abreviacion: 'CER').id
       end
       if bitacora_estado.valid?
         bitacora_estado.save!
