@@ -11,3 +11,45 @@ two:
   descripcion: MyString
   borrado: false
   deleted_at: 2020-10-19 21:04:41
+
+uno:
+  abreviacion: BOR
+  descripcion: Borrador
+  borrado: false
+  deleted_at: 2020-10-19 21:04:41
+
+dos:
+  abreviacion: EMI
+  descripcion: Emitida
+  borrado: false
+  deleted_at: 2020-10-19 21:04:41
+
+tres:
+  abreviacion: CIG
+  descripcion: Comentada por integrante grupo
+  borrado: false
+  deleted_at: 2020-10-19 21:04:41
+
+cuatro:
+  abreviacion: CSK
+  descripcion: Comentada por Stakeholder
+  borrado: false
+  deleted_at: 2020-10-19 21:04:41
+
+cinco:
+  abreviacion: RIG
+  descripcion: Respondida por integrante del grupo
+  borrado: false
+  deleted_at: 2020-10-19 21:04:41
+
+seis:
+  abreviacion: RSK
+  descripcion: Respondida por Stakeholder
+  borrado: false
+  deleted_at: 2020-10-19 21:04:41
+
+siete:
+  abreviacion: CER
+  descripcion: Cerrada
+  borrado: false
+  deleted_at: 2020-10-19 21:04:41
