@@ -26,7 +26,6 @@ class ComentariosControllerTest < ActionDispatch::IntegrationTest
     assert_response 401
   end
 
-=begin
   test "Debería poder crear comentarios a una minuta como estudiante" do
     assert_difference 'BitacoraEstado.count', 0 do
       assert_difference 'Aprobacion.count', 1 do
@@ -54,7 +53,6 @@ class ComentariosControllerTest < ActionDispatch::IntegrationTest
     end
     assert_response :success
   end
-=end
 
   test "Debería poder crear comentarios a una minuta como stakeholder" do
     assert_difference 'BitacoraEstado.count', 1 do
