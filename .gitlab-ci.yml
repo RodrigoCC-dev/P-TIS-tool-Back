@@ -63,6 +63,7 @@ minitest:
     RAILS_ENV: test
     DISABLE_SPRING: 1
     BUNDLE_PATH: vendor/bundle
+    PARALLEL_WORKERS: 1
   artifacts:
     name: coverage
     paths:
@@ -70,7 +71,7 @@ minitest:
   script:
     - bundle exec rails db:test:purge RAILS_ENV=test
     - bundle exec rails db:prepare RAILS_ENV=test
-    - bundle exec PARALLEL_WORKERS=1 rails test RAILS_ENV=test
+    - bundle exec rails test RAILS_ENV=test
   before_script:
     - export APT_CACHE_DIR=`pwd`/apt-cache && mkdir -pv $APT_CACHE_DIR
     - apt update -qq && apt -o dir::cache::archives="$APT_CACHE_DIR" install -yqq nodejs
@@ -95,6 +96,7 @@ sonarqube:
   allow_failure: true
   only:
     - master
+    - develop
 
 deploy:
   image: docker:latest
