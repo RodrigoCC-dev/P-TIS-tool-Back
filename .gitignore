@@ -33,3 +33,6 @@
 
 # Ignore .env file
 .env
+
+# Ignore coverage
+coverage

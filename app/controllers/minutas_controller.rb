@@ -559,8 +559,17 @@ class MinutasController < ApplicationController
           tipo_estados.abreviacion AS abrev_estado,
           tipo_estados.descripcion AS desc_estado,
           estudiantes.iniciales AS iniciales_est
-        ')
-      lista_bitacoras = bitacoras_json(bitacoras)
+        ').order(created_at: 'asc')
+      revisadas = BitacoraRevision.joins(aprobaciones: :asistencia).where('asistencias.id_estudiante = ?', estudiante.id)
+      unless revisadas.size == 0
+        filtradas = bitacoras
+        revisadas.each do |r|
+          filtradas = filtradas.select{|b| b.id != r.id}
+        end
+      else
+        filtradas = bitacoras
+      end
+      lista_bitacoras = bitacoras_json(filtradas)
       render json: lista_bitacoras.as_json(json_data)
     else
       render json: ['error': 'No es un usuario autorizado para este servicio'], status: :unprocessable_entity

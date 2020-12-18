@@ -3,17 +3,17 @@
 one:
   comentario: MyString
   es_item: false
-  id_item: 
+  id_item:
   borrado: false
   deleted_at: 2020-10-19 20:43:03
   asistencia: one
-  minuta: one
+  bitacora_revision: one
 
 two:
   comentario: MyString
   es_item: false
-  id_item: 
+  id_item:
   borrado: false
   deleted_at: 2020-10-19 20:43:03
   asistencia: two
-  minuta: two
+  bitacora_revision: two

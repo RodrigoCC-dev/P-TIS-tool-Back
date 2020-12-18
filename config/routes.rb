@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   resources :estudiantes, only: [:index, :create, :show]
   get 'estudiantes/asignacion/sin_grupo', to: 'estudiantes#sin_grupo'
 
-  resources :stakeholders, only: [:index, :create]
+  resources :stakeholders, only: [:index, :create, :show]
   resources :profesores, only: [:index, :create]
 
   resources :grupos, only: [:index, :create, :show]
@@ -26,6 +26,10 @@ Rails.application.routes.draw do
   get 'minutas/revision/grupo', to: 'minutas#revision_grupo'
   get 'minutas/revision/cliente', to: 'minutas#revision_cliente'
 
+  resources :comentarios, only: [:create]
+  resources :tipo_aprobaciones, only: [:index]
+
+  resources :usuarios, only: [:update]
   get 'login/user', to: 'usuarios#user'
 
   scope 'auth' do

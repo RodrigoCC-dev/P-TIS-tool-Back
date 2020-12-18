@@ -85,6 +85,17 @@ class StakeholdersController < ApplicationController
     end
   end
 
+  # Servicio que muestra la información de un stakeholder según su 'id' de usuario
+  def show
+    stakeholder = Stakeholder.find_by(usuario_id: params[:id])
+    render json: stakeholder.as_json(
+      {except: [:created_at, :update_at], :include => {
+        :usuario => user_data
+        }
+      }
+    )
+  end
+
   private
   def stakeholders_params
     params.require(:stakeholder).permit(:grupo_id, usuario_attributes: [:nombre, :apellido_paterno, :apellido_materno, :email])

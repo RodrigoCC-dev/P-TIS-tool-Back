@@ -16,7 +16,14 @@ two:
 
 three:
   revision: A
-  motivo: one
+  motivo: uno
   minuta: one
   emitida: false
+  activa: true
+
+four:
+  revision: B
+  motivo: dos
+  minuta: one
+  emitida: true
   activa: true

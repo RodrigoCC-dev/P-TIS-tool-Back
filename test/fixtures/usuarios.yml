@@ -33,6 +33,17 @@ Pablo:
   deleted_at: 2020-10-19 00:58:53
   rol: estudiante
 
+Maria:
+  nombre: María
+  apellido_paterno: Facunda
+  apellido_materno: Hernandez
+  run: '18293543-3'
+  email: maria.facunda@usach.cl
+  password_digest: <%= BCrypt::Password.create('maria123') %>
+  borrado: false
+  deleted_at: 2020-10-19 00:58:53
+  rol: estudiante
+
 coordinador:
   nombre: Coordinador
   apellido_paterno: Proyecto

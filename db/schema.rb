@@ -10,10 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_10_29_231604) do
+ActiveRecord::Schema.define(version: 2020_12_09_063743) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "aprobaciones", force: :cascade do |t|
+    t.bigint "bitacora_revision_id", null: false
+    t.bigint "asistencia_id", null: false
+    t.bigint "tipo_aprobacion_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["asistencia_id"], name: "index_aprobaciones_on_asistencia_id"
+    t.index ["bitacora_revision_id"], name: "index_aprobaciones_on_bitacora_revision_id"
+    t.index ["tipo_aprobacion_id"], name: "index_aprobaciones_on_tipo_aprobacion_id"
+  end
 
   create_table "asistencias", force: :cascade do |t|
     t.bigint "id_estudiante"
@@ -62,16 +73,16 @@ ActiveRecord::Schema.define(version: 2020_10_29_231604) do
 
   create_table "comentarios", force: :cascade do |t|
     t.text "comentario"
-    t.boolean "es_item"
+    t.boolean "es_item", default: false
     t.bigint "id_item"
     t.boolean "borrado", default: false
     t.datetime "deleted_at"
     t.bigint "asistencia_id", null: false
-    t.bigint "minuta_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "bitacora_revision_id", null: false
     t.index ["asistencia_id"], name: "index_comentarios_on_asistencia_id"
-    t.index ["minuta_id"], name: "index_comentarios_on_minuta_id"
+    t.index ["bitacora_revision_id"], name: "index_comentarios_on_bitacora_revision_id"
   end
 
   create_table "conclusiones", force: :cascade do |t|
@@ -291,6 +302,15 @@ ActiveRecord::Schema.define(version: 2020_10_29_231604) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "tipo_aprobaciones", force: :cascade do |t|
+    t.string "identificador"
+    t.string "descripcion"
+    t.boolean "borrado", default: false
+    t.datetime "deleted_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "tipo_asistencias", force: :cascade do |t|
     t.string "tipo"
     t.string "descripcion"
@@ -342,6 +362,9 @@ ActiveRecord::Schema.define(version: 2020_10_29_231604) do
     t.index ["rol_id"], name: "index_usuarios_on_rol_id"
   end
 
+  add_foreign_key "aprobaciones", "asistencias"
+  add_foreign_key "aprobaciones", "bitacora_revisiones"
+  add_foreign_key "aprobaciones", "tipo_aprobaciones"
   add_foreign_key "asistencias", "minutas"
   add_foreign_key "asistencias", "tipo_asistencias"
   add_foreign_key "bitacora_estados", "minutas"
@@ -349,7 +372,7 @@ ActiveRecord::Schema.define(version: 2020_10_29_231604) do
   add_foreign_key "bitacora_revisiones", "minutas"
   add_foreign_key "bitacora_revisiones", "motivos"
   add_foreign_key "comentarios", "asistencias"
-  add_foreign_key "comentarios", "minutas"
+  add_foreign_key "comentarios", "bitacora_revisiones"
   add_foreign_key "conclusiones", "bitacora_revisiones"
   add_foreign_key "estudiantes", "grupos"
   add_foreign_key "estudiantes", "secciones"

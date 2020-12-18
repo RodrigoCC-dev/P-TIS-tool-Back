@@ -7,7 +7,7 @@ WORKDIR /usr/src/app
 
 COPY Gemfile Gemfile.lock ./
 
-RUN bundle install
+RUN bundle install --deployment --without development test
 
 EXPOSE 8080
 

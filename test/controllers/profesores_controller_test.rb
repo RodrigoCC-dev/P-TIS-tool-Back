@@ -18,26 +18,30 @@ class ProfesoresControllerTest < ActionDispatch::IntegrationTest
   # Revisión del funcionamiento del servicio create
 
   test "Debería obtener código 401 al tratar de crear un profesor sin autenticación" do
-    post profesores_url(params: {
-      usuario_attributes: {
-        nombre: 'Manuel',
-        apellido_paterno: 'Negrete',
-        apellido_materno: 'Poblete',
-        email: 'manuel.negrete@gmail.com'
-      }
-    })
+    assert_difference 'Profesor.count', 0 do
+      post profesores_url(params: {
+        usuario_attributes: {
+          nombre: 'Manuel',
+          apellido_paterno: 'Negrete',
+          apellido_materno: 'Poblete',
+          email: 'manuel.negrete@gmail.com'
+        }
+      })
+    end
     assert_response 401
   end
 
   test "Debería poder crear un profesor" do
-    post profesores_url(params: { profesor: {
-      usuario_attributes: {
-        nombre: 'Manuel',
-        apellido_paterno: 'Negrete',
-        apellido_materno: 'Poblete',
-        email: 'manuel.negrete@gmail.com'
-      }}
-    }), headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
+    assert_difference 'Profesor.count', 1 do
+      post profesores_url(params: { profesor: {
+        usuario_attributes: {
+          nombre: 'Manuel',
+          apellido_paterno: 'Negrete',
+          apellido_materno: 'Poblete',
+          email: 'manuel.negrete@gmail.com'
+        }}
+      }), headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
+    end
     assert_response :success
   end
 end

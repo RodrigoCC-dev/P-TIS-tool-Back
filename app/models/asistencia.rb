@@ -3,6 +3,7 @@ class Asistencia < ApplicationRecord
   belongs_to :tipo_asistencia
   has_many :comentarios
   has_many :respuestas
+  has_many :aprobaciones
   has_one :responsable
 
   # Validaciones
