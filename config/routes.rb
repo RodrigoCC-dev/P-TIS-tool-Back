@@ -26,7 +26,7 @@ Rails.application.routes.draw do
   get 'minutas/revision/grupo', to: 'minutas#revision_grupo'
   get 'minutas/revision/cliente', to: 'minutas#revision_cliente'
 
-  resources :comentarios, only: [:create]
+  resources :comentarios, only: [:create, :show]
   resources :tipo_aprobaciones, only: [:index]
 
   resources :usuarios, only: [:update]

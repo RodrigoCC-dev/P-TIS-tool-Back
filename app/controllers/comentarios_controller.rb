@@ -67,4 +67,10 @@ class ComentariosController < ApplicationController
     end
   end
 
+  # Servicio que entrega los comentarios de una minuta
+  def show
+    comentarios = Comentario.where(bitacora_revision_id: params[:id].to_i)
+    render json: comentarios.as_json(json_data)
+  end
+
 end
