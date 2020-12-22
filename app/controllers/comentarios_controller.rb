@@ -67,10 +67,25 @@ class ComentariosController < ApplicationController
     end
   end
 
-  # Servicio que entrega los comentarios de una minuta
+  # Servicio que entrega los comentarios de una minuta identificada por su 'bitacora_revision_id'
   def show
-    comentarios = Comentario.where(bitacora_revision_id: params[:id].to_i)
-    render json: comentarios.as_json(json_data)
+    comentarios = Comentario.joins(:asistencia).joins('INNER JOIN estudiantes ON asistencias.id_estudiante = estudiantes.id').where(bitacora_revision_id: params[:id].to_i).select('
+      comentarios.id,
+      comentarios.comentario AS com,
+      comentarios.es_item AS com_es_item,
+      comentarios.id_item AS com_id_item,
+      asistencias.id AS id_asistencia,
+      estudiantes.id AS id_estudiante,
+      estudiantes.iniciales AS iniciales_est')
+    lista = []
+    comentarios.each do |c|
+      h = {id: c.id, comentario: c.com, es_item: c.com_es_item, id_item: c.com_id_item, asistencia: {
+        id: c.id_asistencia, estudiante: {id: c.id_estudiante, iniciales: c.iniciales_est}
+        }
+      }
+      lista << h
+    end
+    render json: lista.as_json()
   end
 
 end
