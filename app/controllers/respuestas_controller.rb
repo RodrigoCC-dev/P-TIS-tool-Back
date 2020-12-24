@@ -3,6 +3,7 @@ class RespuestasController < ApplicationController
   include JsonFormat
   include Funciones
 
+  # Servicio que permite guardar las respuestas a los comentarios de una minuta
   def create
     bitacora = BitacoraRevision.find(params[:id])
     if current_usuario.rol.rango == 3
