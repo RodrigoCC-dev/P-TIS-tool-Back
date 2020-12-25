@@ -13,14 +13,16 @@ class RespuestasController < ApplicationController
     end
     contador = 0
     params[:respuestas].each do |resp|
-      respuesta = Respuesta.new
-      respuesta.respuesta = resp[:respuesta]
-      respuesta.comentario_id = resp[:comentario_id]
-      respuesta.asistencia_id = asistencia.id
-      if respuesta.valid?
-        respuesta.save!
-        contador += 1
-        nueva_actividad(bitacora.minuta_id, 'RE1')
+      if resp[:respuesta] != ''
+        respuesta = Respuesta.new
+        respuesta.respuesta = resp[:respuesta]
+        respuesta.comentario_id = resp[:comentario_id]
+        respuesta.asistencia_id = asistencia.id
+        if respuesta.valid?
+          respuesta.save!
+          contador += 1
+          nueva_actividad(bitacora.minuta_id, 'RE1')
+        end
       end
     end
     if contador > 0
@@ -38,6 +40,9 @@ class RespuestasController < ApplicationController
       if bitacora_estado.valid?
         bitacora_estado.save!
       end
+    end
+    if contador != params[:respuestas].size
+      render json: ['error': 'Falta alguna de las respuestas a los comentarios'], status: :unprocessable_entity
     end
   end
 end

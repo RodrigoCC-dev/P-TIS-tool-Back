@@ -38,4 +38,37 @@ class ItemTest < ActiveSupport::TestCase
     )
     assert item.save
   end
+
+  test "Item con 'borrado' en 'nil' no se guarda" do
+    item = Item.new(
+      descripcion: 'Esto es una prueba',
+      correlativo: 2,
+      tipo_item_id: tipo_items(:one).id,
+      bitacora_revision_id: bitacora_revisiones(:one).id,
+      borrado: nil
+    )
+    assert_not item.save
+  end
+
+  test "Item con 'borrado' en 'true' se guarda" do
+    item = Item.new(
+      descripcion: 'Esto es una prueba',
+      correlativo: 2,
+      tipo_item_id: tipo_items(:one).id,
+      bitacora_revision_id: bitacora_revisiones(:one).id,
+      borrado: true
+    )
+    assert item.save
+  end
+
+  test "Item con 'borrado' en 'false' se guarda" do
+    item = Item.new(
+      descripcion: 'Esto es una prueba',
+      correlativo: 2,
+      tipo_item_id: tipo_items(:one).id,
+      bitacora_revision_id: bitacora_revisiones(:one).id,
+      borrado: false
+    )
+    assert item.save
+  end
 end
