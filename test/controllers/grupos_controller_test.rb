@@ -59,6 +59,32 @@ class GruposControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "Debería obtener código 422 al tratar crear grupos con información no válida como usuario 'coordinador'" do
+    assert_difference 'Grupo.count', 0 do
+      post '/grupos', params: {grupo: {
+        nombre: 'A22',
+        proyecto: 'Sistema de conteo de votos',
+        correlativo: 0,
+      },
+      estudiantes: [estudiantes(:one).id, estudiantes(:two).id]
+      }, headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
+    end
+    assert_response 422
+  end
+
+  test "Debería obtener código 422 al tratar crear grupos con información no válida como usuario 'profesor'" do
+    assert_difference 'Grupo.count', 0 do
+      post '/grupos', params: {grupo: {
+        nombre: 'B33',
+        proyecto: 'Sistema de asistencia general',
+        correlativo: -2
+      },
+      estudiantes: [estudiantes(:two).id, estudiantes(:Pablo).id]
+      }, headers: authenticated_header(usuarios(:profesor), 'profe')
+    end
+    assert_response 422
+  end
+
 
   # Revision del funcionamiento del servicio 'show'
 
