@@ -508,7 +508,7 @@ class MinutasController < ApplicationController
 
   # Servicio que entrega el listado de minutas de un estudiante según sus estados de revisión
   def por_estados
-    if current_usuario.rol.rango === 3
+    if current_usuario.rol.rango == 3
       bitacoras = BitacoraRevision.joins('INNER JOIN motivos ON motivos.id = bitacora_revisiones.motivo_id INNER JOIN minutas ON bitacora_revisiones.minuta_id = minutas.id
         INNER JOIN bitacora_estados ON bitacora_estados.minuta_id = minutas.id INNER JOIN tipo_estados ON tipo_estados.id = bitacora_estados.tipo_estado_id
         INNER JOIN tipo_minutas ON tipo_minutas.id = minutas.tipo_minuta_id INNER JOIN estudiantes ON estudiantes.id = minutas.estudiante_id').where('
@@ -538,7 +538,7 @@ class MinutasController < ApplicationController
 
   # Servicio que entrega las minutas creadas por los integrantes del grupo para la revisión del estudiante
   def revision_grupo
-    if current_usuario.rol.rango === 3
+    if current_usuario.rol.rango == 3
       estudiante = Estudiante.find_by(usuario_id: current_usuario.id)
       bitacoras = BitacoraRevision.joins('INNER JOIN motivos ON motivos.id = bitacora_revisiones.motivo_id INNER JOIN minutas ON bitacora_revisiones.minuta_id = minutas.id
         INNER JOIN bitacora_estados ON bitacora_estados.minuta_id = minutas.id INNER JOIN tipo_estados ON tipo_estados.id = bitacora_estados.tipo_estado_id
@@ -612,7 +612,7 @@ class MinutasController < ApplicationController
 
   # Servicio que entrega el listado de minutas respondidas por los estudiantes creadores de minutas
   def por_respuestas
-    if current_usuario.rol.rango === 3
+    if current_usuario.rol.rango == 3
       bitacoras = BitacoraRevision.joins(:motivo).joins(minuta: {bitacora_estados: :tipo_estado}).joins(minuta: :tipo_minuta).joins(minuta: :estudiante).where('
         minutas.borrado = ? AND estudiantes.usuario_id <> ? AND bitacora_revisiones.activa = ? AND tipo_minutas.tipo <> ? AND bitacora_estados.activo = ? AND
         tipo_estados.abreviacion = ?', false, current_usuario.id, true, 'Semanal', true, 'RIG').select('
@@ -668,14 +668,6 @@ class MinutasController < ApplicationController
     cambio = cambio || minuta.h_inicio_changed?
     cambio = cambio || minuta.h_termino_changed?
     return cambio
-  end
-
-  def nueva_actividad(minuta_id, identificador)
-    Registro.create!(
-      realizada_por: current_usuario.id,
-      minuta_id: minuta_id,
-      tipo_actividad_id: TipoActividad.find_by(identificador: identificador).id
-    )
   end
 
 end
