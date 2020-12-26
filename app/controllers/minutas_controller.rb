@@ -508,11 +508,12 @@ class MinutasController < ApplicationController
 
   # Servicio que entrega el listado de minutas de un estudiante según sus estados de revisión
   def por_estados
-    if current_usuario.rol.rango === 3
+    if current_usuario.rol.rango == 3
       bitacoras = BitacoraRevision.joins('INNER JOIN motivos ON motivos.id = bitacora_revisiones.motivo_id INNER JOIN minutas ON bitacora_revisiones.minuta_id = minutas.id
         INNER JOIN bitacora_estados ON bitacora_estados.minuta_id = minutas.id INNER JOIN tipo_estados ON tipo_estados.id = bitacora_estados.tipo_estado_id
         INNER JOIN tipo_minutas ON tipo_minutas.id = minutas.tipo_minuta_id INNER JOIN estudiantes ON estudiantes.id = minutas.estudiante_id').where('
-        minutas.borrado = ? AND estudiantes.usuario_id = ? AND bitacora_revisiones.activa = ? AND tipo_minutas.tipo <> ? AND bitacora_estados.activo = ?', false, current_usuario.id, true, 'Semanal', true).select('
+        minutas.borrado = ? AND estudiantes.usuario_id = ? AND bitacora_revisiones.activa = ? AND tipo_minutas.tipo <> ? AND bitacora_estados.activo = ?
+        AND tipo_estados.abreviacion <> ?', false, current_usuario.id, true, 'Semanal', true, 'RIG').select('
           bitacora_revisiones.id,
           bitacora_revisiones.revision AS revision_min,
           bitacora_revisiones.fecha_emision AS fecha_emi,
@@ -537,7 +538,7 @@ class MinutasController < ApplicationController
 
   # Servicio que entrega las minutas creadas por los integrantes del grupo para la revisión del estudiante
   def revision_grupo
-    if current_usuario.rol.rango === 3
+    if current_usuario.rol.rango == 3
       estudiante = Estudiante.find_by(usuario_id: current_usuario.id)
       bitacoras = BitacoraRevision.joins('INNER JOIN motivos ON motivos.id = bitacora_revisiones.motivo_id INNER JOIN minutas ON bitacora_revisiones.minuta_id = minutas.id
         INNER JOIN bitacora_estados ON bitacora_estados.minuta_id = minutas.id INNER JOIN tipo_estados ON tipo_estados.id = bitacora_estados.tipo_estado_id
@@ -609,6 +610,34 @@ class MinutasController < ApplicationController
     end
   end
 
+  # Servicio que entrega el listado de minutas respondidas por los estudiantes creadores de minutas
+  def por_respuestas
+    if current_usuario.rol.rango == 3
+      bitacoras = BitacoraRevision.joins(:motivo).joins(minuta: {bitacora_estados: :tipo_estado}).joins(minuta: :tipo_minuta).joins(minuta: :estudiante).where('
+        minutas.borrado = ? AND estudiantes.usuario_id <> ? AND bitacora_revisiones.activa = ? AND tipo_minutas.tipo <> ? AND bitacora_estados.activo = ? AND
+        tipo_estados.abreviacion = ?', false, current_usuario.id, true, 'Semanal', true, 'RIG').select('
+          bitacora_revisiones.id,
+          bitacora_revisiones.revision AS revision_min,
+          bitacora_revisiones.fecha_emision AS fecha_emi,
+          motivos.motivo AS motivo_min,
+          tipo_minutas.tipo AS tipo_min,
+          minutas.id AS id_minuta,
+          minutas.codigo AS codigo_min,
+          minutas.correlativo AS correlativo_min,
+          minutas.fecha_reunion AS fecha_min,
+          minutas.created_at AS creada_el,
+          bitacora_estados.id AS id_estado,
+          tipo_estados.abreviacion AS abrev_estado,
+          tipo_estados.descripcion AS desc_estado,
+          estudiantes.iniciales AS iniciales_est
+        ')
+      lista_bitacoras = bitacoras_json(bitacoras)
+      render json: lista_bitacoras.as_json(json_data)
+    else
+      render json: ['error': 'No es un usuario autorizado para este servicio'], status: :unprocessable_entity
+    end
+  end
+
   private
   def minuta_params
     params.require(:minuta).permit(:estudiante_id, :correlativo, :codigo, :fecha_reunion, :h_inicio, :h_termino, :tipo_minuta_id)
@@ -639,14 +668,6 @@ class MinutasController < ApplicationController
     cambio = cambio || minuta.h_inicio_changed?
     cambio = cambio || minuta.h_termino_changed?
     return cambio
-  end
-
-  def nueva_actividad(minuta_id, identificador)
-    Registro.create!(
-      realizada_por: current_usuario.id,
-      minuta_id: minuta_id,
-      tipo_actividad_id: TipoActividad.find_by(identificador: identificador).id
-    )
   end
 
 end
