@@ -34,11 +34,7 @@ class ComentariosController < ApplicationController
     if aprobacion.valid?
       aprobacion.save!
     end
-    if bitacora.motivo.identificador == 'ECI'
-      revisores = bitacora.minuta.asistencias.where(id_stakeholder: nil).where.not(id_estudiante: nil).size - bitacora.minuta.asistencias.where(id_estudiante: bitacora.minuta.estudiante_id).size
-    elsif bitacora.motivo.identificador == 'ERC'
-      revisores = bitacora.minuta.asistencias.where(id_estudiante: nil).where.not(id_stakeholder: nil).size
-    end
+    revisores = calcular_revisores(bitacora.id)
     revisiones = bitacora.aprobaciones.size
     if revisiones == revisores
       aprobadas_con_com = bitacora.aprobaciones.joins(:tipo_aprobacion).where('tipo_aprobaciones.identificador = ?', 'AC').size
