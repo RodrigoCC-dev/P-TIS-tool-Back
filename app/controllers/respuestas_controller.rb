@@ -45,4 +45,15 @@ class RespuestasController < ApplicationController
       render json: ['error': 'Falta alguna de las respuestas a los comentarios'], status: :unprocessable_entity
     end
   end
+
+  # Servicio que entrega las respuestas de una minuta identificada por su bitacora_revision a través de su id
+  def show
+    respuestas = Comentario.where(bitacora_revision_id: params[:id].to_i)
+    render json: respuestas.as_json(
+      { except: %i[borrado created_at updated_at deleted_at], :include => {
+        :respuestas => json_data
+        }
+      }
+    )
+  end
 end
