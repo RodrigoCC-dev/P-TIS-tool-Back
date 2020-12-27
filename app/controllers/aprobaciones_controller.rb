@@ -3,6 +3,17 @@ class AprobacionesController < ApplicationController
   include JsonFormat
   include Funciones
 
+  #Servicio que entrega las aprobaciones de una minuta de reunión según su bitacora_revisiones.id
+  def show
+    bitacora = BitacoraRevision.find(params[:id].to_i)
+    render json: bitacora.aprobaciones.as_json(
+      { except: %i[created_at updated_at], :include => {
+        :tipo_aprobacion => json_data
+        }
+      }
+    )
+  end
+
   # Servicio que permite actualizar una aprobación de una minuta de reunión
   def update
     bitacora = BitacoraRevision.find(params[:id].to_i)
