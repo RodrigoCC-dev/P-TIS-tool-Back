@@ -19,7 +19,6 @@ class RespuestasController < ApplicationController
         respuesta.asistencia_id = asistencia.id
         if respuesta.valid?
           respuesta.save!
-          contador += 1
           nueva_actividad(bitacora.minuta_id, 'RE1')
         end
       end
