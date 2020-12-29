@@ -13,18 +13,20 @@ class ComentariosController < ApplicationController
     end
     contador = 0
     params[:comentarios].each do |c|
-      comentario = Comentario.new
-      comentario.comentario = c[:comentario]
-      comentario.asistencia_id = asistencia.id
-      comentario.bitacora_revision_id = bitacora.id
-      if to_boolean(c[:es_item])
-        comentario.es_item = true
-        comentario.id_item = c[:id_item]
-      end
-      if comentario.valid?
-        comentario.save!
-        nueva_actividad(bitacora.minuta_id, 'COM1')
-        contador += 1
+      if c[:comentario].to_s != ''
+        comentario = Comentario.new
+        comentario.comentario = c[:comentario]
+        comentario.asistencia_id = asistencia.id
+        comentario.bitacora_revision_id = bitacora.id
+        if to_boolean(c[:es_item])
+          comentario.es_item = true
+          comentario.id_item = c[:id_item]
+        end
+        if comentario.valid?
+          comentario.save!
+          nueva_actividad(bitacora.minuta_id, 'COM1')
+          contador += 1
+        end
       end
     end
     aprobacion = Aprobacion.new
@@ -57,9 +59,6 @@ class ComentariosController < ApplicationController
       if bitacora_estado.valid?
         bitacora_estado.save!
       end
-    end
-    if contador != params[:comentarios].size
-      render json: ['error': 'Información de alguno de los comentarios no es válida'], status: :unprocessable_entity
     end
   end
 

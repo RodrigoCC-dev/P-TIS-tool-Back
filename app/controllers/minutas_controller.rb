@@ -145,6 +145,7 @@ class MinutasController < ApplicationController
       bitacora_revisiones.id AS id_bitacora,
       bitacora_revisiones.revision AS rev_min,
       motivos.motivo AS motivo_min,
+      motivos.identificador AS motivo_ident,
       temas.tema AS tema_min,
       minutas.id AS id_minuta,
       minutas.codigo AS codigo_min,
@@ -203,7 +204,7 @@ class MinutasController < ApplicationController
       lista_items << item
     end
     h = {
-      id: bitacora.id_bitacora, revision: bitacora.rev_min, motivo: bitacora.motivo_min,
+      id: bitacora.id_bitacora, revision: bitacora.rev_min, motivo: bitacora.motivo_min, identificador: bitacora.motivo_ident,
       minuta: {
         id: bitacora.id_minuta, codigo: bitacora.codigo_min, correlativo: bitacora.correlativo_min, tema: bitacora.tema_min, creada_por: bitacora.iniciales_est,
         creada_el: bitacora.creada_el, tipo: bitacora.tipo_min, fecha_reunion: bitacora.fecha_min, h_inicio: bitacora.hora_ini, h_termino: bitacora.hora_ter,
@@ -585,9 +586,8 @@ class MinutasController < ApplicationController
         INNER JOIN bitacora_estados ON bitacora_estados.minuta_id = minutas.id INNER JOIN tipo_estados ON tipo_estados.id = bitacora_estados.tipo_estado_id
         INNER JOIN tipo_minutas ON tipo_minutas.id = minutas.tipo_minuta_id INNER JOIN estudiantes ON estudiantes.id = minutas.estudiante_id
         INNER JOIN grupos ON grupos.id = estudiantes.grupo_id').where('minutas.borrado = ? AND bitacora_revisiones.activa = ? AND grupos.id = ? AND motivos.identificador <> ?
-        AND tipo_estados.abreviacion = ? AND tipo_estados.abreviacion = ? AND tipo_estados.abreviacion = ? AND tipo_estados.abreviacion = ? AND
-        tipo_estados.abreviacion = ? AND tipo_minutas.tipo <> ? AND bitacora_revisiones.emitida = ?',
-        false, true, stakeholder.grupo_id, 'ECI', 'RIG', 'RSK', 'CER', 'EMI', 'CSK', 'Semanal', true).select('
+        AND tipo_minutas.tipo <> ? AND bitacora_revisiones.emitida = ? AND bitacora_estados.activo = ?',
+        false, true, stakeholder.grupo_id, 'ECI', 'Semanal', true, true).where.not('tipo_estados.abreviacion = ?', 'BOR').select('
           bitacora_revisiones.id,
           bitacora_revisiones.revision AS revision_min,
           bitacora_revisiones.fecha_emision AS fecha_emi,
