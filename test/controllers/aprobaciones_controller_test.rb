@@ -86,4 +86,15 @@ class AprobacionesControllerTest < ActionDispatch::IntegrationTest
     end
     assert_response 422
   end
+
+  test "Debería obtener código 422 al tratar de actualizar como estudiante sin aprobación previa" do
+    assert_difference "BitacoraEstado.count", 0 do
+      put aprobacion_url(id: bitacora_revisiones(:three).id, params: {
+          id: bitacora_revisiones(:three).id,
+          tipo_aprobacion_id: tipo_aprobaciones(:uno).id
+        }
+      ), headers: authenticated_header(usuarios(:Maria), 'maria123')
+    end
+    assert_response 422
+  end
 end
