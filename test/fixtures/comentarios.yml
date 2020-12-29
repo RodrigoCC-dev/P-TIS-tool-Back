@@ -17,3 +17,21 @@ two:
   deleted_at: 2020-10-19 20:43:03
   asistencia: two
   bitacora_revision: two
+
+uno:
+  comentario: Comentario de prueba 1
+  es_item: false
+  id_item:
+  borrado: false
+  deleted_at: 2020-10-19 20:43:03
+  asistencia: Pablo
+  bitacora_revision: three
+
+uno:
+  comentario: Comentario de prueba 2
+  es_item: false
+  id_item:
+  borrado: false
+  deleted_at: 2020-10-19 20:43:03
+  asistencia: Pablo
+  bitacora_revision: three

@@ -13,3 +13,17 @@ two:
   deleted_at: 2020-10-19 20:45:56
   comentario: two
   asistencia: two
+
+uno:
+  respuesta: MyText
+  borrado: false
+  deleted_at: 2020-10-19 20:45:56
+  comentario: uno
+  asistencia: Maria
+
+dos:
+  respuesta: MyText
+  borrado: false
+  deleted_at: 2020-10-19 20:45:56
+  comentario: dos
+  asistencia: Maria

@@ -51,8 +51,8 @@ class RespuestasControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "Debería obtener código 422 al tratar crear una respuesta vacía como estudiante" do
-    assert_difference 'BitacoraEstado.count', 0 do
+  test "Debería poder cambiar estado de minuta al crear una respuesta vacía como estudiante" do
+    assert_difference 'BitacoraEstado.count', 1 do
       assert_difference 'Registro.count', 0 do
         assert_difference 'Respuesta.count', 0 do
           post respuestas_url(params: {
@@ -65,11 +65,11 @@ class RespuestasControllerTest < ActionDispatch::IntegrationTest
         end
       end
     end
-    assert_response 422
+    assert_response :success
   end
 
-  test "Debería obtener código 422 al tratar crear una respuesta vacía como stakeholder" do
-    assert_difference 'BitacoraEstado.count', 0 do
+  test "Debería poder cambiar estado de minuta al crear una respuesta vacía como stakeholder" do
+    assert_difference 'BitacoraEstado.count', 1 do
       assert_difference 'Registro.count', 0 do
         assert_difference 'Respuesta.count', 0 do
           post respuestas_url(params: {
@@ -82,6 +82,20 @@ class RespuestasControllerTest < ActionDispatch::IntegrationTest
         end
       end
     end
-    assert_response 422
+    assert_response :success
   end
+
+
+  # Revisión del funcionamiento del servicio 'show'
+
+  test "Debería obtener código 401 al tratar de obtener las respuestas sin autenticación" do
+    get respuesta_url(id: bitacora_revisiones(:three).id)
+    assert_response 401
+  end
+
+  test "Debería poder obtener las respuestas de una minuta comentada" do
+    get respuesta_url(id: bitacora_revisiones(:three).id), headers: authenticated_header(usuarios(:Pablo), 'pablo123')
+    assert_response :success
+  end
+
 end
