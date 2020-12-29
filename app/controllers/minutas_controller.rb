@@ -586,9 +586,8 @@ class MinutasController < ApplicationController
         INNER JOIN bitacora_estados ON bitacora_estados.minuta_id = minutas.id INNER JOIN tipo_estados ON tipo_estados.id = bitacora_estados.tipo_estado_id
         INNER JOIN tipo_minutas ON tipo_minutas.id = minutas.tipo_minuta_id INNER JOIN estudiantes ON estudiantes.id = minutas.estudiante_id
         INNER JOIN grupos ON grupos.id = estudiantes.grupo_id').where('minutas.borrado = ? AND bitacora_revisiones.activa = ? AND grupos.id = ? AND motivos.identificador <> ?
-        AND tipo_estados.abreviacion = ? AND tipo_estados.abreviacion = ? AND tipo_estados.abreviacion = ? AND tipo_estados.abreviacion = ? AND
-        tipo_estados.abreviacion = ? AND tipo_minutas.tipo <> ? AND bitacora_revisiones.emitida = ?',
-        false, true, stakeholder.grupo_id, 'ECI', 'RIG', 'RSK', 'CER', 'EMI', 'CSK', 'Semanal', true).select('
+        AND tipo_minutas.tipo <> ? AND bitacora_revisiones.emitida = ? AND bitacora_estados.activo = ?',
+        false, true, stakeholder.grupo_id, 'ECI', 'Semanal', true, true).where.not('tipo_estados.abreviacion = ?', 'BOR').select('
           bitacora_revisiones.id,
           bitacora_revisiones.revision AS revision_min,
           bitacora_revisiones.fecha_emision AS fecha_emi,
