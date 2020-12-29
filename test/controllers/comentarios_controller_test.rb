@@ -27,7 +27,7 @@ class ComentariosControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "Debería poder crear comentarios a una minuta como estudiante" do
-    assert_difference 'BitacoraEstado.count', 0 do
+    assert_difference 'BitacoraEstado.count', 1 do
       assert_difference 'Aprobacion.count', 1 do
         assert_difference 'Registro.count', 2 do
           assert_difference 'Comentario.count', 2 do
@@ -55,7 +55,7 @@ class ComentariosControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "Debería poder crear comentarios a una minuta como stakeholder" do
-    assert_difference 'BitacoraEstado.count', 1 do
+    assert_difference 'BitacoraEstado.count', 0 do
       assert_difference 'Aprobacion.count', 1 do
         assert_difference 'Registro.count', 2 do
           assert_difference 'Comentario.count', 2 do
