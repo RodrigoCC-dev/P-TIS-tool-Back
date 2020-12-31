@@ -31,6 +31,7 @@ Rails.application.routes.draw do
   resources :tipo_aprobaciones, only: [:index]
   resources :respuestas, only: [:create, :show]
   resources :aprobaciones, only: [:show, :update]
+  resources :registros, only: [:show]
 
   resources :usuarios, only: [:update]
   get 'login/user', to: 'usuarios#user'
