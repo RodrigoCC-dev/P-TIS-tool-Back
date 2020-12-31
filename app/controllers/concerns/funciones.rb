@@ -42,4 +42,21 @@ module Funciones
       return nil
     end
   end
+
+  def calcular_revisores(bitacora_id)
+    bitacora = BitacoraRevision.find(bitacora_id)
+    revisores = 0
+    if bitacora.motivo.identificador == 'ECI'
+      revisores = bitacora.minuta.asistencias.where(id_stakeholder: nil).where.not(id_estudiante: nil).size - bitacora.minuta.asistencias.where(id_estudiante: bitacora.minuta.estudiante_id).size
+    elsif bitacora.motivo.identificador == 'ERC' || bitacora.motivo.identificador == 'EAC'
+      revisores = bitacora.minuta.asistencias.where(id_estudiante: nil).where.not(id_stakeholder: nil).size
+    elsif bitacora.motivo.identificador == 'EF'
+      if bitacora.minuta.tipo_minuta.tipo == 'Coordinacion'
+        revisores = bitacora.minuta.asistencias.where(id_stakeholder: nil).where.not(id_estudiante: nil).size - bitacora.minuta.asistencias.where(id_estudiante: bitacora.minuta.estudiante_id).size
+      elsif bitacora.minuta.tipo_minuta.tipo == 'Cliente'
+        revisores = bitacora.minuta.asistencias.where(id_estudiante: nil).where.not(id_stakeholder: nil).size
+      end
+    end
+    return revisores
+  end
 end

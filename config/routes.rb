@@ -25,9 +25,13 @@ Rails.application.routes.draw do
   get 'minutas/revision/estados', to: 'minutas#por_estados'
   get 'minutas/revision/grupo', to: 'minutas#revision_grupo'
   get 'minutas/revision/cliente', to: 'minutas#revision_cliente'
+  get 'minutas/revision/respondidas', to: 'minutas#por_respuestas'
 
-  resources :comentarios, only: [:create]
+  resources :comentarios, only: [:create, :show]
   resources :tipo_aprobaciones, only: [:index]
+  resources :respuestas, only: [:create, :show]
+  resources :aprobaciones, only: [:show, :update]
+  resources :registros, only: [:show]
 
   resources :usuarios, only: [:update]
   get 'login/user', to: 'usuarios#user'

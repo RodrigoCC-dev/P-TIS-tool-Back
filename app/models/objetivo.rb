@@ -3,4 +3,5 @@ class Objetivo < ApplicationRecord
 
   # Validaciones
   validates :descripcion, presence: true
+  validates :borrado, inclusion: {in: [true, false]}
 end

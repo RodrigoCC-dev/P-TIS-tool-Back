@@ -27,7 +27,7 @@ class ComentariosControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "Debería poder crear comentarios a una minuta como estudiante" do
-    assert_difference 'BitacoraEstado.count', 0 do
+    assert_difference 'BitacoraEstado.count', 1 do
       assert_difference 'Aprobacion.count', 1 do
         assert_difference 'Registro.count', 2 do
           assert_difference 'Comentario.count', 2 do
@@ -55,7 +55,7 @@ class ComentariosControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "Debería poder crear comentarios a una minuta como stakeholder" do
-    assert_difference 'BitacoraEstado.count', 1 do
+    assert_difference 'BitacoraEstado.count', 0 do
       assert_difference 'Aprobacion.count', 1 do
         assert_difference 'Registro.count', 2 do
           assert_difference 'Comentario.count', 2 do
@@ -82,4 +82,31 @@ class ComentariosControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+
+  # Revisión del funcionamiento del servicio 'show'
+
+  test "Debería obtener código 401 al tratar de obtener 'show' sin autenticación" do
+    get comentario_url(id: bitacora_revisiones(:three).id)
+    assert_response 401
+  end
+
+  test "Debería poder obtener los comentarios de una minuta como estudiante" do
+    get comentario_url(id: bitacora_revisiones(:three).id), headers: authenticated_header(usuarios(:Pablo), 'pablo123')
+    assert_response :success
+  end
+
+  test "Debería poder obtener los comentarios de una minuta como stakeholder" do
+    get comentario_url(id: bitacora_revisiones(:three).id), headers: authenticated_header(usuarios(:stakeholder), 'cliente')
+    assert_response :success
+  end
+
+  test "Debería poder obtener los comentarios de una minuta como profesor" do
+    get comentario_url(id: bitacora_revisiones(:three).id), headers: authenticated_header(usuarios(:profesor), 'profe')
+    assert_response :success
+  end
+
+  test "Debería poder obtener los comentarios de una minuta como coordinador" do
+    get comentario_url(id: bitacora_revisiones(:three).id), headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
+    assert_response :success
+  end
 end
