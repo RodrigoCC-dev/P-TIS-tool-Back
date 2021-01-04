@@ -3,6 +3,7 @@ class EstudiantesController < ApplicationController
   before_action :semestre_actual, only: [:index, :sin_grupo]
   before_action :usuario_actual, only: [:index, :sin_grupo]
   include JsonFormat
+  include Funciones
 
   # Servicio que muestra los estudiantes ingresados en el sistema según las secciones asignadas al profesor
   def index
@@ -34,22 +35,45 @@ class EstudiantesController < ApplicationController
 
   # Servicio que permite crear un estudiante en el sistema
   def create
-    estudiante = Estudiante.new
-    estudiante.build_usuario
-    estudiante.usuario.assign_attributes(estudiantes_params[:usuario_attributes])
-    estudiante.iniciales = obtener_iniciales(estudiante.usuario)
-    grupo_por_defecto = Grupo.find_by(nombre: 'SG')
-    estudiante.grupo_id = grupo_por_defecto.id
-    rol_estudiante = Rol.find_by(rol: 'Estudiante')
-    estudiante.usuario.rol_id = rol_estudiante.id
-    estudiante.assign_attributes(estudiantes_params)
-    estudiante.usuario.password = 'pass'
-    estudiante.usuario.password_confirmation = 'pass'
-    if estudiante.valid?
-      estudiante.save!
+    usuario = Usuario.find_by(run: estudiantes_params[:usuario_attributes][:rut])
+    if usuario.nil?
+      estudiante = Estudiante.new
+      estudiante.build_usuario
+      estudiante.usuario.assign_attributes(estudiantes_params[:usuario_attributes])
+      estudiante.iniciales = obtener_iniciales(estudiante.usuario)
+      grupo_por_defecto = Grupo.find_by(nombre: 'SG')
+      estudiante.grupo_id = grupo_por_defecto.id
+      rol_estudiante = Rol.find_by(rol: 'Estudiante')
+      estudiante.usuario.rol_id = rol_estudiante.id
+      estudiante.assign_attributes(estudiantes_params)
+      estudiante.usuario.password = nueva_password(estudiante.usuario.nombre)
+      estudiante.usuario.password_confirmation = nueva_password(estudiante.usuario.nombre)
+      if estudiante.valid?
+        estudiante.save!
+      else
+        render json: ['error': 'Información del estudiante no es válida'], status: :unprocessable_entity
+      end
     else
-      render json: ['error': 'Información del estudiante no es válida'], status: :unprocessable_entity
+      unless usuario.estudiante.nil?
+        usuario.borrado = false
+        usuario.nombre = estudiantes_params[:usuario_attributes][:nombre]
+        usuario.apellido_paterno = estudiantes_params[:usuario_attributes][:apellido_paterno]
+        usuario.apellido_materno = estudiantes_params[:usuario_attributes][:apellido_materno]
+        usuario.email = estudiantes_params[:usuario_attributes][:email]
+        usuario.password = nueva_password(usuario.nombre)
+        usuario.password_confirmation = nueva_password(usuario.nombre)
+        usuario.estudiante.iniciales = obtener_iniciales(usuario)
+        usuario.estudiante.assign_attributes(estudiantes_params)
+        if usuario.valid?
+          usuario.save
+        else
+          render json: ['error': 'Información del estudiante no es válida'], status: :unprocessable_entity
+        end
+      else
+        render json: ['error': 'El usuario no es un estudiante'], status: :unprocessable_entity
+      end
     end
+
   end
 
   # Servicio que muestra la información de un estudiante según su 'id' de usuario
@@ -89,6 +113,19 @@ class EstudiantesController < ApplicationController
           ')
     end
     render json: estudiantes.as_json(json_data)
+  end
+
+  # Servicio que permite eliminar estudiantes del sistema mediante borrado lógico
+  def eliminar
+    if params[:eliminados].size > 0
+      estudiantes = Estudiante.where(id: params[:eliminados])
+      estudiantes.each do |e|
+        e.usuario.borrado = true
+        e.usuario.deleted_at = Time.now()
+        e.grupo_id = Grupo.find_by(nombre: 'SG').id
+        e.save
+      end
+    end
   end
 
   private
