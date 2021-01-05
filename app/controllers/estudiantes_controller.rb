@@ -123,6 +123,8 @@ class EstudiantesController < ApplicationController
         e.usuario.borrado = true
         e.usuario.deleted_at = Time.now()
         e.grupo_id = Grupo.find_by(nombre: 'SG').id
+        e.password = 'mDDpbBBmxMH7ff3'
+        e.password_confirmation = 'mDDpbBBmxMH7ff3'
         e.save
       end
     end

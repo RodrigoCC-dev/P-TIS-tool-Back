@@ -22,7 +22,7 @@ class UsuariosController < ApplicationController
   # Servicio que entrega la información del usuario autenticado
   def user
     render json: current_usuario.as_json(
-      { except: %i[created_at updated_at password_digest deleted_at], :include => {
+      { except: %i[created_at updated_at password_digest borrado deleted_at], :include => {
         :rol => json_data
         }
       }
