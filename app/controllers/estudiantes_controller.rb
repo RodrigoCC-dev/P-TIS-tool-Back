@@ -35,7 +35,7 @@ class EstudiantesController < ApplicationController
 
   # Servicio que permite crear un estudiante en el sistema
   def create
-    usuario = Usuario.find_by(run: estudiantes_params[:usuario_attributes][:rut])
+    usuario = Usuario.find_by(run: estudiantes_params[:usuario_attributes][:run])
     if usuario.nil?
       estudiante = Estudiante.new
       estudiante.build_usuario
@@ -123,8 +123,8 @@ class EstudiantesController < ApplicationController
         e.usuario.borrado = true
         e.usuario.deleted_at = Time.now()
         e.grupo_id = Grupo.find_by(nombre: 'SG').id
-        e.password = 'mDDpbBBmxMH7ff3'
-        e.password_confirmation = 'mDDpbBBmxMH7ff3'
+        e.usuario.password = 'mDDpbBBmxMH7ff3'
+        e.usuario.password_confirmation = 'mDDpbBBmxMH7ff3'
         e.save
       end
     end
