@@ -69,13 +69,11 @@ class StakeholdersController < ApplicationController
         grupo_por_defecto = Grupo.find_by(nombre: 'SG')
         stakeholder.grupo_id = grupo_por_defecto.id
       end
-      if busqueda.nil?
-        rol_stakeholder = Rol.find_by(rol: 'Stakeholder')
-        stakeholder.usuario.rol_id = rol_stakeholder.id
-        nueva_password = nueva_password(stakeholder.usuario.nombre)
-        stakeholder.usuario.password = nueva_password
-        stakeholder.usuario.password_confirmation = nueva_password
-      end
+      rol_stakeholder = Rol.find_by(rol: 'Stakeholder')
+      stakeholder.usuario.rol_id = rol_stakeholder.id
+      nueva_password = nueva_password(stakeholder.usuario.nombre)
+      stakeholder.usuario.password = nueva_password
+      stakeholder.usuario.password_confirmation = nueva_password
       if stakeholder.valid?
         stakeholder.save!
       else
