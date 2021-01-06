@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_05_221402) do
+ActiveRecord::Schema.define(version: 2021_01_06_011653) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -284,10 +284,8 @@ ActiveRecord::Schema.define(version: 2021_01_05_221402) do
   create_table "stakeholders", force: :cascade do |t|
     t.string "iniciales"
     t.bigint "usuario_id", null: false
-    t.bigint "grupo_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["grupo_id"], name: "index_stakeholders_on_grupo_id"
     t.index ["usuario_id"], name: "index_stakeholders_on_usuario_id"
   end
 
@@ -405,7 +403,6 @@ ActiveRecord::Schema.define(version: 2021_01_05_221402) do
   add_foreign_key "secciones", "cursos"
   add_foreign_key "secciones", "jornadas"
   add_foreign_key "secciones", "semestres"
-  add_foreign_key "stakeholders", "grupos"
   add_foreign_key "stakeholders", "usuarios"
   add_foreign_key "temas", "bitacora_revisiones"
   add_foreign_key "usuarios", "roles"
