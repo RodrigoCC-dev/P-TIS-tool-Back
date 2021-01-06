@@ -1,6 +1,6 @@
 class Stakeholder < ApplicationRecord
   belongs_to :usuario
-  belongs_to :grupo
+  has_and_belongs_to_many :grupos
 
   accepts_nested_attributes_for :usuario
 

@@ -24,7 +24,7 @@ class GruposController < ApplicationController
         h = {id: e.id, iniciales: e.iniciales_est, usuario: {nombre: e.nombre_est, apellido_paterno: e.apellido1, apellido_materno: e.apellido2, run: e.run_est, email: e.email_est}}
         lista_est << h
       end
-      stakeholders = Stakeholder.where(grupo_id: g.id)
+      stakeholders = g.stakeholders
       if est_asignados.size > 0
         jornada = est_asignados[0].jornada
       else
