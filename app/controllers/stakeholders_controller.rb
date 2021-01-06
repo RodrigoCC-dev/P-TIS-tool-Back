@@ -63,14 +63,13 @@ class StakeholdersController < ApplicationController
     stakeholder.usuario.assign_attributes(stakeholders_params[:usuario_attributes])
     stakeholder.assign_attributes(stakeholders_params)
     busqueda = Usuario.where(email: stakeholder.usuario.email, borrado: false)
-    if busqueda.nil?
+    if busqueda.size == 0
       stakeholder.iniciales = obtener_iniciales(stakeholder.usuario)
-      if params[:grupo_id] == 0 || params[:grupo_id] == nil
-        grupo_por_defecto = Grupo.find_by(nombre: 'SG')
-        stakeholder.grupos << grupo_por_defecto
+      unless grupo_params[:id] == 0 && grupo_params[:id] == nil
+        grupo = Grupo.find(grupo_params[:id])
+        stakeholder.grupos << grupo
       end
-      rol_stakeholder = Rol.find_by(rol: 'Stakeholder')
-      stakeholder.usuario.rol_id = rol_stakeholder.id
+      stakeholder.usuario.rol_id = Rol.find_by(rol: 'Stakeholder').id
       nueva_password = nueva_password(stakeholder.usuario.nombre)
       stakeholder.usuario.password = nueva_password
       stakeholder.usuario.password_confirmation = nueva_password
@@ -96,9 +95,26 @@ class StakeholdersController < ApplicationController
     )
   end
 
+  # Servicio que permite editar la asignación de stakeholders a un grupo identificado por su 'id'
+  def update
+    grupo = Grupo.find(params[:id])
+    stakeholders = Stakeholder.where(id: params[:stakeholders])
+    unless stakeholders.size == 0
+      grupo.stakeholders.clear
+      grupo.stakeholders << stakeholders
+      grupo.save
+    else
+      render json: ['Error': 'No se han agregado stakeholders al grupo seleccionado'], status: :unprocessable_entity
+    end
+  end
+
   private
   def stakeholders_params
     params.require(:stakeholder).permit(:grupo_id, usuario_attributes: [:nombre, :apellido_paterno, :apellido_materno, :email])
+  end
+
+  def grupo_params
+    params.require(:grupo).permit(:id)
   end
 
   def semestre_actual
