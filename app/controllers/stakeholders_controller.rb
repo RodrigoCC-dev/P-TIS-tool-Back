@@ -83,8 +83,8 @@ class StakeholdersController < ApplicationController
         jornadas.nombre AS jornada')
     elsif current_usuario.rol.rango == 2
       stakeholders = Stakeholder.joins(grupos: {estudiantes: [seccion: :jornada]}).joins(:usuario).joins(
-        grupos: {estudiantes: [seccion: :semestre]}).where('semestres.id = ? AND usuarios.borrado = ? AND profesores.usuario_id = ?',
-        @semestre_actual.id, false, current_usuario.id).select('
+        grupos: {estudiantes: [seccion: :semestre]}).joins(grupos: {estudiantes: [seccion: :profesores]}).where(
+          'semestres.id = ? AND usuarios.borrado = ? AND profesores.usuario_id = ?', @semestre_actual.id, false, current_usuario.id).select('
         stakeholders.id,
         usuarios.nombre AS nombre_stk,
         usuarios.apellido_paterno AS apellido1,

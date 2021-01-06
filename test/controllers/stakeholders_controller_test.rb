@@ -4,7 +4,7 @@ class StakeholdersControllerTest < ActionDispatch::IntegrationTest
 
   # Revision del funcionamiento del servicio 'index'
 
-  test "Debería obtener código '401' al tratra de obtener 'index' sin autenticación" do
+  test "Debería obtener código '401' al tratar de obtener 'index' sin autenticación" do
     get stakeholders_url
     assert_response 401
   end
@@ -92,6 +92,52 @@ class StakeholdersControllerTest < ActionDispatch::IntegrationTest
 
   test "Debería poder obtener la información de un stakeholder" do
     get stakeholder_url(id: usuarios(:stakeholder).id), headers: authenticated_header(usuarios(:stakeholder), 'cliente')
+    assert_response :success
+  end
+
+
+  # Revisión del funcionamiento del servicio 'update'
+
+  test "Debería obtener código '401' al tratar de obtener 'update' sin autenticación" do
+    put stakeholder_url(id: grupos(:one).id, params: {
+      id: grupos(:one).id,
+      stakeholders: [stakeholders(:two).id]
+      })
+    assert_response 401
+  end
+
+  test "Debería poder cambiar la asignación de stakeholders a un grupo como coordinador" do
+    @stakeholder1 = stakeholders(:one)
+    @stakeholder2 = stakeholders(:two)
+    put stakeholder_url(id: grupos(:one).id, params: {
+      id: grupos(:one).id,
+      stakeholders: [stakeholders(:two).id, stakeholders(:Gabriela).id]
+      }), headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
+    @stakeholder1.reload
+    @stakeholder2.reload
+    assert_equal @stakeholder1.grupos, []
+    assert_equal @stakeholder1.grupos.size, 0
+    assert_equal @stakeholder2.grupos.size, 2
+    assert @stakeholder2.grupos.include?(grupos(:two))
+    assert @stakeholder2.grupos.include?(grupos(:one))
+    assert_response :success
+  end
+
+
+  # Revisión del funcionamiento del servicio 'por_jornada'
+
+  test "Debería obtener código '401' al tratar de obtener 'por_jornada' sin autenticación" do
+    get stakeholders_asignacion_grupos_url
+    assert_response 401
+  end
+
+  test "Debería poder obtener los stakeholders asignados como coordinador" do
+    get stakeholders_asignacion_grupos_url, headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
+    assert_response :success
+  end
+
+  test "Debería poder obtener los stakeholders asignados como profesor" do
+    get stakeholders_asignacion_grupos_url, headers: authenticated_header(usuarios(:profesor), 'profe')
     assert_response :success
   end
 
