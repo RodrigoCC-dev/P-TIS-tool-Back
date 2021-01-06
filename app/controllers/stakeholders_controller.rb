@@ -7,7 +7,7 @@ class StakeholdersController < ApplicationController
   # Servicio que muestra los stakeholder ingresados en el sistema según las secciones asignadas al profesor
   def index
     if current_usuario.rol.rango == 1
-      stakeholders = Stakeholder.joins("INNER JOIN grupos ON grupos.id = stakeholders.grupo_id
+      stakeholders = Stakeholder.joins("INNER JOIN grupos_stakeholders ON grupos_stakeholders.stakeholder_id = stakeholders.id INNER JOIN grupos ON grupos.id = grupos_stakeholders.grupo_id
         INNER JOIN estudiantes ON estudiantes.grupo_id = grupos.id INNER JOIN secciones ON secciones.id = estudiantes.seccion_id
         INNER JOIN semestres ON semestres.id = secciones.semestre_id INNER JOIN usuarios ON usuarios.id = stakeholders.usuario_id
         INNER JOIN jornadas ON jornadas.id = secciones.jornada_id").where('
@@ -21,7 +21,7 @@ class StakeholdersController < ApplicationController
         grupos.nombre AS nombre_grupo,
         jornadas.nombre AS jornada')
     elsif current_usuario.rol.rango == 2
-      stakeholders = Stakeholder.joins("INNER JOIN grupos ON grupos.id = stakeholders.grupo_id
+      stakeholders = Stakeholder.joins("INNER JOIN grupos_stakeholders ON grupos_stakeholders.stakeholder_id = stakeholders.id INNER JOIN grupos ON grupos.id = grupos_stakeholders.grupo_id
         INNER JOIN estudiantes ON estudiantes.grupo_id = grupos.id INNER JOIN secciones ON secciones.id = estudiantes.seccion_id
         INNER JOIN profesores_secciones ON profesores_secciones.seccion_id = secciones.id INNER JOIN profesores ON profesores.id = profesores_secciones.profesor_id
         INNER JOIN semestres ON semestres.id = secciones.semestre_id INNER JOIN usuarios ON usuarios.id = stakeholders.usuario_id
@@ -65,9 +65,9 @@ class StakeholdersController < ApplicationController
     busqueda = Usuario.where(email: stakeholder.usuario.email, borrado: false)
     if busqueda.nil?
       stakeholder.iniciales = obtener_iniciales(stakeholder.usuario)
-      if stakeholder.grupo_id == 0 || stakeholder.grupo_id == nil
+      if params[:grupo_id] == 0 || params[:grupo_id] == nil
         grupo_por_defecto = Grupo.find_by(nombre: 'SG')
-        stakeholder.grupo_id = grupo_por_defecto.id
+        stakeholder.grupos << grupo_por_defecto
       end
       rol_stakeholder = Rol.find_by(rol: 'Stakeholder')
       stakeholder.usuario.rol_id = rol_stakeholder.id
@@ -89,7 +89,8 @@ class StakeholdersController < ApplicationController
     stakeholder = Stakeholder.find_by(usuario_id: params[:id])
     render json: stakeholder.as_json(
       {except: [:created_at, :update_at], :include => {
-        :usuario => user_data
+        :usuario => user_data,
+        :grupos => json_data
         }
       }
     )
