@@ -582,12 +582,10 @@ class MinutasController < ApplicationController
   def revision_cliente
     if current_usuario.rol.rango == 4
       stakeholder = Stakeholder.find_by(usuario_id: current_usuario.id)
-      bitacoras = BitacoraRevision.joins('INNER JOIN motivos ON motivos.id = bitacora_revisiones.motivo_id INNER JOIN minutas ON bitacora_revisiones.minuta_id = minutas.id
-        INNER JOIN bitacora_estados ON bitacora_estados.minuta_id = minutas.id INNER JOIN tipo_estados ON tipo_estados.id = bitacora_estados.tipo_estado_id
-        INNER JOIN tipo_minutas ON tipo_minutas.id = minutas.tipo_minuta_id INNER JOIN estudiantes ON estudiantes.id = minutas.estudiante_id
-        INNER JOIN grupos ON grupos.id = estudiantes.grupo_id').where('minutas.borrado = ? AND bitacora_revisiones.activa = ? AND grupos.id = ? AND motivos.identificador <> ?
+      bitacoras = BitacoraRevision.joins(:motivo).joins(minuta: {bitacora_estados: :tipo_estado}).joins(minuta: :tipo_minuta).joins(minuta: {estudiante: [grupo: :stakeholders]}).joins(
+        minuta: {estudiante: [seccion: :jornada]}).where('minutas.borrado = ? AND bitacora_revisiones.activa = ? AND stakeholders.id = ? AND motivos.identificador <> ?
         AND tipo_minutas.tipo <> ? AND bitacora_revisiones.emitida = ? AND bitacora_estados.activo = ?',
-        false, true, stakeholder.grupo_id, 'ECI', 'Semanal', true, true).where.not('tipo_estados.abreviacion = ?', 'BOR').select('
+        false, true, stakeholder.id, 'ECI', 'Semanal', true, true).where.not('tipo_estados.abreviacion = ?', 'BOR').select('
           bitacora_revisiones.id,
           bitacora_revisiones.revision AS revision_min,
           bitacora_revisiones.fecha_emision AS fecha_emi,
@@ -601,9 +599,26 @@ class MinutasController < ApplicationController
           bitacora_estados.id AS id_estado,
           tipo_estados.abreviacion AS abrev_estado,
           tipo_estados.descripcion AS desc_estado,
-          estudiantes.iniciales AS iniciales_est
+          estudiantes.iniciales AS iniciales_est,
+          grupos.id AS grupo_id,
+          grupos.nombre AS nombre_grupo,
+          jornadas.nombre AS jornada
         ')
-      lista_bitacoras = bitacoras_json(bitacoras)
+      lista_bitacoras = []
+      bitacoras.each do |bit|
+        h = {id: bit.id, motivo: bit.motivo_min, revision: bit.revision_min, fecha_emision: bit.fecha_emi,
+          minuta: {
+            id: bit.id_minuta, codigo: bit.codigo_min, correlativo: bit.correlativo_min, fecha_reunion: bit.fecha_min, tipo_minuta: bit.tipo_min, creada_por: bit.iniciales_est, creada_el: bit.creada_el
+          },
+          estado: {
+            id: bit.id_estado, abreviacion: bit.abrev_estado, descripcion: bit.desc_estado
+          },
+          grupo: {
+            id: bit.grupo_id, nombre: bit.nombre_grupo, jornada: bit.jornada
+          }
+        }
+        lista_bitacoras << h
+      end
       render json: lista_bitacoras.as_json(json_data)
     else
       render json: ['error': 'No es un usuario autorizado para este servicio'], status: :unprocessable_entity
