@@ -1,6 +1,6 @@
 class StakeholdersController < ApplicationController
   before_action :authenticate_usuario
-  before_action :semestre_actual, only: [:index, :por_jornada]
+  before_action :semestre_actual, only: [:por_jornada]
   include JsonFormat
   include Funciones
 
@@ -76,6 +76,7 @@ class StakeholdersController < ApplicationController
         usuarios.nombre AS nombre_stk,
         usuarios.apellido_paterno AS apellido1,
         usuarios.apellido_materno AS apellido2,
+        usuarios.email AS correo_elec,
         secciones.codigo AS codigo_seccion,
         grupos.id AS id_grupo,
         grupos.nombre AS nombre_grupo,
@@ -88,11 +89,13 @@ class StakeholdersController < ApplicationController
         usuarios.nombre AS nombre_stk,
         usuarios.apellido_paterno AS apellido1,
         usuarios.apellido_materno AS apellido2,
+        usuarios.email AS correo_elec,
         secciones.codigo AS codigo_seccion,
         grupos.id AS id_grupo,
         grupos.nombre AS nombre_grupo,
         jornadas.nombre AS jornada')
     end
+    grupos = Grupo.joins(estudiantes: {seccion: :jornada}).select('grupos.id, grupos.nombre AS nombre_grupo, grupos.proyecto AS proyecto_grupo, jornadas.nombre AS jornada')
     lista = []
     stakeholders.each do |s|
       unless lista.include?(s)
@@ -103,12 +106,15 @@ class StakeholdersController < ApplicationController
     lista.each do |l|
       aux = []
       l.grupos.each do |g|
-        grupo = {id: g.id, nombre: g.nombre }
+        grupo = {
+          id: g.id,
+          nombre: g.nombre,
+          jornada: grupos.find(g.id).jornada
+        }
         aux << grupo
       end
-      h = {id: l.id, nombre: l.nombre_stk, apellido_paterno: l.apellido1, apellido_materno: l.apellido2,
-        grupos: aux,
-        jornada: l.jornada
+      h = {id: l.id, nombre: l.nombre_stk, apellido_paterno: l.apellido1, apellido_materno: l.apellido2, email: l.correo_elec,
+        grupos: aux
       }
       lista_final << h
     end
