@@ -56,7 +56,7 @@ class GruposController < ApplicationController
   # Servicio que entrega los estudiantes de un grupo en particular
   def show
     grupo = Grupo.find(params[:id])
-    if grupo
+    unless grupo.nil?
       estudiantes = Estudiante.joins(:grupo).joins(:usuario).where('grupos.id = ?', grupo.id).select('
         estudiantes.id AS id_est,
         estudiantes.iniciales AS iniciales_est,

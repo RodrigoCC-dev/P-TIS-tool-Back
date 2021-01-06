@@ -4,8 +4,8 @@ one:
   nombre: MyString
   apellido_paterno: MyString
   apellido_materno: MyString
-  run: MyString
-  email: MyString
+  run: '11222333-4'
+  email: one@mystring.com
   password_digest: <%= BCrypt::Password.create('MyString') %>
   borrado:
   deleted_at: 2020-10-19 00:58:53
@@ -15,10 +15,32 @@ two:
   nombre: MyString
   apellido_paterno: MyString
   apellido_materno: MyString
+  run: '22333444-5'
+  email: two@mystring.com
+  password_digest: <%= BCrypt::Password.create('MyString') %>
+  borrado: true
+  deleted_at: 2020-10-19 00:58:53
+  rol: two
+
+three:
+  nombre: MyString
+  apellido_paterno: MyString
+  apellido_materno: MyString
   run: MyString
   email: MyString
   password_digest: <%= BCrypt::Password.create('MyString') %>
   borrado:
+  deleted_at: 2020-10-19 00:58:53
+  rol: one
+
+four:
+  nombre: MyString
+  apellido_paterno: MyString
+  apellido_materno: MyString
+  run: MyString
+  email: MyString
+  password_digest: <%= BCrypt::Password.create('MyString') %>
+  borrado: false
   deleted_at: 2020-10-19 00:58:53
   rol: two
 

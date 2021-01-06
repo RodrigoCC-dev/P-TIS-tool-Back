@@ -12,6 +12,18 @@ two:
   seccion: two
   grupo: two
 
+three:
+  iniciales: ONE
+  usuario: one
+  seccion: one
+  grupo: one
+
+four:
+  iniciales: MyString
+  usuario: two
+  seccion: two
+  grupo: two
+
 Pablo:
   id: 262345
   iniciales: PCN
