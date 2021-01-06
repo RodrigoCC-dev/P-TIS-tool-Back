@@ -1,6 +1,6 @@
 class Grupo < ApplicationRecord
   has_many :estudiantes
-  has_many :stakeholders
+  has_and_belongs_to_many :stakeholders
   before_save :sin_espacios
 
   # Validaciones

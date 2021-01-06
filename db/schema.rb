@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_09_063743) do
+ActiveRecord::Schema.define(version: 2021_01_05_221402) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -124,6 +124,13 @@ ActiveRecord::Schema.define(version: 2020_12_09_063743) do
     t.datetime "deleted_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "grupos_stakeholders", id: false, force: :cascade do |t|
+    t.bigint "stakeholder_id", null: false
+    t.bigint "grupo_id", null: false
+    t.index ["grupo_id"], name: "index_grupos_stakeholders_on_grupo_id"
+    t.index ["stakeholder_id"], name: "index_grupos_stakeholders_on_stakeholder_id"
   end
 
   create_table "items", force: :cascade do |t|
@@ -377,6 +384,8 @@ ActiveRecord::Schema.define(version: 2020_12_09_063743) do
   add_foreign_key "estudiantes", "grupos"
   add_foreign_key "estudiantes", "secciones"
   add_foreign_key "estudiantes", "usuarios"
+  add_foreign_key "grupos_stakeholders", "grupos"
+  add_foreign_key "grupos_stakeholders", "stakeholders"
   add_foreign_key "items", "bitacora_revisiones"
   add_foreign_key "items", "tipo_items"
   add_foreign_key "items_responsables", "items"
