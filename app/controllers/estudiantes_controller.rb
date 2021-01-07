@@ -73,7 +73,6 @@ class EstudiantesController < ApplicationController
         render json: ['error': 'El usuario no es un estudiante'], status: :unprocessable_entity
       end
     end
-
   end
 
   # Servicio que muestra la información de un estudiante según su 'id' de usuario

@@ -13,9 +13,9 @@ two:
   grupo: two
 
 three:
-  iniciales: ONE
-  usuario: one
-  seccion: one
+  iniciales: THR
+  usuario: three
+  seccion: two
   grupo: one
 
 four:

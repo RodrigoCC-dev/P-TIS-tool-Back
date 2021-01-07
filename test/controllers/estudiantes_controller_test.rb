@@ -89,6 +89,53 @@ class EstudiantesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "Debería poder restablecer un estudiante eliminado como coordinador" do
+    @usuario = usuarios(:two)
+    assert_difference 'Estudiante.count', 0 do
+      post '/estudiantes', params: {estudiante: {
+        seccion_id: secciones(:two).id,
+          usuario_attributes: {
+            nombre: 'Mauricio',
+            apellido_paterno: 'Venegas',
+            apellido_materno: 'Maldonado',
+            run: '22333444-5',
+            email: 'mauricio.venegas@usach.cl'
+          }
+        }
+      }, headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
+    end
+    @usuario.reload
+    assert_equal @usuario.borrado, false
+    assert_equal @usuario.nombre, 'Mauricio'
+    assert_equal @usuario.apellido_paterno, 'Venegas'
+    assert_equal @usuario.apellido_materno, 'Maldonado'
+    assert_equal @usuario.email, 'mauricio.venegas@usach.cl'
+    assert_response :success
+  end
+
+  test "Debería poder restablecer un estudiante eliminado como profesor" do
+    @usuario = usuarios(:three)
+    assert_difference 'Estudiante.count', 0 do
+      post '/estudiantes', params: {estudiante: {
+        seccion_id: secciones(:one).id,
+          usuario_attributes: {
+            nombre: 'Sergio',
+            apellido_paterno: 'Gatica',
+            apellido_materno: 'Valenzuela',
+            run: '12345678-9',
+            email: 'sergio.gatica@usach.cl'
+          }
+        }
+      }, headers: authenticated_header(usuarios(:profesor), 'profe')
+    end
+    @usuario.reload
+    assert_equal @usuario.borrado, false
+    assert_equal @usuario.nombre, 'Sergio'
+    assert_equal @usuario.apellido_paterno, 'Gatica'
+    assert_equal @usuario.apellido_materno, 'Valenzuela'
+    assert_equal @usuario.email, 'sergio.gatica@usach.cl'
+    assert_response :success
+  end
 
   # Revisión del funcionamiento del servicio 'show'
 

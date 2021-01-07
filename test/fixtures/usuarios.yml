@@ -26,10 +26,10 @@ three:
   nombre: MyString
   apellido_paterno: MyString
   apellido_materno: MyString
-  run: MyString
+  run: '12345678-9'
   email: MyString
   password_digest: <%= BCrypt::Password.create('MyString') %>
-  borrado:
+  borrado: true
   deleted_at: 2020-10-19 00:58:53
   rol: one
 
