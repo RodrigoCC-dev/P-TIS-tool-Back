@@ -654,7 +654,58 @@ class MinutasController < ApplicationController
   end
 
   # Servicio que permite guardar los logros y metas de una minuta de avance semanal
-  def avance
+  def crear_avance
+    bitacora = BitacoraRevision.new
+    bitacora.build_minuta(semanal_params)
+    bitacora.minuta.fecha_reunion = params[:minuta][:fecha_avance]
+    bitacora.minuta.h_inicio = Time.now()
+    bitacora.minuta.h_termino = Time.now()
+    bitacora.minuta.numero_sprint = params[:numero_sprint]
+    tipo_estado = TipoEstado.find_by(abreviacion: 'BOR')
+    if bitacora.valid?
+      bitacora.save
+      nueva_actividad(bitacora.minuta_id, 'A1')
+      asistencia = Asistencia.new
+      asistencia.tipo_asistencia_id = TipoAsistencia.find_by(tipo: 'PRE').id
+      asistencia.minuta_id = bitacora.minuta_id
+      asistencia.id_estudiante = Estudiante.find_by(usuario_id: current_usuario.id)
+      asistencia.save
+      responsable = Responsable.new
+      responsable.asistencia_id = asistencia.id
+      responsable.save
+      params[:logros].each do |l|
+        logro = Item.new
+        logro.descripcion = l[:descripcion]
+        logro.correlativo = l[:correlativo]
+        logro.bitacora_revision_id = bitacora.id
+        logro.tipo_item_id = TipoItem.find_by(tipo: 'Logro').id
+        logro.responsables << responsable
+        if logro.valid?
+          logro.save
+          nueva_actividad(bitacora.minuta_id, 'L1')
+        end
+      end
+      params[:metas].each do |m|
+        meta = Item.new
+        meta.descripcion = m[:descripcion]
+        meta.correlativo = m[:correlativo]
+        meta.bitacora_revision_id = bitacora.id
+        meta.tipo_item_id = TipoItem.find_by(tipo: 'Meta').id
+        meta.responsables << responsable
+        if meta.valid?
+          meta.save
+          nueva_actividad(bitacora.minuta_id, 'MT1')
+        end
+      end
+      bitacora_estado = BitacoraEstado.new
+      bitacora_estado.minuta_id = bitacora.minuta_id
+      bitacora_estado.tipo_estado_id = tipo_estado.id
+      if bitacora_estado.valid?
+        bitacora_estado.save
+      end
+    else
+      render json: ['error': 'Información de la minuta de avance no es válida'], status: :unprocessable_entity
+    end
   end
 
   # Servicio que entrega el correlativo correspondiente a una minuta de avance semanal
@@ -679,6 +730,10 @@ class MinutasController < ApplicationController
 
   def revision_params
     params.require(:bitacora_revision).permit(:revision, :motivo_id)
+  end
+
+  def semanal_params
+    params.require(:minuta).permit(:estudiante_id, :correlativo, :codigo)
   end
 
   def clasificacion_cambio?(clasificacion)

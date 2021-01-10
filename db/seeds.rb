@@ -407,6 +407,21 @@ TipoActividad.create!([
     "actividad" => "Modifica asistencia",
     "descripcion" => "Se actualiza la asistencia de la minuta",
     "identificador" => "M10"
+  },
+  {
+    "actividad" => "Crea minuta avance",
+    "descripcion" => "Se creó una minuta de avance semanal"
+    "identificador" => "A1"
+  },
+  {
+    "actividad" => "Registrar un logro",
+    "descripcion" => "Se registra un logro en una minuta de avance semanal",
+    "identificador" => "L1"
+  },
+  {
+    "actividad" => "Registrar una meta",
+    "descripcion" => "Se registra una meta en una minuta de avance semanal",
+    "identificador" => "MT1"
   }
 ])
 
