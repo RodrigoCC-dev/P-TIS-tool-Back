@@ -159,31 +159,48 @@ TipoAsistencia.create!([
 TipoItem.create!([
   {
     "tipo" => "Agenda",
-    "descripcion" => "Comprimiso con fecha y responsable"
+    "descripcion" => "Comprimiso con fecha y responsable",
+    "rango" => 1
   },
   {
     "tipo" => "Decisión",
-    "descripcion" => "Acuerdo de trabajo"
+    "descripcion" => "Acuerdo de trabajo",
+    "rango" => 1
   },
   {
     "tipo" => "Compromiso",
-    "descripcion" => "Acuerdo de trabajo con responsabilidad"
+    "descripcion" => "Acuerdo de trabajo con responsabilidad",
+    "rango" => 1
   },
   {
     "tipo" => "Hecho",
-    "descripcion" => "Tarea terminada"
+    "descripcion" => "Tarea terminada",
+    "rango" => 1
   },
   {
     "tipo" => "Info",
-    "descripcion" => "Item informativo"
+    "descripcion" => "Item informativo",
+    "rango" => 1
   },
   {
     "tipo" => "Idea",
-    "descripcion" => "Propuesta formulada en la reunión"
+    "descripcion" => "Propuesta formulada en la reunión",
+    "rango" => 1
   },
   {
     "tipo" => "Por hacer",
-    "descripcion" => "Tarea por realizar"
+    "descripcion" => "Tarea por realizar",
+    "rango" => 1
+  },
+  {
+    "tipo" => "Logro",
+    "descripcion" => "Logro conseguido durante la semana de trabajo",
+    "rango" => 2
+  },
+  {
+    "tipo" => "Meta",
+    "descripcion" => "Meta a conseguir en la siguiente semana de trabajo",
+    "rango" => 2
   }
 ])
 
@@ -418,22 +435,22 @@ profesor_uno.save!
 TipoAprobacion.create!([
   {
     "identificador" => "A",
-    "descripcion" => "Aprobada"
+    "descripcion" => "Aprobada",
+    "rango" => 1
   },
   {
     "identificador" => "AC",
-    "descripcion" => "Aprobada con comentarios"
+    "descripcion" => "Aprobada con comentarios",
+    "rango" => 2
   },
   {
     "identificador" => "R",
-    "descripcion" => "Rechazada"
+    "descripcion" => "Rechazada",
+    "rango" => 3
   },
   {
     "identificador" => "RC",
-    "descripcion" => "Rechazada con comentarios"
-  },
-  {
-    "identificador" => "RH",
-    "descripcion" => "Rehacer"
+    "descripcion" => "Rechazada con comentarios",
+    "rango" => 4
   }
   ])
