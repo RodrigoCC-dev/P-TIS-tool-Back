@@ -13,5 +13,6 @@ class Minuta < ApplicationRecord
   validates :correlativo, :codigo, :fecha_reunion, :h_inicio, :h_termino, presence: true
   validates :correlativo, numericality: {only_integer: true, greater_than: 0}
   validates :codigo, format: {with: /\A(MINUTA_)+(G(\d{2})_)+(\d{2}_)+(\d{4})-(\d{1}_)+(\d{4})\z/}
+  validates :numero_sprint, numericality: {only_integer: true, greater_than: 0}
 
 end
