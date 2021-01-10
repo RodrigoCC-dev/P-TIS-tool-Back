@@ -657,10 +657,14 @@ class MinutasController < ApplicationController
   def crear_avance
     bitacora = BitacoraRevision.new
     bitacora.build_minuta(semanal_params)
+    bitacora.minuta.build_clasificacion()
     bitacora.minuta.fecha_reunion = params[:minuta][:fecha_avance]
     bitacora.minuta.h_inicio = Time.now()
     bitacora.minuta.h_termino = Time.now()
     bitacora.minuta.numero_sprint = params[:numero_sprint]
+    bitacora.revision = '0'
+    bitacora.motivo_id = Motivo.find_by(identificador: 'EF').id
+    byebug
     tipo_estado = TipoEstado.find_by(abreviacion: 'BOR')
     if bitacora.valid?
       bitacora.save
@@ -668,7 +672,7 @@ class MinutasController < ApplicationController
       asistencia = Asistencia.new
       asistencia.tipo_asistencia_id = TipoAsistencia.find_by(tipo: 'PRE').id
       asistencia.minuta_id = bitacora.minuta_id
-      asistencia.id_estudiante = Estudiante.find_by(usuario_id: current_usuario.id)
+      asistencia.id_estudiante = Estudiante.find_by(usuario_id: current_usuario.id).id
       asistencia.save
       responsable = Responsable.new
       responsable.asistencia_id = asistencia.id
@@ -733,7 +737,7 @@ class MinutasController < ApplicationController
   end
 
   def semanal_params
-    params.require(:minuta).permit(:estudiante_id, :correlativo, :codigo)
+    params.require(:minuta).permit(:estudiante_id, :correlativo, :codigo, :tipo_minuta_id)
   end
 
   def clasificacion_cambio?(clasificacion)
