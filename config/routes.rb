@@ -29,6 +29,8 @@ Rails.application.routes.draw do
   get 'minutas/revision/grupo', to: 'minutas#revision_grupo'
   get 'minutas/revision/cliente', to: 'minutas#revision_cliente'
   get 'minutas/revision/respondidas', to: 'minutas#por_respuestas'
+  post 'minutas/avance/semanal', to: 'minutas#avance'
+  get 'minutas/correlativo/semanal/:id', to: 'minutas#correlativo_semanal'
 
   resources :comentarios, only: [:create, :show]
   resources :tipo_aprobaciones, only: [:index]

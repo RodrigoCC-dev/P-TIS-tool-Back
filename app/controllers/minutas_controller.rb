@@ -473,7 +473,7 @@ class MinutasController < ApplicationController
 
   # Servicio que entrega el número correlativo siguiente para la nueva minuta del grupo
   def correlativo
-    ultima = Minuta.joins(estudiante: :grupo).where('grupos.id = ? AND minutas.borrado = ?', params[:id], false).last
+    ultima = Minuta.joins(estudiante: :grupo).joins(:tipo_minuta).where('grupos.id = ? AND minutas.borrado = ?', params[:id], false).where.not('tipo_minutas.tipo = ?', 'Semanal').last
     if ultima.nil?
       correlativo = 1
     else
@@ -651,6 +651,21 @@ class MinutasController < ApplicationController
     else
       render json: ['error': 'No es un usuario autorizado para este servicio'], status: :unprocessable_entity
     end
+  end
+
+  # Servicio que permite guardar los logros y metas de una minuta de avance semanal
+  def avance
+  end
+
+  # Servicio que entrega el correlativo correspondiente a una minuta de avance semanal
+  def correlativo_semanal
+    ultima = Minuta.joins(estudiante: :grupo).joins(:tipo_minuta).where('grupos.id = ? AND minutas.borrado = ? AND tipo_minutas.tipo = ?', params[:id], false, 'Semanal').last
+    if ultima.nil?
+      correlativo = 1
+    else
+      correlativo = ultima.correlativo + 1
+    end
+    render json: correlativo.as_json
   end
 
   private
