@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_06_011653) do
+ActiveRecord::Schema.define(version: 2021_01_10_051520) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -179,6 +179,7 @@ ActiveRecord::Schema.define(version: 2021_01_06_011653) do
     t.datetime "deleted_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "numero_sprint", default: 0
     t.index ["clasificacion_id"], name: "index_minutas_on_clasificacion_id"
     t.index ["estudiante_id"], name: "index_minutas_on_estudiante_id"
     t.index ["tipo_minuta_id"], name: "index_minutas_on_tipo_minuta_id"
@@ -314,6 +315,7 @@ ActiveRecord::Schema.define(version: 2021_01_06_011653) do
     t.datetime "deleted_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "rango"
   end
 
   create_table "tipo_asistencias", force: :cascade do |t|
@@ -341,6 +343,7 @@ ActiveRecord::Schema.define(version: 2021_01_06_011653) do
     t.datetime "deleted_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "rango"
   end
 
   create_table "tipo_minutas", force: :cascade do |t|
