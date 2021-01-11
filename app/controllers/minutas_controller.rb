@@ -723,6 +723,25 @@ class MinutasController < ApplicationController
     render json: correlativo.as_json
   end
 
+  def avances_por_grupo
+    bitacoras = BitacoraRevision.joins(minuta: :tipo_minuta).joins(minuta: {estudiante: :grupo}).where('minutas.borrado = ? AND tipo_minutas.tipo = ? AND grupos.id = ?', false, 'Semanal', params[:id])
+    render json: bitacoras.as_json(
+      {except: %i[created_at updated_at], :include => {
+        :minuta => {except: %i[created_at updated_at borrado deleted_at], :include => {
+          :asistencias => json_data
+          }
+        },
+        :items => {except: %i[created_at updated_at borrado deleted_at], :include => {
+          :tipo_item => json_data,
+          :responsables => json_data
+          }
+        }
+        }
+      }
+    )
+  end
+
+
   private
   def minuta_params
     params.require(:minuta).permit(:estudiante_id, :correlativo, :codigo, :fecha_reunion, :h_inicio, :h_termino, :tipo_minuta_id)
