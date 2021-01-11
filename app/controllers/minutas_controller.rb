@@ -724,8 +724,8 @@ class MinutasController < ApplicationController
   end
 
   def avances_por_grupo
-    bitacoras = BitacoraRevision.joins(minuta: :tipo_minuta).joins(minuta: {estudiante: :grupo}).where('minutas.borrado = ? AND tipo_minutas.tipo = ? AND grupos.id = ?',
-      false, 'Semanal', params[:id]).select('
+    bitacoras = BitacoraRevision.joins(minuta: :tipo_minuta).joins(minuta: {estudiante: :grupo}).joins(minuta: {bitacora_estados: :tipo_estado}).where(
+      'minutas.borrado = ? AND tipo_minutas.tipo = ? AND grupos.id = ? AND bitacora_estados.activo = ?', false, 'Semanal', params[:id], true).select('
         bitacora_revisiones.id,
         bitacora_revisiones.emitida AS bit_emitida,
         bitacora_revisiones.activa AS bit_activa,
@@ -734,7 +734,12 @@ class MinutasController < ApplicationController
         minutas.correlativo AS minuta_correlativo,
         minutas.codigo AS codigo_min,
         minutas.fecha_reunion AS fecha_min,
-        minutas.numero_sprint AS num_sprint
+        minutas.numero_sprint AS num_sprint,
+        minutas.created_at AS creada_el,
+        bitacora_estados.id AS estado_id,
+        tipo_estados.id AS tipo_id,
+        tipo_estados.abreviacion AS tipo_abrev,
+        tipo_estados.descripcion AS tipo_desc
     ')
     lista = []
     bitacoras.each do |bit|
@@ -759,7 +764,9 @@ class MinutasController < ApplicationController
       end
       h = {id: bit.id, emitida: bit.bit_emitida, activa: bit.bit_activa, fecha_emision: bit.bit_fecha, minuta: {
         id: bit.id_minuta, correlativo: bit.minuta_correlativo, codigo: bit.codigo_min, fecha_reunion: bit.fecha_min,
-        numero_sprint: bit.num_sprint, asistencia: asistencias.as_json(json_data), items: lista_items}
+        numero_sprint: bit.num_sprint, creada_el: bit.creada_el, asistencia: asistencias.as_json(json_data), items: lista_items,
+        bitacora_estado: {id: bit.estado_id, tipo_estado: {id: bit.tipo_id, abreviacion: bit.tipo_abrev, descripcion: bit.tipo_desc}}
+        }
       }
       lista << h
     end
