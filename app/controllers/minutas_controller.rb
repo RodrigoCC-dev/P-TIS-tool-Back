@@ -724,21 +724,46 @@ class MinutasController < ApplicationController
   end
 
   def avances_por_grupo
-    bitacoras = BitacoraRevision.joins(minuta: :tipo_minuta).joins(minuta: {estudiante: :grupo}).where('minutas.borrado = ? AND tipo_minutas.tipo = ? AND grupos.id = ?', false, 'Semanal', params[:id])
-    render json: bitacoras.as_json(
-      {except: %i[created_at updated_at], :include => {
-        :minuta => {except: %i[created_at updated_at borrado deleted_at], :include => {
-          :asistencias => json_data
+    bitacoras = BitacoraRevision.joins(minuta: :tipo_minuta).joins(minuta: {estudiante: :grupo}).where('minutas.borrado = ? AND tipo_minutas.tipo = ? AND grupos.id = ?',
+      false, 'Semanal', params[:id]).select('
+        bitacora_revisiones.id,
+        bitacora_revisiones.emitida AS bit_emitida,
+        bitacora_revisiones.activa AS bit_activa,
+        bitacora_revisiones.fecha_emision AS bit_fecha,
+        minutas.id AS id_minuta,
+        minutas.correlativo AS minuta_correlativo,
+        minutas.codigo AS codigo_min,
+        minutas.fecha_reunion AS fecha_min,
+        minutas.numero_sprint AS num_sprint
+    ')
+    lista = []
+    bitacoras.each do |bit|
+      items = Item.joins(:tipo_item).joins(:responsables).where(bitacora_revision_id: bit.id).select('
+        items.id,
+        items.descripcion AS descripcion_item,
+        items.correlativo AS correlativo_item,
+        tipo_items.id AS tipo_id,
+        tipo_items.tipo AS item_tipo,
+        tipo_items.descripcion AS descripcion_tipo,
+        responsables.id AS id_resp,
+        responsables.asistencia_id AS asistencia_resp
+        ')
+      asistencias = Asistencia.where(minuta_id: bit.id_minuta)
+      lista_items = []
+      items.each do |i|
+        item = {id: i.id, descripcion: i.descripcion_item, correlativo: i.correlativo_item, tipo_item: {
+          id: i.tipo_id, tipo: i.item_tipo, descripcion: i.descripcion_tipo}, responsables: {
+          id: i.id_resp, asistencia_id: i.asistencia_resp}
           }
-        },
-        :items => {except: %i[created_at updated_at borrado deleted_at], :include => {
-          :tipo_item => json_data,
-          :responsables => json_data
-          }
-        }
-        }
+        lista_items << item
+      end
+      h = {id: bit.id, emitida: bit.bit_emitida, activa: bit.bit_activa, fecha_emision: bit.bit_fecha, minuta: {
+        id: bit.id_minuta, correlativo: bit.minuta_correlativo, codigo: bit.codigo_min, fecha_reunion: bit.fecha_min,
+        numero_sprint: bit.num_sprint, asistencia: asistencias.as_json(json_data), items: lista_items}
       }
-    )
+      lista << h
+    end
+    render json: lista.as_json
   end
 
 
