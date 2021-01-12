@@ -664,7 +664,6 @@ class MinutasController < ApplicationController
     bitacora.minuta.numero_sprint = params[:numero_sprint]
     bitacora.revision = '0'
     bitacora.motivo_id = Motivo.find_by(identificador: 'EF').id
-    byebug
     tipo_estado = TipoEstado.find_by(abreviacion: 'BOR')
     if bitacora.valid?
       bitacora.save
@@ -833,7 +832,22 @@ class MinutasController < ApplicationController
         end
       end
       nuevos_items(nuevos_logros, bitacora, 'Logro', responsable)
-      nuevos_items(nuevas_metas, bicatora, 'Meta', responsable)
+      nuevos_items(nuevas_metas, bitacora, 'Meta', responsable)
+    end
+    if to_boolean(params[:emitir])
+      bitacora.minuta.bitacora_estados.each do |bit|
+        bit.activo = false
+        bit.save
+      end
+      bitacora_estado = BitacoraEstado.new
+      bitacora_estado.minuta_id = bitacora.minuta_id
+      bitacora_estado.tipo_estado_id = TipoEstado.find_by(abreviacion: 'CER').id
+      if bitacora_estado.valid?
+        bitacora_estado.save!
+        bitacora.emitida = true
+        bitacora.fecha_emision = Time.now()
+        bitacora.save
+      end
     end
   end
 
