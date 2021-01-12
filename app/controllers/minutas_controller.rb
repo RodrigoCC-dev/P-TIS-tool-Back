@@ -778,6 +778,14 @@ class MinutasController < ApplicationController
   # Servicio que permite actualizar los logros y metas de un estudiante e ingresar nuevos logros y metas para los otros estudiantes del grupo
   def actualizar_avance
     bitacora = BitacoraRevision.find(params[:id])
+    bitacora.minuta.numero_sprint = params[:minuta][:numero_sprint]
+    if bitacora.minuta.save
+      nueva_actividad(bitacora.minuta_id, 'NS1')
+    end
+    bitacora.minuta.fecha_reunion = params[:minuta][:fecha_avance]
+    if bitacora.minuta.save
+      nueva_actividad(bitacora.minuta_id, 'F4')
+    end
     asistencia = Asistencia.where(id_estudiante: params[:minuta][:estudiante_id], minuta_id: bitacora.minuta_id).last
     if asistencia.nil?
       asistencia = Asistencia.new
