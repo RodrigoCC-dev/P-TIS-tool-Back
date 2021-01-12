@@ -724,24 +724,45 @@ class MinutasController < ApplicationController
 
   # Servicio que entrega las minutas de avance semanal del grupo identificado por su 'id'
   def avances_por_grupo
-    bitacoras = BitacoraRevision.joins(minuta: :tipo_minuta).joins(minuta: {estudiante: :grupo}).joins(minuta: {bitacora_estados: :tipo_estado}).where(
-      'minutas.borrado = ? AND tipo_minutas.tipo = ? AND grupos.id = ? AND bitacora_estados.activo = ?', false, 'Semanal', params[:id], true).select('
-        bitacora_revisiones.id,
-        bitacora_revisiones.emitida AS bit_emitida,
-        bitacora_revisiones.activa AS bit_activa,
-        bitacora_revisiones.fecha_emision AS bit_fecha,
-        minutas.id AS id_minuta,
-        minutas.estudiante_id AS id_estudiante,
-        minutas.correlativo AS minuta_correlativo,
-        minutas.codigo AS codigo_min,
-        minutas.fecha_reunion AS fecha_min,
-        minutas.numero_sprint AS num_sprint,
-        minutas.created_at AS creada_el,
-        bitacora_estados.id AS estado_id,
-        tipo_estados.id AS tipo_id,
-        tipo_estados.abreviacion AS tipo_abrev,
-        tipo_estados.descripcion AS tipo_desc
-    ')
+    if current_usuario.rol.rango < 3
+      bitacoras = BitacoraRevision.joins(minuta: :tipo_minuta).joins(minuta: {estudiante: :grupo}).joins(minuta: {bitacora_estados: :tipo_estado}).where(
+        'minutas.borrado = ? AND tipo_minutas.tipo = ? AND grupos.id = ? AND bitacora_estados.activo = ?', false, 'Semanal', params[:id], true).select('
+          bitacora_revisiones.id,
+          bitacora_revisiones.emitida AS bit_emitida,
+          bitacora_revisiones.activa AS bit_activa,
+          bitacora_revisiones.fecha_emision AS bit_fecha,
+          minutas.id AS id_minuta,
+          minutas.estudiante_id AS id_estudiante,
+          minutas.correlativo AS minuta_correlativo,
+          minutas.codigo AS codigo_min,
+          minutas.fecha_reunion AS fecha_min,
+          minutas.numero_sprint AS num_sprint,
+          minutas.created_at AS creada_el,
+          bitacora_estados.id AS estado_id,
+          tipo_estados.id AS tipo_id,
+          tipo_estados.abreviacion AS tipo_abrev,
+          tipo_estados.descripcion AS tipo_desc
+      ').order(created_at: 'desc')
+    else
+      bitacoras = BitacoraRevision.joins(minuta: :tipo_minuta).joins(minuta: {estudiante: :grupo}).joins(minuta: {bitacora_estados: :tipo_estado}).where(
+        'minutas.borrado = ? AND tipo_minutas.tipo = ? AND grupos.id = ? AND bitacora_estados.activo = ?', false, 'Semanal', params[:id], true).select('
+          bitacora_revisiones.id,
+          bitacora_revisiones.emitida AS bit_emitida,
+          bitacora_revisiones.activa AS bit_activa,
+          bitacora_revisiones.fecha_emision AS bit_fecha,
+          minutas.id AS id_minuta,
+          minutas.estudiante_id AS id_estudiante,
+          minutas.correlativo AS minuta_correlativo,
+          minutas.codigo AS codigo_min,
+          minutas.fecha_reunion AS fecha_min,
+          minutas.numero_sprint AS num_sprint,
+          minutas.created_at AS creada_el,
+          bitacora_estados.id AS estado_id,
+          tipo_estados.id AS tipo_id,
+          tipo_estados.abreviacion AS tipo_abrev,
+          tipo_estados.descripcion AS tipo_desc
+      ')
+    end
     lista = []
     bitacoras.each do |bit|
       items = Item.joins(:tipo_item).joins(:responsables).where(bitacora_revision_id: bit.id, borrado: false).select('
