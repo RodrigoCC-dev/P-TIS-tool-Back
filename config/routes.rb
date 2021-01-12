@@ -31,6 +31,8 @@ Rails.application.routes.draw do
   get 'minutas/revision/respondidas', to: 'minutas#por_respuestas'
   post 'minutas/avance/semanal', to: 'minutas#crear_avance'
   get 'minutas/correlativo/semanal/:id', to: 'minutas#correlativo_semanal'
+  get 'minutas/avances/semanales/grupo/:id', to: 'minutas#avances_por_grupo'
+  post 'minutas/actualizar/avance/semanal', to: 'minutas#actualizar_avance'
 
   resources :comentarios, only: [:create, :show]
   resources :tipo_aprobaciones, only: [:index]

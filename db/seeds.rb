@@ -422,6 +422,16 @@ TipoActividad.create!([
     "actividad" => "Registrar una meta",
     "descripcion" => "Se registra una meta en una minuta de avance semanal",
     "identificador" => "MT1"
+  },
+  {
+    "actividad" => "Cambiar número Sprint",
+    "descripcion" => "Se actualiza número de Sprint en minuta de avance semanal",
+    "identificador" => "NS1"
+  },
+  {
+    "actividad" => "Cambiar fecha minuta semanal",
+    "descripcion" => "Se actualiza fecha de avance semanal"
+    "identificador" => "F4"
   }
 ])
 
