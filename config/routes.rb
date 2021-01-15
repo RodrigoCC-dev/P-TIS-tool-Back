@@ -5,8 +5,11 @@ Rails.application.routes.draw do
   resources :secciones, only: [:index]
   resources :estudiantes, only: [:index, :create, :show]
   get 'estudiantes/asignacion/sin_grupo', to: 'estudiantes#sin_grupo'
+  post 'estudiantes/eliminar', to: 'estudiantes#eliminar'
 
-  resources :stakeholders, only: [:index, :create, :show]
+  resources :stakeholders, only: [:index, :create, :show, :update]
+  get 'stakeholders/asignacion/grupos', to: 'stakeholders#por_jornada'
+
   resources :profesores, only: [:index, :create]
 
   resources :grupos, only: [:index, :create, :show]
@@ -24,8 +27,12 @@ Rails.application.routes.draw do
   get 'minutas/grupo/:id', to: 'minutas#por_grupo'
   get 'minutas/revision/estados', to: 'minutas#por_estados'
   get 'minutas/revision/grupo', to: 'minutas#revision_grupo'
-  get 'minutas/revision/cliente', to: 'minutas#revision_cliente'
+  get 'minutas/revision/cliente/:id', to: 'minutas#revision_cliente'
   get 'minutas/revision/respondidas', to: 'minutas#por_respuestas'
+  post 'minutas/avance/semanal', to: 'minutas#crear_avance'
+  get 'minutas/correlativo/semanal/:id', to: 'minutas#correlativo_semanal'
+  get 'minutas/avances/semanales/grupo/:id', to: 'minutas#avances_por_grupo'
+  post 'minutas/actualizar/avance/semanal', to: 'minutas#actualizar_avance'
 
   resources :comentarios, only: [:create, :show]
   resources :tipo_aprobaciones, only: [:index]

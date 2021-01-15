@@ -23,3 +23,16 @@ two:
   clasificacion: two
   borrado:
   deleted_at: 2020-10-19 17:40:28
+
+avance:
+  correlativo: 3
+  codigo: 'MINUTA_G01_02_2020-2_1008'
+  fecha_reunion: 2020-10-19 17:40:28
+  h_inicio: 2020-10-19 17:40:28
+  h_termino: 2020-10-19 17:40:28
+  estudiante_id: 262345
+  tipo_minuta: two
+  clasificacion: two
+  numero_sprint: 4534
+  borrado:
+  deleted_at: 2020-10-19 17:40:28

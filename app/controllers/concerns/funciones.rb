@@ -59,4 +59,8 @@ module Funciones
     end
     return revisores
   end
+
+  def nueva_password(nombre)
+    return nombre.titleize.split(' ').join + '123'
+  end
 end

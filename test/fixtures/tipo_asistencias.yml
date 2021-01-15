@@ -3,11 +3,17 @@
 one:
   tipo: MyString
   descripcion: MyString
-  borrado: 
+  borrado:
   deleted_at: 2020-10-19 20:04:14
 
 two:
   tipo: MyString
   descripcion: MyString
-  borrado: 
+  borrado:
+  deleted_at: 2020-10-19 20:04:14
+
+presente:
+  tipo: PRE
+  descripcion: MyString
+  borrado: false
   deleted_at: 2020-10-19 20:04:14

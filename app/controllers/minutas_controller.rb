@@ -473,7 +473,7 @@ class MinutasController < ApplicationController
 
   # Servicio que entrega el número correlativo siguiente para la nueva minuta del grupo
   def correlativo
-    ultima = Minuta.joins(estudiante: :grupo).where('grupos.id = ? AND minutas.borrado = ?', params[:id], false).last
+    ultima = Minuta.joins(estudiante: :grupo).joins(:tipo_minuta).where('grupos.id = ? AND minutas.borrado = ?', params[:id], false).where.not('tipo_minutas.tipo = ?', 'Semanal').last
     if ultima.nil?
       correlativo = 1
     else
@@ -578,16 +578,14 @@ class MinutasController < ApplicationController
     end
   end
 
-  # Servicio que entrega las minutas a revisar por un stakeholder
+  # Servicio que entrega las minutas a revisar por un stakeholder según el 'id' de un grupo asignado
   def revision_cliente
     if current_usuario.rol.rango == 4
       stakeholder = Stakeholder.find_by(usuario_id: current_usuario.id)
-      bitacoras = BitacoraRevision.joins('INNER JOIN motivos ON motivos.id = bitacora_revisiones.motivo_id INNER JOIN minutas ON bitacora_revisiones.minuta_id = minutas.id
-        INNER JOIN bitacora_estados ON bitacora_estados.minuta_id = minutas.id INNER JOIN tipo_estados ON tipo_estados.id = bitacora_estados.tipo_estado_id
-        INNER JOIN tipo_minutas ON tipo_minutas.id = minutas.tipo_minuta_id INNER JOIN estudiantes ON estudiantes.id = minutas.estudiante_id
-        INNER JOIN grupos ON grupos.id = estudiantes.grupo_id').where('minutas.borrado = ? AND bitacora_revisiones.activa = ? AND grupos.id = ? AND motivos.identificador <> ?
-        AND tipo_minutas.tipo <> ? AND bitacora_revisiones.emitida = ? AND bitacora_estados.activo = ?',
-        false, true, stakeholder.grupo_id, 'ECI', 'Semanal', true, true).where.not('tipo_estados.abreviacion = ?', 'BOR').select('
+      bitacoras = BitacoraRevision.joins(:motivo).joins(minuta: {bitacora_estados: :tipo_estado}).joins(minuta: :tipo_minuta).joins(minuta: {estudiante: [grupo: :stakeholders]}).joins(
+        minuta: {estudiante: [seccion: :jornada]}).where('minutas.borrado = ? AND bitacora_revisiones.activa = ? AND stakeholders.id = ? AND motivos.identificador <> ?
+        AND tipo_minutas.tipo <> ? AND bitacora_revisiones.emitida = ? AND bitacora_estados.activo = ? AND grupos.id = ?',
+        false, true, stakeholder.id, 'ECI', 'Semanal', true, true, params[:id]).where.not('tipo_estados.abreviacion = ?', 'BOR').select('
           bitacora_revisiones.id,
           bitacora_revisiones.revision AS revision_min,
           bitacora_revisiones.fecha_emision AS fecha_emi,
@@ -601,9 +599,26 @@ class MinutasController < ApplicationController
           bitacora_estados.id AS id_estado,
           tipo_estados.abreviacion AS abrev_estado,
           tipo_estados.descripcion AS desc_estado,
-          estudiantes.iniciales AS iniciales_est
+          estudiantes.iniciales AS iniciales_est,
+          grupos.id AS grupo_id,
+          grupos.nombre AS nombre_grupo,
+          jornadas.nombre AS jornada
         ')
-      lista_bitacoras = bitacoras_json(bitacoras)
+      lista_bitacoras = []
+      bitacoras.each do |bit|
+        h = {id: bit.id, motivo: bit.motivo_min, revision: bit.revision_min, fecha_emision: bit.fecha_emi,
+          minuta: {
+            id: bit.id_minuta, codigo: bit.codigo_min, correlativo: bit.correlativo_min, fecha_reunion: bit.fecha_min, tipo_minuta: bit.tipo_min, creada_por: bit.iniciales_est, creada_el: bit.creada_el
+          },
+          estado: {
+            id: bit.id_estado, abreviacion: bit.abrev_estado, descripcion: bit.desc_estado
+          },
+          grupo: {
+            id: bit.grupo_id, nombre: bit.nombre_grupo, jornada: bit.jornada
+          }
+        }
+        lista_bitacoras << h
+      end
       render json: lista_bitacoras.as_json(json_data)
     else
       render json: ['error': 'No es un usuario autorizado para este servicio'], status: :unprocessable_entity
@@ -638,6 +653,226 @@ class MinutasController < ApplicationController
     end
   end
 
+  # Servicio que permite guardar los logros y metas de una minuta de avance semanal
+  def crear_avance
+    bitacora = BitacoraRevision.new
+    bitacora.build_minuta(semanal_params)
+    bitacora.minuta.build_clasificacion()
+    bitacora.minuta.fecha_reunion = params[:minuta][:fecha_avance]
+    bitacora.minuta.h_inicio = Time.now()
+    bitacora.minuta.h_termino = Time.now()
+    bitacora.minuta.numero_sprint = params[:numero_sprint]
+    bitacora.revision = '0'
+    bitacora.motivo_id = Motivo.find_by(identificador: 'EF').id
+    tipo_estado = TipoEstado.find_by(abreviacion: 'BOR')
+    if bitacora.valid?
+      bitacora.save
+      nueva_actividad(bitacora.minuta_id, 'A1')
+      asistencia = Asistencia.new
+      asistencia.tipo_asistencia_id = TipoAsistencia.find_by(tipo: 'PRE').id
+      asistencia.minuta_id = bitacora.minuta_id
+      asistencia.id_estudiante = Estudiante.find_by(usuario_id: current_usuario.id).id
+      asistencia.save
+      responsable = Responsable.new
+      responsable.asistencia_id = asistencia.id
+      responsable.save
+      params[:logros].each do |l|
+        logro = Item.new
+        logro.descripcion = l[:descripcion]
+        logro.correlativo = l[:correlativo]
+        logro.bitacora_revision_id = bitacora.id
+        logro.tipo_item_id = TipoItem.find_by(tipo: 'Logro').id
+        logro.responsables << responsable
+        if logro.valid?
+          logro.save
+          nueva_actividad(bitacora.minuta_id, 'L1')
+        end
+      end
+      params[:metas].each do |m|
+        meta = Item.new
+        meta.descripcion = m[:descripcion]
+        meta.correlativo = m[:correlativo]
+        meta.bitacora_revision_id = bitacora.id
+        meta.tipo_item_id = TipoItem.find_by(tipo: 'Meta').id
+        meta.responsables << responsable
+        if meta.valid?
+          meta.save
+          nueva_actividad(bitacora.minuta_id, 'MT1')
+        end
+      end
+      bitacora_estado = BitacoraEstado.new
+      bitacora_estado.minuta_id = bitacora.minuta_id
+      bitacora_estado.tipo_estado_id = tipo_estado.id
+      if bitacora_estado.valid?
+        bitacora_estado.save
+      end
+    else
+      render json: ['error': 'Información de la minuta de avance no es válida'], status: :unprocessable_entity
+    end
+  end
+
+  # Servicio que entrega el correlativo correspondiente a una minuta de avance semanal según el 'id' del grupo
+  def correlativo_semanal
+    ultima = Minuta.joins(estudiante: :grupo).joins(:tipo_minuta).where('grupos.id = ? AND minutas.borrado = ? AND tipo_minutas.tipo = ?', params[:id], false, 'Semanal').last
+    if ultima.nil?
+      correlativo = 1
+    else
+      correlativo = ultima.correlativo + 1
+    end
+    render json: correlativo.as_json
+  end
+
+  # Servicio que entrega las minutas de avance semanal del grupo identificado por su 'id'
+  def avances_por_grupo
+    if current_usuario.rol.rango < 3
+      bitacoras = BitacoraRevision.joins(minuta: :tipo_minuta).joins(minuta: {estudiante: :grupo}).joins(minuta: {bitacora_estados: :tipo_estado}).where(
+        'minutas.borrado = ? AND tipo_minutas.tipo = ? AND grupos.id = ? AND bitacora_estados.activo = ?', false, 'Semanal', params[:id], true).select('
+          bitacora_revisiones.id,
+          bitacora_revisiones.emitida AS bit_emitida,
+          bitacora_revisiones.activa AS bit_activa,
+          bitacora_revisiones.fecha_emision AS bit_fecha,
+          minutas.id AS id_minuta,
+          minutas.estudiante_id AS id_estudiante,
+          minutas.correlativo AS minuta_correlativo,
+          minutas.codigo AS codigo_min,
+          minutas.fecha_reunion AS fecha_min,
+          minutas.numero_sprint AS num_sprint,
+          minutas.created_at AS creada_el,
+          bitacora_estados.id AS estado_id,
+          tipo_estados.id AS tipo_id,
+          tipo_estados.abreviacion AS tipo_abrev,
+          tipo_estados.descripcion AS tipo_desc
+      ').order(created_at: 'desc')
+    else
+      bitacoras = BitacoraRevision.joins(minuta: :tipo_minuta).joins(minuta: {estudiante: :grupo}).joins(minuta: {bitacora_estados: :tipo_estado}).where(
+        'minutas.borrado = ? AND tipo_minutas.tipo = ? AND grupos.id = ? AND bitacora_estados.activo = ?', false, 'Semanal', params[:id], true).select('
+          bitacora_revisiones.id,
+          bitacora_revisiones.emitida AS bit_emitida,
+          bitacora_revisiones.activa AS bit_activa,
+          bitacora_revisiones.fecha_emision AS bit_fecha,
+          minutas.id AS id_minuta,
+          minutas.estudiante_id AS id_estudiante,
+          minutas.correlativo AS minuta_correlativo,
+          minutas.codigo AS codigo_min,
+          minutas.fecha_reunion AS fecha_min,
+          minutas.numero_sprint AS num_sprint,
+          minutas.created_at AS creada_el,
+          bitacora_estados.id AS estado_id,
+          tipo_estados.id AS tipo_id,
+          tipo_estados.abreviacion AS tipo_abrev,
+          tipo_estados.descripcion AS tipo_desc
+      ')
+    end
+    lista = []
+    bitacoras.each do |bit|
+      items = Item.joins(:tipo_item).joins(:responsables).where(bitacora_revision_id: bit.id, borrado: false).select('
+        items.id,
+        items.descripcion AS descripcion_item,
+        items.correlativo AS correlativo_item,
+        tipo_items.id AS tipo_id,
+        tipo_items.tipo AS item_tipo,
+        tipo_items.descripcion AS descripcion_tipo,
+        responsables.id AS id_resp,
+        responsables.asistencia_id AS asistencia_resp
+        ')
+      asistencias = Asistencia.where(minuta_id: bit.id_minuta)
+      lista_items = []
+      items.each do |i|
+        item = {id: i.id, descripcion: i.descripcion_item, correlativo: i.correlativo_item, tipo_item: {
+          id: i.tipo_id, tipo: i.item_tipo, descripcion: i.descripcion_tipo}, responsables: {
+          id: i.id_resp, asistencia_id: i.asistencia_resp}
+          }
+        lista_items << item
+      end
+      h = {id: bit.id, emitida: bit.bit_emitida, activa: bit.bit_activa, fecha_emision: bit.bit_fecha, minuta: {
+        id: bit.id_minuta, estudiante_id: bit.id_estudiante, correlativo: bit.minuta_correlativo, codigo: bit.codigo_min, fecha_reunion: bit.fecha_min,
+        numero_sprint: bit.num_sprint, creada_el: bit.creada_el, asistencia: asistencias.as_json(json_data), items: lista_items,
+        bitacora_estado: {id: bit.estado_id, tipo_estado: {id: bit.tipo_id, abreviacion: bit.tipo_abrev, descripcion: bit.tipo_desc}}
+        }
+      }
+      lista << h
+    end
+    render json: lista.as_json
+  end
+
+  # Servicio que permite actualizar los logros y metas de un estudiante e ingresar nuevos logros y metas para los otros estudiantes del grupo
+  def actualizar_avance
+    bitacora = BitacoraRevision.find(params[:id])
+    bitacora.minuta.numero_sprint = params[:numero_sprint]
+    if bitacora.minuta.save
+      nueva_actividad(bitacora.minuta_id, 'NS1')
+    end
+    bitacora.minuta.fecha_reunion = params[:minuta][:fecha_avance]
+    if bitacora.minuta.save
+      nueva_actividad(bitacora.minuta_id, 'F4')
+    end
+    asistencia = Asistencia.where(id_estudiante: params[:minuta][:estudiante_id], minuta_id: bitacora.minuta_id).last
+    if asistencia.nil?
+      asistencia = Asistencia.new
+      asistencia.tipo_asistencia_id = TipoAsistencia.find_by(tipo: 'PRE').id
+      asistencia.minuta_id = bitacora.minuta_id
+      asistencia.id_estudiante = Estudiante.find_by(usuario_id: current_usuario.id).id
+      asistencia.save
+      responsable = Responsable.new
+      responsable.asistencia_id = asistencia.id
+      responsable.save
+      nuevos_items(params[:logros], bitacora, 'Logro', responsable)
+      nuevos_items(params[:metas], bitacora, 'Meta', responsable)
+    else
+      responsable = Responsable.find_by(asistencia_id: asistencia.id)
+      items = Item.joins(:responsables).where('items.bitacora_revision_id = ? AND responsables.id = ? AND items.borrado = ?', bitacora.id, responsable.id, false)
+      items.each do |item|
+        if item.tipo_item.tipo == 'Logro'
+          unless params_include(params[:logros], item.id)
+            item.borrado = true
+            item.deleted_at = Time.now
+            item.save
+          end
+        elsif item.tipo_item.tipo == 'Meta'
+          unless params_include(params[:metas], item.id)
+            item.borrado = true
+            item.deleted_at = Time.now
+            item.save
+          end
+        end
+      end
+      nuevos_logros = []
+      params[:logros].each do |p|
+        if p[:id] != 0
+          actualizar_item(p)
+        else
+          nuevos_logros << p
+        end
+      end
+      nuevas_metas = []
+      params[:metas].each do |m|
+        if m[:id] != 0
+          actualizar_item(m)
+        else
+          nuevas_metas << m
+        end
+      end
+      nuevos_items(nuevos_logros, bitacora, 'Logro', responsable)
+      nuevos_items(nuevas_metas, bitacora, 'Meta', responsable)
+    end
+    if to_boolean(params[:emitir])
+      bitacora.minuta.bitacora_estados.each do |bit|
+        bit.activo = false
+        bit.save
+      end
+      bitacora_estado = BitacoraEstado.new
+      bitacora_estado.minuta_id = bitacora.minuta_id
+      bitacora_estado.tipo_estado_id = TipoEstado.find_by(abreviacion: 'CER').id
+      if bitacora_estado.valid?
+        bitacora_estado.save!
+        bitacora.emitida = true
+        bitacora.fecha_emision = Time.now()
+        bitacora.save
+      end
+    end
+  end
+
+
   private
   def minuta_params
     params.require(:minuta).permit(:estudiante_id, :correlativo, :codigo, :fecha_reunion, :h_inicio, :h_termino, :tipo_minuta_id)
@@ -649,6 +884,10 @@ class MinutasController < ApplicationController
 
   def revision_params
     params.require(:bitacora_revision).permit(:revision, :motivo_id)
+  end
+
+  def semanal_params
+    params.require(:minuta).permit(:estudiante_id, :correlativo, :codigo, :tipo_minuta_id)
   end
 
   def clasificacion_cambio?(clasificacion)
@@ -668,6 +907,42 @@ class MinutasController < ApplicationController
     cambio = cambio || minuta.h_inicio_changed?
     cambio = cambio || minuta.h_termino_changed?
     return cambio
+  end
+
+  def nuevos_items(params, bitacora, tipo, responsable)
+    params.each do |p|
+      item = Item.new
+      item.descripcion = p[:descripcion]
+      item.correlativo = p[:correlativo]
+      item.bitacora_revision_id = bitacora.id
+      item.tipo_item_id = TipoItem.find_by(tipo: tipo).id
+      item.responsables << responsable
+      if item.valid?
+        item.save
+        if tipo == 'Logro'
+          nueva_actividad(bitacora.minuta_id, 'L1')
+        elsif tipo == 'Meta'
+          nueva_actividad(bitacora.minuta_id, 'MT1')
+        end
+      end
+    end
+  end
+
+  def params_include(params, id_item)
+    presente = false
+    params.each do |p|
+      if p[:id] = id_item
+        presente = true
+      end
+    end
+    return presente
+  end
+
+  def actualizar_item(params)
+    item = Item.find(params[:id].to_i)
+    item.descripcion = params[:descripcion]
+    item.correlativo = params[:correlativo]
+    item.save
   end
 
 end

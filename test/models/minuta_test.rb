@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class MinutumTest < ActiveSupport::TestCase
+class MinutaTest < ActiveSupport::TestCase
   test "Minuta sin 'correlativo' no se guarda" do
     minuta = Minuta.new(
       codigo: 'MINUTA_G01_01_2020-2_1112',
