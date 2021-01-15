@@ -8,6 +8,8 @@ class JornadasController < ApplicationController
       jornadas = Jornada.where('borrado = ?', false)
     elsif current_usuario.rol.rango == 2
       jornadas = Profesor.joins(secciones: :jornada).where('profesores.usuario_id = ? AND jornadas.borrado = ?', current_usuario.id, false).select('jornadas.*')
+    elsif current_usuario.rol.rango == 4
+      jornadas = Stakeholder.joins(grupos: {estudiantes: [seccion: :jornada]}).where('stakeholders.usuario_id = ? AND jornadas.borrado = ?', current_usuario.id, false).select('jornadas.*')
     end
     render json: jornadas.as_json(json_data)
   end
