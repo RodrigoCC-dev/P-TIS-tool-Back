@@ -578,14 +578,14 @@ class MinutasController < ApplicationController
     end
   end
 
-  # Servicio que entrega las minutas a revisar por un stakeholder
+  # Servicio que entrega las minutas a revisar por un stakeholder según el 'id' de un grupo asignado
   def revision_cliente
     if current_usuario.rol.rango == 4
       stakeholder = Stakeholder.find_by(usuario_id: current_usuario.id)
       bitacoras = BitacoraRevision.joins(:motivo).joins(minuta: {bitacora_estados: :tipo_estado}).joins(minuta: :tipo_minuta).joins(minuta: {estudiante: [grupo: :stakeholders]}).joins(
         minuta: {estudiante: [seccion: :jornada]}).where('minutas.borrado = ? AND bitacora_revisiones.activa = ? AND stakeholders.id = ? AND motivos.identificador <> ?
-        AND tipo_minutas.tipo <> ? AND bitacora_revisiones.emitida = ? AND bitacora_estados.activo = ?',
-        false, true, stakeholder.id, 'ECI', 'Semanal', true, true).where.not('tipo_estados.abreviacion = ?', 'BOR').select('
+        AND tipo_minutas.tipo <> ? AND bitacora_revisiones.emitida = ? AND bitacora_estados.activo = ? AND grupos.id = ?',
+        false, true, stakeholder.id, 'ECI', 'Semanal', true, true, params[:id]).where.not('tipo_estados.abreviacion = ?', 'BOR').select('
           bitacora_revisiones.id,
           bitacora_revisiones.revision AS revision_min,
           bitacora_revisiones.fecha_emision AS fecha_emi,
