@@ -4,7 +4,7 @@ one:
   descripcion: MyString
   correlativo: 1
   resuelto: false
-  resuelto_por: 
+  resuelto_por:
   resuelto_el: 2020-10-19 20:31:35
   borrado: false
   deleted_at: 2020-10-19 20:31:35
@@ -15,9 +15,57 @@ two:
   descripcion: MyString
   correlativo: 1
   resuelto: false
-  resuelto_por: 
+  resuelto_por:
   resuelto_el: 2020-10-19 20:31:35
   borrado: false
   deleted_at: 2020-10-19 20:31:35
   bitacora_revision: two
   tipo_item: two
+
+uno:
+  descripcion: 'Item uno'
+  correlativo: 3453
+  resuelto: false
+  resuelto_por:
+  resuelto_el: 2020-10-19 20:31:35
+  borrado: false
+  deleted_at: 2020-10-19 20:31:35
+  bitacora_revision: avance
+  tipo_item: logro
+  responsables: uno
+
+dos:
+  descripcion: ItemDos
+  correlativo: 43623
+  resuelto: false
+  resuelto_por:
+  resuelto_el: 2020-10-19 20:31:35
+  borrado: false
+  deleted_at: 2020-10-19 20:31:35
+  bitacora_revision: avance
+  tipo_item: logro
+  responsables: uno
+
+tres:
+  descripcion: ItemTres
+  correlativo: 462346
+  resuelto: false
+  resuelto_por:
+  resuelto_el: 2020-10-19 20:31:35
+  borrado: false
+  deleted_at: 2020-10-19 20:31:35
+  bitacora_revision: avance
+  tipo_item: meta
+  responsables: uno
+
+cuatro:
+  descripcion: ItemCuatro
+  correlativo: 2453
+  resuelto: false
+  resuelto_por:
+  resuelto_el: 2020-10-19 20:31:35
+  borrado: false
+  deleted_at: 2020-10-19 20:31:35
+  bitacora_revision: avance
+  tipo_item: meta
+  responsables: uno

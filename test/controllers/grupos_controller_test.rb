@@ -53,7 +53,7 @@ class GruposControllerTest < ActionDispatch::IntegrationTest
         proyecto: 'Sistema de asistencia general',
         correlativo: 2
       },
-      estudiantes: [estudiantes(:two).id, estudiantes(:Pablo).id]
+      estudiantes: [estudiantes(:two).id, estudiantes(:uno).id]
       }, headers: authenticated_header(usuarios(:profesor), 'profe')
     end
     assert_response :success
@@ -79,7 +79,7 @@ class GruposControllerTest < ActionDispatch::IntegrationTest
         proyecto: 'Sistema de asistencia general',
         correlativo: -2
       },
-      estudiantes: [estudiantes(:two).id, estudiantes(:Pablo).id]
+      estudiantes: [estudiantes(:two).id, estudiantes(:uno).id]
       }, headers: authenticated_header(usuarios(:profesor), 'profe')
     end
     assert_response 422

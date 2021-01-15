@@ -12,7 +12,7 @@ two:
   borrado:
   deleted_at: 2020-10-19 20:04:14
 
-three:
+presente:
   tipo: PRE
   descripcion: MyString
   borrado: false
