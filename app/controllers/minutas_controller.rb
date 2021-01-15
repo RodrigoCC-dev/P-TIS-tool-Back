@@ -711,7 +711,7 @@ class MinutasController < ApplicationController
     end
   end
 
-  # Servicio que entrega el correlativo correspondiente a una minuta de avance semanal
+  # Servicio que entrega el correlativo correspondiente a una minuta de avance semanal según el 'id' del grupo
   def correlativo_semanal
     ultima = Minuta.joins(estudiante: :grupo).joins(:tipo_minuta).where('grupos.id = ? AND minutas.borrado = ? AND tipo_minutas.tipo = ?', params[:id], false, 'Semanal').last
     if ultima.nil?

@@ -416,4 +416,99 @@ class MinutasControllerTest < ActionDispatch::IntegrationTest
     get minutas_revision_respondidas_url, headers: authenticated_header(usuarios(:Pablo), 'pablo123')
     assert_response :success
   end
+
+
+  # Revisiopn del funcionamiento del serivicio 'crear_avance'
+
+  test "Debería obtener código 401 al tratar de crear un avance sin autenticación" do
+    post minutas_avance_semanal_url(params: {
+      minuta: {
+        estudiante_id: estudiantes(:Pablo).id,
+        codigo: 'MINUTA_G01_05_2020-2_0105',
+        correlativo: 9534,
+        fecha_avance: '2021-01-05',
+        tipo_minuta_id: tipo_minutas(:one).id
+      },
+      numero_sprint: 9454,
+      logros: [
+        {id: 94534, descripcion: 'Esto es un logro de prueba', correlativo: 82345},
+        {id: 46334, descripcion: 'Este es otro logro de prueba', correlativo: 94513}
+      ],
+      metas: [
+        {id: 34534, descripcion: 'Esta es una meta de prueba', correlativo: 345413},
+        {id: 11345, descripcion: 'Esta es otra meta de prueba', correlativo: 45343}
+      ]
+    })
+    assert_response 401
+  end
+
+  test "Debería poder crear una minuta de avance semanal" do
+    assert_difference 'BitacoraEstado.count', 1 do
+      assert_difference 'Registro.count', 5 do
+        assert_difference 'Item.count', 4 do
+          assert_difference 'Responsable.count', 1 do
+            assert_difference 'Asistencia.count', 1 do
+              assert_difference 'BitacoraRevision.count', 1 do
+                post minutas_avance_semanal_url(params: {
+                  minuta: {
+                    estudiante_id: estudiantes(:Pablo).id,
+                    codigo: 'MINUTA_G01_05_2020-2_0105',
+                    correlativo: 9534,
+                    fecha_avance: '2021-01-05',
+                    tipo_minuta_id: tipo_minutas(:one).id
+                  },
+                  numero_sprint: 9454,
+                  logros: [
+                    {id: 94534, descripcion: 'Esto es un logro de prueba', correlativo: 82345},
+                    {id: 46334, descripcion: 'Este es otro logro de prueba', correlativo: 94513}
+                  ],
+                  metas: [
+                    {id: 34534, descripcion: 'Esta es una meta de prueba', correlativo: 345413},
+                    {id: 11345, descripcion: 'Esta es otra meta de prueba', correlativo: 45343}
+                  ]
+                }), headers: authenticated_header(usuarios(:Pablo), 'pablo123')
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+
+
+  # Revisión del funcionamiento del servicio 'correlativo_semanal'
+
+  test "Debería obtener código 401 al tratar de obtener 'correlativo_semanal' sin autenticación" do
+    get '/minutas/correlativo/semanal/' + grupos(:one).id.to_s
+    assert_response 401
+  end
+
+  test "Debería obtener el nuevo correlativo de minutas de avance semanal para el grupo" do
+    get '/minutas/correlativo/semanal/' + grupos(:one).id.to_s, headers: authenticated_header(usuarios(:Pablo), 'pablo123')
+    assert_response :success
+  end
+
+
+  # Revisión del funcionamiento del servicio 'avances_por_grupo'
+
+  test "Debería obtener código 401 al tratar de obtener 'avances_por_grupo' sin autenticación" do
+    get '/minutas/avances/semanales/grupo/' + grupos(:one).id.to_s
+    assert_response 401
+  end
+
+  test "Debeŕia obtener el listado de minutas de avance de un grupo como coordinador" do
+    get '/minutas/avances/semanales/grupo/' + grupos(:one).id.to_s, headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
+    assert_response :success
+  end
+
+  test "Debeŕia obtener el listado de minutas de avance de un grupo como profesor" do
+    get '/minutas/avances/semanales/grupo/' + grupos(:one).id.to_s, headers: authenticated_header(usuarios(:profesor), 'profe')
+    assert_response :success
+  end
+
+  test "Debeŕia obtener el listado de minutas de avance de un grupo como estudiante" do
+    get '/minutas/avances/semanales/grupo/' + grupos(:one).id.to_s, headers: authenticated_header(usuarios(:Pablo), 'pablo123')
+    assert_response :success
+  end
+
 end
