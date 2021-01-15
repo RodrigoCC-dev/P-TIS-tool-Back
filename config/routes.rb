@@ -27,7 +27,7 @@ Rails.application.routes.draw do
   get 'minutas/grupo/:id', to: 'minutas#por_grupo'
   get 'minutas/revision/estados', to: 'minutas#por_estados'
   get 'minutas/revision/grupo', to: 'minutas#revision_grupo'
-  get 'minutas/revision/cliente', to: 'minutas#revision_cliente'
+  get 'minutas/revision/cliente/:id', to: 'minutas#revision_cliente'
   get 'minutas/revision/respondidas', to: 'minutas#por_respuestas'
   post 'minutas/avance/semanal', to: 'minutas#crear_avance'
   get 'minutas/correlativo/semanal/:id', to: 'minutas#correlativo_semanal'
