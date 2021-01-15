@@ -24,14 +24,14 @@ four:
   seccion: two
   grupo: two
 
-Pablo:
+uno:
   id: 262345
   iniciales: PCN
   usuario: Pablo
   seccion: one
-  grupo: defecto
+  grupo: one
 
-Maria:
+dos:
   id: 234634523
   iniciales: MFH
   usuario: Maria

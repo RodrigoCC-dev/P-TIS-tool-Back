@@ -711,7 +711,7 @@ class MinutasController < ApplicationController
     end
   end
 
-  # Servicio que entrega el correlativo correspondiente a una minuta de avance semanal
+  # Servicio que entrega el correlativo correspondiente a una minuta de avance semanal según el 'id' del grupo
   def correlativo_semanal
     ultima = Minuta.joins(estudiante: :grupo).joins(:tipo_minuta).where('grupos.id = ? AND minutas.borrado = ? AND tipo_minutas.tipo = ?', params[:id], false, 'Semanal').last
     if ultima.nil?
@@ -798,7 +798,7 @@ class MinutasController < ApplicationController
   # Servicio que permite actualizar los logros y metas de un estudiante e ingresar nuevos logros y metas para los otros estudiantes del grupo
   def actualizar_avance
     bitacora = BitacoraRevision.find(params[:id])
-    bitacora.minuta.numero_sprint = params[:minuta][:numero_sprint]
+    bitacora.minuta.numero_sprint = params[:numero_sprint]
     if bitacora.minuta.save
       nueva_actividad(bitacora.minuta_id, 'NS1')
     end
@@ -939,7 +939,7 @@ class MinutasController < ApplicationController
   end
 
   def actualizar_item(params)
-    item = Item.find(params[:id])
+    item = Item.find(params[:id].to_i)
     item.descripcion = params[:descripcion]
     item.correlativo = params[:correlativo]
     item.save

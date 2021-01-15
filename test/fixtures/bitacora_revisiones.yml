@@ -27,3 +27,10 @@ four:
   minuta: one
   emitida: true
   activa: true
+
+avance:
+  revision: 0
+  motivo: cuatro
+  minuta: avance
+  emitida: false
+  activa: true
