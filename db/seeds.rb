@@ -410,7 +410,7 @@ TipoActividad.create!([
   },
   {
     "actividad" => "Crea minuta avance",
-    "descripcion" => "Se creó una minuta de avance semanal"
+    "descripcion" => "Se creó una minuta de avance semanal",
     "identificador" => "A1"
   },
   {
