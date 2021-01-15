@@ -365,27 +365,27 @@ class MinutasControllerTest < ActionDispatch::IntegrationTest
   # Revisión del funcionamiento del servicio 'revision_cliente'
 
   test "Debería obtener código '401' al tratar de obtener 'revision_cliente' sin autenticación" do
-    get '/minutas/revision/cliente'
+    get '/minutas/revision/cliente/' + grupos(:one).id.to_s
     assert_response 401
   end
 
   test "Debería obtener código '422' al tratar de obtener 'revision_cliente' como 'estudiante'" do
-    get '/minutas/revision/cliente', headers: authenticated_header(usuarios(:Pablo), 'pablo123')
+    get '/minutas/revision/cliente/' + grupos(:one).id.to_s, headers: authenticated_header(usuarios(:Pablo), 'pablo123')
     assert_response 422
   end
 
   test "Debería obtener código '422' al tratar de obtener 'revision_cliente' como 'profeosr'" do
-    get '/minutas/revision/cliente', headers: authenticated_header(usuarios(:profesor), 'profe')
+    get '/minutas/revision/cliente/' + grupos(:one).id.to_s, headers: authenticated_header(usuarios(:profesor), 'profe')
     assert_response 422
   end
 
   test "Debería obtener código '422' al tratar de obtener 'revision_cliente' como 'coordinador'" do
-    get '/minutas/revision/cliente', headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
+    get '/minutas/revision/cliente/' + grupos(:one).id.to_s, headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
     assert_response 422
   end
 
   test "Debería obtener el listado de minutas a revisar por un stakeholder" do
-    get '/minutas/revision/cliente', headers: authenticated_header(usuarios(:stakeholder), 'cliente')
+    get '/minutas/revision/cliente/' + grupos(:one).id.to_s, headers: authenticated_header(usuarios(:stakeholder), 'cliente')
     assert_response :success
   end
 
@@ -576,7 +576,7 @@ class MinutasControllerTest < ActionDispatch::IntegrationTest
     assert_equal 'Esta es otra meta de prueba', @bitacora.items.find(4000).descripcion
     assert_response :success
   end
-  
+
   test "Debería poder agrega logros y metas a una minuta de avance" do
     @bitacora = bitacora_revisiones(:avance)
     @minuta = minutas(:avance)
