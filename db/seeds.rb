@@ -430,7 +430,7 @@ TipoActividad.create!([
   },
   {
     "actividad" => "Cambiar fecha minuta semanal",
-    "descripcion" => "Se actualiza fecha de avance semanal"
+    "descripcion" => "Se actualiza fecha de avance semanal",
     "identificador" => "F4"
   }
 ])
