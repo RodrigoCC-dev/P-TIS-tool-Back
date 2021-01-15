@@ -540,7 +540,7 @@ class MinutasControllerTest < ActionDispatch::IntegrationTest
 
 =begin
 
-    ### NO es posible testear la actualización por problemas de asignación de 'ids' de las fixtures (problema de rails)
+    ### NO es posible testear la actualización de miutas de avance por problemas de asignación de 'ids' de rails test
 
   test "Debería poder actualizar una minuta de avance" do
     @bitacora = bitacora_revisiones(:avance)
@@ -556,27 +556,27 @@ class MinutasControllerTest < ActionDispatch::IntegrationTest
         },
         numero_sprint: 9454,
         logros: [
-          {id: items(:uno).id, descripcion: 'Esto es un logro de prueba', correlativo: 82345},
-          {id: items(:dos).id, descripcion: 'Este es otro logro de prueba', correlativo: 94513}
+          {id: 1000, descripcion: 'Esto es un logro de prueba', correlativo: 82345},
+          {id: 2000, descripcion: 'Este es otro logro de prueba', correlativo: 94513}
         ],
         metas: [
-          {id: items(:tres).id, descripcion: 'Esta es una meta de prueba', correlativo: 345413},
-          {id: items(:cuatro).id, descripcion: 'Esta es otra meta de prueba', correlativo: 45343}
+          {id: 3000, descripcion: 'Esta es una meta de prueba', correlativo: 345413},
+          {id: 4000, descripcion: 'Esta es otra meta de prueba', correlativo: 45343}
         ],
         emitir: false
       }, headers: authenticated_header(usuarios(:Pablo), 'pablo123')
     end
     @bitacora.reload
-    assert_equal '2021-01-05T00:00:00.000Z', @bitacora.minuta.fecha_reunion
+    assert_equal Date.new(2021,1,5), @bitacora.minuta.fecha_reunion
     assert_equal 9454, @bitacora.minuta.numero_sprint
     assert_equal 4, @bitacora.items.size
-    assert_equal 'Esto es un logro de prueba', @bitacora.items.find(items(:uno).id).descripcion
-    assert_equal 'Este es otro logro de prueba', @bitacora.items.find(items(:dos).id).descripcion
-    assert_equal 'Esta es una meta de prueba', @bitacora.items.find(items(:tres).id).descripcion
-    assert_equal 'Esta es otra meta de prueba', @bitacora.items.find(items(:cuatro).id).descripcion
+    assert_equal 'Esto es un logro de prueba', @bitacora.items.find(1000).descripcion
+    assert_equal 'Este es otro logro de prueba', @bitacora.items.find(2000).descripcion
+    assert_equal 'Esta es una meta de prueba', @bitacora.items.find(3000).descripcion
+    assert_equal 'Esta es otra meta de prueba', @bitacora.items.find(4000).descripcion
     assert_response :success
   end
-
+  
   test "Debería poder agrega logros y metas a una minuta de avance" do
     @bitacora = bitacora_revisiones(:avance)
     @minuta = minutas(:avance)

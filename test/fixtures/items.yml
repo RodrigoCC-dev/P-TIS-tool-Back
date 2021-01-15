@@ -23,6 +23,7 @@ two:
   tipo_item: two
 
 uno:
+  id: 1000
   descripcion: 'Item uno'
   correlativo: 3453
   resuelto: false
@@ -35,6 +36,7 @@ uno:
   responsables: uno
 
 dos:
+  id: 2000
   descripcion: ItemDos
   correlativo: 43623
   resuelto: false
@@ -47,6 +49,7 @@ dos:
   responsables: uno
 
 tres:
+  id: 3000
   descripcion: ItemTres
   correlativo: 462346
   resuelto: false
@@ -59,6 +62,7 @@ tres:
   responsables: uno
 
 cuatro:
+  id: 4000
   descripcion: ItemCuatro
   correlativo: 2453
   resuelto: false
