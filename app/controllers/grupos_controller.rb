@@ -82,6 +82,24 @@ class GruposController < ApplicationController
     render json: datos.as_json
   end
 
+  # Servicio que permite borrar un grupo de trabajo
+  def destroy
+    grupo = Grupo.find(params[:id])
+    unless grupo.nil?
+      grupo_defecto = Grupo.find_by(nombre: 'SG')
+      grupo.estudiantes.each do |e|
+        e.grupo_id = grupo_defecto.id
+        e.save
+      end
+      grupo.stakeholders.clear
+      grupo.borrado = true
+      grupo.deleted_at = Time.now()
+      grupo.save
+    else
+      render json: ['Error': 'El grupo solicitado no existe'], status: :unprocessable_entity
+    end
+  end
+
   # Servicio que entrega el último grupo de estudiantes disponibles asociados a una jornada
   def ultimo_grupo
     grupo = Estudiante.joins(:grupo).joins(seccion: :jornada).where('grupos.borrado = ? AND grupos.nombre <> ? AND jornadas.nombre = ?', false, 'SG', params[:jornada]).select('
