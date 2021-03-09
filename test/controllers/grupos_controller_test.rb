@@ -99,6 +99,34 @@ class GruposControllerTest < ActionDispatch::IntegrationTest
   end
 
 
+  # Revisión del funcionamiento del servicio 'destroy'
+
+  test "Debería obtener código '401' al tratar de borrar un grupo sin autenticación" do
+    delete grupo_url(id: grupos(:one).id)
+    assert_response 401
+  end
+
+  test "Debería poder borrar un grupo como coordinador" do
+    @grupo = grupos(:two)
+    delete grupo_url(id: @grupo.id), headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
+    @grupo.reload
+    assert_equal @grupo.estudiantes.size, 0
+    assert_equal @grupo.stakeholders.size, 0
+    assert_equal @grupo.borrado, true
+    assert_response :success
+  end
+
+  test "Debería poder borrar un grupo como profesor" do
+    @grupo = grupos(:two)
+    delete grupo_url(id: @grupo.id), headers: authenticated_header(usuarios(:profesor), 'profe')
+    @grupo.reload
+    assert_equal @grupo.estudiantes.size, 0
+    assert_equal @grupo.stakeholders.size, 0
+    assert_equal @grupo.borrado, true
+    assert_response :success
+  end
+  
+
   # Revisión de funcionamiento del servicio 'ultimo_grupo'
 
   test "Debería obtener código '401' al postear 'ultimo_grupo' sin autenticación" do

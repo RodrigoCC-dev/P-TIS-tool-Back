@@ -85,19 +85,15 @@ class GruposController < ApplicationController
   # Servicio que permite borrar un grupo de trabajo
   def destroy
     grupo = Grupo.find(params[:id])
-    unless grupo.nil?
-      grupo_defecto = Grupo.find_by(nombre: 'SG')
-      grupo.estudiantes.each do |e|
-        e.grupo_id = grupo_defecto.id
-        e.save
-      end
-      grupo.stakeholders.clear
-      grupo.borrado = true
-      grupo.deleted_at = Time.now()
-      grupo.save
-    else
-      render json: ['Error': 'El grupo solicitado no existe'], status: :unprocessable_entity
+    grupo_defecto = Grupo.find_by(nombre: 'SG')
+    grupo.estudiantes.each do |e|
+      e.grupo_id = grupo_defecto.id
+      e.save
     end
+    grupo.stakeholders.clear
+    grupo.borrado = true
+    grupo.deleted_at = Time.now()
+    grupo.save
   end
 
   # Servicio que entrega el último grupo de estudiantes disponibles asociados a una jornada
