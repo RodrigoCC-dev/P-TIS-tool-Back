@@ -129,6 +129,11 @@ class EstudiantesController < ApplicationController
     end
   end
 
+  # Servicio que permite crear nuevos estudiantes a partir de archivo Excel
+  def desde_archivo
+    
+  end
+
   private
   def estudiantes_params
     params.require(:estudiante).permit(:seccion_id, usuario_attributes: [:nombre, :apellido_paterno, :apellido_materno, :run, :email])
