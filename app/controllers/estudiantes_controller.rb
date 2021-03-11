@@ -131,7 +131,35 @@ class EstudiantesController < ApplicationController
 
   # Servicio que permite crear nuevos estudiantes a partir de archivo Excel
   def desde_archivo
-    
+    file = params[:archivo]
+    seccion = Seccion.find(params[:seccion])
+    unless file.nil?
+      tmp = file.tempfile
+      tmp_file = File.join('tmp', file.original_filename)
+      FileUtils.cp tmp.path, tmp_file
+
+      begin
+        excel_file = Roo::Spreadsheet.open(Rails.root.join(tmp_file), extension: :xlsx)
+      rescue Zip::Error
+        excel_file = Roo::Spreadsheet.open(tmp.path)
+      end
+    end
+
+    excel_file.sheet(0)
+    (9..excel_file.sheet(0).last_row).each do |num_row|
+      valores = excel_file.sheet(0).row(num_row)
+      puts valores[0]
+      puts valores[1]
+      puts valores[2]
+      puts valores[3]
+      puts valores[4]
+  #  excel_file.each_row_streaming(offset: 8) do |line|
+  #    puts line
+    end
+
+    FileUtils.rm tmp.path
+    FileUtils.rm tmp_file
+    tmp.unlink
   end
 
   private
