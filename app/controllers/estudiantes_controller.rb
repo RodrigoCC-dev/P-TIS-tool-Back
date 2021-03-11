@@ -41,8 +41,7 @@ class EstudiantesController < ApplicationController
       estudiante.build_usuario
       estudiante.usuario.assign_attributes(estudiantes_params[:usuario_attributes])
       estudiante.iniciales = obtener_iniciales(estudiante.usuario)
-      grupo_por_defecto = Grupo.find_by(nombre: 'SG')
-      estudiante.grupo_id = grupo_por_defecto.id
+      estudiante.grupo_id = Grupo.find_by(nombre: 'SG').id
       rol_estudiante = Rol.find_by(rol: 'Estudiante')
       estudiante.usuario.rol_id = rol_estudiante.id
       estudiante.assign_attributes(estudiantes_params)
@@ -133,30 +132,42 @@ class EstudiantesController < ApplicationController
   def desde_archivo
     file = params[:archivo]
     seccion = Seccion.find(params[:seccion])
+    grupo_por_defecto = Grupo.find_by(nombre: 'SG')
+    rol_estudiante = Rol.find_by(rango: 3)
     unless file.nil?
       tmp = file.tempfile
       tmp_file = File.join('tmp', file.original_filename)
       FileUtils.cp tmp.path, tmp_file
-
       begin
         excel_file = Roo::Spreadsheet.open(Rails.root.join(tmp_file), extension: :xlsx)
       rescue Zip::Error
         excel_file = Roo::Spreadsheet.open(tmp.path)
       end
     end
-
     excel_file.sheet(0)
     (9..excel_file.sheet(0).last_row).each do |num_row|
       valores = excel_file.sheet(0).row(num_row)
-      puts valores[0]
-      puts valores[1]
-      puts valores[2]
-      puts valores[3]
-      puts valores[4]
-  #  excel_file.each_row_streaming(offset: 8) do |line|
-  #    puts line
+      run_est = valores[1].to_s.split('.').join
+      usuario = Usuario.find_by(run: run_est)
+      if usuario.nil?
+        estudiante = Estudiante.new
+        estudiante.build_usuario
+        estudiante.usuario.apellido_paterno = valores[2].to_s
+        estudiante.usuario.apellido_materno = valores[3].to_s
+        estudiante.usuario.nombre = valores[4].to_s
+        estudiante.usuario.run = run_est
+        estudiante.usuario.email = valores[7].to_s
+        estudiante.usuario.rol_id = rol_estudiante.id
+        estudiante.usuario.password = nueva_password(estudiante.usuario.nombre)
+        estudiante.usuario.password_confirmation = nueva_password(estudiante.usuario.nombre)
+        estudiante.seccion_id = seccion.id
+        estudiante.iniciales = obtener_iniciales(estudiante.usuario)
+        estudiante.grupo_id = grupo_por_defecto.id
+        if estudiante.valid?
+          estudiante.save!
+        end
+      end
     end
-
     FileUtils.rm tmp.path
     FileUtils.rm tmp_file
     tmp.unlink
