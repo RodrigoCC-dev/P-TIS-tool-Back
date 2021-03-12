@@ -166,6 +166,15 @@ class EstudiantesController < ApplicationController
         if estudiante.valid?
           estudiante.save!
         end
+      else
+        if usuario.rol.rango == 3
+          estudiante = Estudiante.find_by(usuario_id: usuario.id)
+          estudiante = asignar_datos_estudiante(estudiante, valores, rol_estudiante.id, seccion.id, grupo_por_defecto.id)
+          estudiante.usuario.borrado = false
+          if estudiante.valid?
+            estudiante.save!
+          end
+        end
       end
     end
     FileUtils.rm tmp.path
@@ -178,19 +187,27 @@ class EstudiantesController < ApplicationController
     params.require(:estudiante).permit(:seccion_id, usuario_attributes: [:nombre, :apellido_paterno, :apellido_materno, :run, :email])
   end
 
-  def obtener_iniciales(usuario)
-    iniciales = ""
-    iniciales += usuario.nombre.chr.upcase
-    iniciales += usuario.apellido_paterno.chr.upcase
-    iniciales += usuario.apellido_materno.chr.upcase
-    return iniciales
-  end
-
   def semestre_actual
     @semestre_actual = Semestre.where('activo = ? AND borrado = ?', true, false).last
   end
 
   def usuario_actual
     @usuario = Usuario.find(current_usuario.id)
+  end
+
+  def asignar_datos_estudiante(estudiante, valores, id_rol, id_seccion, id_grupo)
+    run_est = valores[1].to_s.split('.').join
+    estudiante.usuario.apellido_paterno = valores[2].to_s
+    estudiante.usuario.apellido_materno = valores[3].to_s
+    estudiante.usuario.nombre = valores[4].to_s
+    estudiante.usuario.run = run_est
+    estudiante.usuario.email = valores[7].to_s
+    estudiante.usuario.rol_id = id_rol
+    estudiante.usuario.password = nueva_password(estudiante.usuario.nombre)
+    estudiante.usuario.password_confirmation = nueva_password(estudiante.usuario.nombre)
+    estudiante.seccion_id = id_seccion
+    estudiante.iniciales = obtener_iniciales(estudiante.usuario)
+    estudiante.grupo_id = id_grupo
+    return estudiante
   end
 end
