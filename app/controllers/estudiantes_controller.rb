@@ -152,17 +152,7 @@ class EstudiantesController < ApplicationController
       if usuario.nil?
         estudiante = Estudiante.new
         estudiante.build_usuario
-        estudiante.usuario.apellido_paterno = valores[2].to_s
-        estudiante.usuario.apellido_materno = valores[3].to_s
-        estudiante.usuario.nombre = valores[4].to_s
-        estudiante.usuario.run = run_est
-        estudiante.usuario.email = valores[7].to_s
-        estudiante.usuario.rol_id = rol_estudiante.id
-        estudiante.usuario.password = nueva_password(estudiante.usuario.nombre)
-        estudiante.usuario.password_confirmation = nueva_password(estudiante.usuario.nombre)
-        estudiante.seccion_id = seccion.id
-        estudiante.iniciales = obtener_iniciales(estudiante.usuario)
-        estudiante.grupo_id = grupo_por_defecto.id
+        estudiante = asignar_datos_estudiante(estudiante, valores, rol_estudiante.id, seccion.id, grupo_por_defecto.id)
         if estudiante.valid?
           estudiante.save!
         end
