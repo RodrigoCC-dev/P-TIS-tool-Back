@@ -172,6 +172,19 @@ class EstudiantesController < ApplicationController
     tmp.unlink
   end
 
+  # Servicio que entrega la plantilla de ingreso de datos de estudiantes desde una nómina
+  def plantilla
+=begin
+    respond_to do |format|
+      format.html
+      format.xlsx { render xlsx: "templates/Plantilla_nomina_curso.xlsx" }
+    end
+=end
+    # send_file Rails.root.join("app/templates/Plantilla_nomina_curso.xlsx"), filename: "Plantilla_nomina_curso.xlsx", type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    send_file "#{Rails.root}/app/templates/Plantilla_nomina_curso.xlsx", filename: 'Formato_nomina.xlsx', type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    # render xlsx: "Plantilla_nomina_curso", template: "templates/Plantilla_nomina_curso.xlsx" and return
+  end
+
   private
   def estudiantes_params
     params.require(:estudiante).permit(:seccion_id, usuario_attributes: [:nombre, :apellido_paterno, :apellido_materno, :run, :email])
