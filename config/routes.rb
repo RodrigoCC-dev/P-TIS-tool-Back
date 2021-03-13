@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   get 'estudiantes/asignacion/sin_grupo', to: 'estudiantes#sin_grupo'
   post 'estudiantes/eliminar', to: 'estudiantes#eliminar'
   post 'estudiantes/archivo/nuevos', to: 'estudiantes#desde_archivo'
+  get 'estudiantes/archivo/plantilla', to: 'estudiantes#plantilla'
 
   resources :stakeholders, except: [:destroy, :new, :edit]
   get 'stakeholders/asignacion/grupos', to: 'stakeholders#por_jornada'
