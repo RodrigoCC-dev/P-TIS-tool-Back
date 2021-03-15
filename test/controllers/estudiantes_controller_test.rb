@@ -39,6 +39,11 @@ class EstudiantesControllerTest < ActionDispatch::IntegrationTest
     assert_response 401
   end
 
+  test "Debería obtener código '401' al tratar de obtener 'desde_archivo' sin autenticación" do
+    post estudiantes_archivo_nuevos_url(params: {archivo: "#{Rails.root}/test/templates/Nomina_curso_para_test.xls", seccion: secciones(:one).id})
+    assert_response 401
+  end
+
 
   # Revisión del funcionamiento de 'index'
 
@@ -158,7 +163,7 @@ class EstudiantesControllerTest < ActionDispatch::IntegrationTest
   end
 
 
-  # Revisio del funcionamiento del servicio 'eliminar'
+  # Revisión del funcionamiento del servicio 'eliminar'
 
   test "Debería poder eliminar un estudiante como coordinador" do
     @estudiante1 = estudiantes(:one)
@@ -178,4 +183,40 @@ class EstudiantesControllerTest < ActionDispatch::IntegrationTest
     assert_equal @estudiante2.grupo_id, grupos(:defecto).id
     assert_response :success
   end
+
+
+  # Revisión del funcionamiento del servicio 'desde_archivo'
+
+  test "Debería poder crear estudiantes desde un archivo Excel como coordinador" do
+    assert_difference 'Estudiante.count', 2 do
+      assert_difference 'Usuario.count', 2 do
+        post estudiantes_archivo_nuevos_url, params: {
+          archivo: fixture_file_upload('files/Nomina_curso_para_test.xls', 'application/vnd.ms-excel'),
+          seccion: secciones(:one).id},
+          headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
+      end
+    end
+    @estudiante1 = Estudiante.find_by(usuario_id: Usuario.find_by(run: '13876543-1').id)
+    @estudiante2 = Estudiante.find_by(usuario_id: Usuario.find_by(run: '16978974-7').id)
+    assert_equal 'pedro.parada@usach.cl', @estudiante1.usuario.email
+    assert_equal 'yolanda.meneses@usach.cl', @estudiante2.usuario.email
+    assert_response :success
+  end
+
+  test "Debería poder crear estudiantes desde un archivo Excel como profesor" do
+    assert_difference 'Estudiante.count', 2 do
+      assert_difference 'Usuario.count', 2 do
+        post estudiantes_archivo_nuevos_url, params: {
+          archivo: fixture_file_upload('files/Nomina_curso_para_test.xls', 'application/vnd.ms-excel'),
+          seccion: secciones(:one).id},
+          headers: authenticated_header(usuarios(:profesor), 'profe')
+      end
+    end
+    @estudiante1 = Estudiante.find_by(usuario_id: Usuario.find_by(run: '13876543-1').id)
+    @estudiante2 = Estudiante.find_by(usuario_id: Usuario.find_by(run: '16978974-7').id)
+    assert_equal 'pedro.parada@usach.cl', @estudiante1.usuario.email
+    assert_equal 'yolanda.meneses@usach.cl', @estudiante2.usuario.email
+    assert_response :success
+  end
+
 end
