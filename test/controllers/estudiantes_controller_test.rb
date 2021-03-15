@@ -40,7 +40,12 @@ class EstudiantesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "Debería obtener código '401' al tratar de obtener 'desde_archivo' sin autenticación" do
-    post estudiantes_archivo_nuevos_url(params: {archivo: "#{Rails.root}/test/templates/Nomina_curso_para_test.xls", seccion: secciones(:one).id})
+    post estudiantes_archivo_nuevos_url, params: {archivo: "#{Rails.root}/test/templates/Nomina_curso_para_test.xls", seccion: secciones(:one).id}
+    assert_response 401
+  end
+
+  test "Debería obtener código '401' al tratar de obtener 'plantilla' sin autenticación" do
+    get estudiantes_archivo_plantilla_url
     assert_response 401
   end
 
@@ -216,6 +221,19 @@ class EstudiantesControllerTest < ActionDispatch::IntegrationTest
     @estudiante2 = Estudiante.find_by(usuario_id: Usuario.find_by(run: '16978974-7').id)
     assert_equal 'pedro.parada@usach.cl', @estudiante1.usuario.email
     assert_equal 'yolanda.meneses@usach.cl', @estudiante2.usuario.email
+    assert_response :success
+  end
+
+
+  # Revisión del funcionamiento del servicio 'plantilla'
+
+  test "Debería poder obtener el formato de la plantilla como coordinador" do
+    get estudiantes_archivo_plantilla_url, headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
+    assert_response :success
+  end
+
+  test "Debería poder obtener el formato de la plantilla como profesor" do
+    get estudiantes_archivo_plantilla_url, headers: authenticated_header(usuarios(:profesor), 'profe')
     assert_response :success
   end
 
