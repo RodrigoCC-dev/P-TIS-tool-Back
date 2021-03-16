@@ -30,6 +30,15 @@ class RegistrosController < ApplicationController
     render json: lista.as_json()
   end
 
+  # Servicio que entrega la suma de actividades realizadas por los integrantes de un grupo
+  def suma
+    registro = Registro.find_by_sql ['SELECT usuarios.id, usuarios.nombre, usuarios.apellido_paterno, usuarios.apellido_materno, tipo_actividades.actividad,
+      COUNT(tipo_actividades.actividad) FROM registros INNER JOIN tipo_actividades ON registros.tipo_actividad_id = tipo_actividades.id INNER JOIN usuarios ON
+      usuarios.id = registros.realizada_por INNER JOIN estudiantes ON estudiantes.usuario_id = usuarios.id INNER JOIN grupos ON grupos.id = estudiantes.grupo_id
+      WHERE grupos.id = :grupo_id GROUP BY usuarios.id, tipo_actividades.actividad', {:grupo_id => params[:grupo]}]
+    render json: registro.as_json()
+  end
+
   private
   def obtener_iniciales_hash(usuario)
     iniciales = ''
