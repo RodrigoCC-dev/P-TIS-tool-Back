@@ -3,9 +3,9 @@ module Funciones
 
   def obtener_iniciales(usuario)
     iniciales = ""
-    iniciales += usuario.nombre.chr.upcase
-    iniciales += usuario.apellido_paterno.chr.upcase
-    iniciales += usuario.apellido_materno.chr.upcase
+    iniciales += usuario.nombre.parameterize.chr.upcase
+    iniciales += usuario.apellido_paterno.parameterize.chr.upcase
+    iniciales += usuario.apellido_materno.parameterize.chr.upcase
     return iniciales
   end
 
@@ -61,6 +61,6 @@ module Funciones
   end
 
   def nueva_password(nombre)
-    return nombre.titleize.split(' ').join + '123'
+    return nombre.parameterize.titleize.split(' ').join + '123'
   end
 end

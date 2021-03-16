@@ -23,9 +23,9 @@ class Usuario < ApplicationRecord
 
   private
   def downcase_fields
-    self.nombre = self.nombre.titleize.strip
-    self.apellido_paterno = self.apellido_paterno.titleize.strip
-    self.apellido_materno = self.apellido_materno.titleize.strip
+    self.nombre = self.nombre.capitalize.titleize.strip
+    self.apellido_paterno = self.apellido_paterno.capitalize.titleize.strip
+    self.apellido_materno = self.apellido_materno.capitalize.titleize.strip
     self.email = self.email.downcase.strip
   end
 
