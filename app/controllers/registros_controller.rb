@@ -32,11 +32,45 @@ class RegistrosController < ApplicationController
 
   # Servicio que entrega la suma de actividades realizadas por los integrantes de un grupo
   def suma
-    registro = Registro.find_by_sql ['SELECT usuarios.id, usuarios.nombre, usuarios.apellido_paterno, usuarios.apellido_materno, tipo_actividades.actividad,
-      COUNT(tipo_actividades.actividad) FROM registros INNER JOIN tipo_actividades ON registros.tipo_actividad_id = tipo_actividades.id INNER JOIN usuarios ON
-      usuarios.id = registros.realizada_por INNER JOIN estudiantes ON estudiantes.usuario_id = usuarios.id INNER JOIN grupos ON grupos.id = estudiantes.grupo_id
-      WHERE grupos.id = :grupo_id GROUP BY usuarios.id, tipo_actividades.actividad', {:grupo_id => params[:grupo]}]
-    render json: registro.as_json()
+    grupo = Grupo.find(params[:grupo])
+    registros = Registro.find_by_sql ['SELECT usuarios.id, usuarios.nombre, usuarios.apellido_paterno, usuarios.apellido_materno, tipo_actividades.actividad,
+      tipo_actividades.identificador, COUNT(tipo_actividades.actividad) FROM registros INNER JOIN tipo_actividades ON registros.tipo_actividad_id = tipo_actividades.id
+      INNER JOIN usuarios ON usuarios.id = registros.realizada_por INNER JOIN estudiantes ON estudiantes.usuario_id = usuarios.id INNER JOIN grupos ON grupos.id = estudiantes.grupo_id
+      WHERE grupos.id = :grupo_id GROUP BY usuarios.id, tipo_actividades.actividad, tipo_actividades.identificador', {:grupo_id => grupo.id}]
+    lista = []
+    grupo.estudiantes.each do |est|
+      minuta = 0
+      objetivos = 0
+      conclusiones = 0
+      tema = 0
+      items = 0
+      comentarios = 0
+      respuestas = 0
+      registros.each do |reg|
+        if reg.id == est.usuario_id
+          case reg.identificador
+          when 'M1', 'M2', 'M3', 'M4', 'M8', 'M9', 'M10'
+            minuta += reg.count
+          when 'O1', 'O2', 'O3'
+            objetivos += reg.count
+          when 'C1', 'C2', 'C3'
+            conclusiones += reg.count
+          when 'T1', 'T2'
+            tema += reg.count
+          when 'M5', 'R1', 'F1', 'M6', 'R2', 'F2', 'M7', 'R3', 'F3'
+            items += reg.count
+          when 'COM1', 'COM2', 'COM3'
+            comentarios += reg.count
+          when 'RE1', 'RE2', 'RE3'
+            respuestas += reg.count
+          end
+        end
+      end
+      h = {id: est.id, iniciales: est.iniciales, usuario: {id: est.usuario.id, nombre: est.usuario.nombre, apellido_paterno: est.usuario.apellido_paterno, apellido_materno: est.usuario.apellido_materno,
+        run: est.usuario.run, registros: {minutas: minuta, tema: tema, objetivos: objetivos, conclusiones: conclusiones, items: items, comentarios: comentarios, respuestas: respuestas}}}
+      lista << h
+    end
+    render json: lista.as_json()
   end
 
   private
