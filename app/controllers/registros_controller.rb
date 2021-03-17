@@ -30,8 +30,8 @@ class RegistrosController < ApplicationController
     render json: lista.as_json()
   end
 
-  # Servicio que entrega la suma de actividades realizadas por los integrantes de un grupo
-  def suma
+  # Servicio que entrega la suma de actividades realizadas por cada integrante de un grupo
+  def actividades_minutas
     grupo = Grupo.find(params[:grupo])
     registros = Registro.find_by_sql ['SELECT usuarios.id, usuarios.nombre, usuarios.apellido_paterno, usuarios.apellido_materno, tipo_actividades.actividad,
       tipo_actividades.identificador, COUNT(tipo_actividades.actividad) FROM registros INNER JOIN tipo_actividades ON registros.tipo_actividad_id = tipo_actividades.id
