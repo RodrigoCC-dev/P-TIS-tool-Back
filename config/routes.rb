@@ -41,7 +41,7 @@ Rails.application.routes.draw do
   resources :respuestas, only: [:create, :show]
   resources :aprobaciones, only: [:show, :update]
   resources :registros, only: [:show]
-  get 'registros/grupos/:grupo', to: 'registros#suma'
+  get 'registros/grupo/:grupo', to: 'registros#suma'
 
   resources :usuarios, only: [:update]
   get 'login/user', to: 'usuarios#user'
