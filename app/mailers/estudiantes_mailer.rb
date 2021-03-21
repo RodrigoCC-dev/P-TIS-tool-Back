@@ -19,6 +19,7 @@ class EstudiantesMailer < ApplicationMailer
   def revisionCliente(bitacora)
     @bitacora = bitacora
     @emisor = bitacora.minuta.estudiante
+    @grupo = @emisor.grupo
     asistencias = bitacora.minuta.asistencias.where.not(id_stakeholder: nil)
     lista_ids = []
     asistencias.each do |a|
