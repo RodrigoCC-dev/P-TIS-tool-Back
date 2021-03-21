@@ -1,0 +1,17 @@
+<<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <h1>Se ha emitido una nueva minuta para revisión de coordinación interna</h1>
+    <br>
+    <p>Estimada/o <strong><%= @estudiante.usuario.nombre %></strong>, tu compañera/o de grupo
+      <strong><%= @emisor.usuario.nombre + ' ' + @emisor.usuario.apellido_paterno %></strong>
+      ha emitido la minuta <strong><%= @bitacora.minuta.codigo %></strong> para revisión por parte
+      de los integrantes del grupo. Se necesita de tu revisión y aprobación para continuar con el proceso
+      de emisión. Por favor, visita la aplicación <b>Módulo de Minutas de Reunión</b> de los cursos
+      Proyecto y Taller de Ingeniería de Software para completar la revisión de esta minuta.</p>
+  </body>
+</html>
