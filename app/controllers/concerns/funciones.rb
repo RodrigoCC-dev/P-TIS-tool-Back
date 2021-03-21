@@ -17,7 +17,7 @@ module Funciones
           id: bit.id_minuta, codigo: bit.codigo_min, correlativo: bit.correlativo_min, fecha_reunion: bit.fecha_min, tipo_minuta: bit.tipo_min, creada_por: bit.iniciales_est, creada_el: bit.creada_el
         },
         estado: {
-          id: bit.id_estado, abreviacion: bit.abrev_estado, descripcion: bit.desc_estado
+          id: bit.id_estado, abreviacion: bit.abrev_estado, descripcion: bit.desc_estado, inicia_el: bit.cambia_estado_el
         }
       }
       lista << h
