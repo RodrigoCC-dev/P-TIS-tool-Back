@@ -31,4 +31,8 @@ class EstudiantesMailer < ApplicationMailer
       mail(to: @stakeholder.usuario.email, subject: "Se ha emitido una nueva minuta para su revisión", template_name: 'minuta_revision_cliente')
     end
   end
+
+  def respuestaAlCliente(bitacora)
+    
+  end
 end

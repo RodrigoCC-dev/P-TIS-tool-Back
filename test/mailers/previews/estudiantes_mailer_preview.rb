@@ -4,4 +4,9 @@ class EstudiantesMailerPreview < ActionMailer::Preview
     bitacora = BitacoraRevision.last
     EstudiantesMailer.nuevaMinutaCoordinacion(bitacora)
   end
+
+  def revisionCliente
+    bitacora = BitacoraRevision.last
+    EstudiantesMailer.revisionCliente(bitacora)
+  end
 end
