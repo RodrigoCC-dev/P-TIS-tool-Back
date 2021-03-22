@@ -8,8 +8,10 @@ class ComentariosController < ApplicationController
     bitacora = BitacoraRevision.find(params[:id])
     if current_usuario.rol.rango == 3
       asistencia = bitacora.minuta.asistencias.find_by(id_estudiante: Estudiante.find_by(usuario_id: current_usuario.id).id)
+      es_estudiante = true
     elsif current_usuario.rol.rango == 4
       asistencia = bitacora.minuta.asistencias.find_by(id_stakeholder: Stakeholder.find_by(usuario_id: current_usuario.id).id)
+      es_estudiante = false
     else
       asistencia = nil
     end
@@ -62,6 +64,9 @@ class ComentariosController < ApplicationController
         if bitacora_estado.valid?
           bitacora_estado.save!
         end
+      end
+      if es_estudiante == false
+        StakeholdersMailer.comentariosMinuta(bitacora, current_usuario)
       end
     else
       render json: ['error': 'Servicio no permitido para este usuario'], status: :unprocessable_entity

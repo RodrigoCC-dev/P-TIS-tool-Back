@@ -8,8 +8,10 @@ class RespuestasController < ApplicationController
     bitacora = BitacoraRevision.find(params[:id])
     if current_usuario.rol.rango == 3
       asistencia = bitacora.minuta.asistencias.find_by(id_estudiante: Estudiante.find_by(usuario_id: current_usuario.id).id)
+      es_estudiante = true
     elsif current_usuario.rol.rango == 4
       asistencia = bitacora.minuta.asistencias.find_by(id_stakeholder: Stakeholder.find_by(usuario_id: current_usuario.id).id)
+      es_estudiante = false
     end
     params[:respuestas].each do |resp|
       if resp[:respuesta] != ''
@@ -36,6 +38,9 @@ class RespuestasController < ApplicationController
     end
     if bitacora_estado.valid?
       bitacora_estado.save!
+    end
+    if es_estudiante
+      EstudiantesMailer.respuestaAlCliente(bitacora).deliver_later
     end
   end
 

@@ -84,11 +84,7 @@ class MinutasController < ApplicationController
           item.save!
           nueva_actividad(bitacora.minuta_id, 'M5')
           unless i[:fecha] == ''
-            nueva_actividad = Registro.create!(
-              realizada_por: current_usuario.id,
-              minuta_id: bitacora.minuta_id,
-              tipo_actividad_id: TipoActividad.find_by(identificador: 'F1').id
-            )
+            nueva_actividad(bitacora.minuta_id, 'F1')
           end
         end
       end
@@ -97,6 +93,14 @@ class MinutasController < ApplicationController
       bitacora_estado.tipo_estado_id = tipo_estado.id
       if bitacora_estado.valid?
         bitacora_estado.save!
+      end
+      if tipo_estado.abreviacion.eql?('EMI')
+        case bitacora.motivo.identificador
+        when 'ECI'
+          EstudiantesMailer.nuevaMinutaCoordinacion(bitacora).deliver_later
+        when 'ERC'
+          EstudiantesMailer.revisionCliente(bitacora).deliver_later
+        end
       end
     else
       render json: ['error': 'Información de la minuta no es válida'], status: :unprocessable_entity
@@ -428,6 +432,14 @@ class MinutasController < ApplicationController
         bitacora_estado.tipo_estado_id = tipo_estado.id
         if bitacora_estado.valid?
           bitacora_estado.save!
+        end
+      end
+      if tipo_estado.abreviacion.eql?('EMI')
+        case bitacora.motivo.identificador
+        when 'ECI'
+          EstudiantesMailer.nuevaMinutaCoordinacion(bitacora).deliver_later
+        when 'ERC'
+          EstudiantesMailer.revisionCliente(bitacora).deliver_later
         end
       end
     else
