@@ -3,9 +3,9 @@ module Funciones
 
   def obtener_iniciales(usuario)
     iniciales = ""
-    iniciales += usuario.nombre.chr.upcase
-    iniciales += usuario.apellido_paterno.chr.upcase
-    iniciales += usuario.apellido_materno.chr.upcase
+    iniciales += usuario.nombre.parameterize.chr.upcase
+    iniciales += usuario.apellido_paterno.parameterize.chr.upcase
+    iniciales += usuario.apellido_materno.parameterize.chr.upcase
     return iniciales
   end
 
@@ -17,7 +17,7 @@ module Funciones
           id: bit.id_minuta, codigo: bit.codigo_min, correlativo: bit.correlativo_min, fecha_reunion: bit.fecha_min, tipo_minuta: bit.tipo_min, creada_por: bit.iniciales_est, creada_el: bit.creada_el
         },
         estado: {
-          id: bit.id_estado, abreviacion: bit.abrev_estado, descripcion: bit.desc_estado
+          id: bit.id_estado, abreviacion: bit.abrev_estado, descripcion: bit.desc_estado, inicia_el: bit.cambia_estado_el
         }
       }
       lista << h
@@ -61,6 +61,6 @@ module Funciones
   end
 
   def nueva_password(nombre)
-    return nombre.titleize.split(' ').join + '123'
+    return nombre.parameterize.titleize.split(' ').join + '123'
   end
 end
