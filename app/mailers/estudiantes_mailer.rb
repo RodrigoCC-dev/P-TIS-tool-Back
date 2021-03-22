@@ -33,6 +33,18 @@ class EstudiantesMailer < ApplicationMailer
   end
 
   def respuestaAlCliente(bitacora)
-    
+    @bitacora = bitacora
+    @emisor = bitacora.minuta.estudiante
+    @grupo = @emisor.grupo
+    asistencias = bitacora.minuta.asistencias.where.not(id_stakeholder: nil)
+    lista_ids = []
+    asistencias.each do |a|
+      lista_ids << a.id_stakeholder
+    end
+    stakeholders = Stakeholder.where(id: lista_ids)
+    stakeholders.each do |stk|
+      @stakeholder = stk
+      mail(to: @stakeholder.usuario.email, subject: "Se han respondido los comentarios realizados a la minuta #{@bitacora.minuta.codigo}_#{@bitacora.revision}", template_name: 'respuestas_a_comentarios')
+    end
   end
 end
