@@ -11,6 +11,8 @@ RUN bundle install --deployment --without development test
 
 EXPOSE 8080
 
-CMD ["bundle", "exec", "passenger", "start"]
-
 COPY . .
+
+RUN SECRET_ENV_VAR=$(bundle exec rails secret) &&\
+    echo -e "production:\n  secret_key_base:" > ./config/.example_secrets.yml &&\
+    echo "$(cat ./config/.example_secrets.yml) $SECRET_ENV_VAR" > ./config/secrets.yml
