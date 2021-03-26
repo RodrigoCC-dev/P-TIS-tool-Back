@@ -10,11 +10,8 @@ services:
     expose:
       - 5432
     environment:
-      - POSTGRES_USER=root
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=''
-      - DB_USERNAME=root
-      - DB_PASSWORD=postgres
-      - POSTGRES_HOST_AUTH_METHOD=trust
 
   api:
     build: .
