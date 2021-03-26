@@ -3,8 +3,7 @@ FROM ruby:2.6.6
 RUN gem install bundler
 RUN bundle config --global frozen 1
 
-RUN apk add --update --no-cache \
-  postgres-dev \
+RUN apt-get update && apt-get install -y \
   nodejs \
   yarn \
   nano
