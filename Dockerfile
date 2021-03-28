@@ -4,6 +4,7 @@ RUN gem install bundler
 RUN bundle config --global frozen 1
 
 RUN apt-get update && apt-get install -y \
+  gcc g++ make \
   nodejs \
   yarn \
   nano
