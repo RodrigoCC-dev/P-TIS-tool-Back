@@ -47,7 +47,7 @@ Rails.application.routes.draw do
   get 'login/user', to: 'usuarios#user'
 
   scope 'auth' do
-    post 'login' => 'usuario_token#create'
+    post 'login' => 'usuarios#login'
   end
 
 end

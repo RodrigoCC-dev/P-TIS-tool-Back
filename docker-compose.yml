@@ -1,0 +1,32 @@
+version: '2.2'
+
+services:
+  database:
+    image: postgres:10.14
+    container_name: ptis-tool-db
+    restart: always
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD='ptis2021'
+      - POSTGRES_HOST_AUTH_METHOD=trust
+
+  api:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 8080 -b '0.0.0.0'"
+    container_name: ptis-tool-api
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+      - RAILS_ENV=production
+      - DISABLE_SPRING=1
+      - BUNDLE_PATH=vendor/bundle
+    depends_on:
+      - database
+
+volumes:
+  db-data:

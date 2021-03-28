@@ -11,10 +11,8 @@ gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 4.1'
 # Use environment variables: gem: 'dotenv-rails', github: 'https://github.com/bkeepers/dotenv'
 gem 'dotenv-rails'
-# Use Knock for JWT authentication
-gem 'knock'
-# Use gem rack-cors for enable cross-origin resourse sharing
-gem 'rack-cors'
+# Use jwt for JWT authentication
+gem 'jwt', '~> 2.2.2'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.7'
 # Use Redis adapter to run Action Cable in production
@@ -33,7 +31,7 @@ gem 'roo-xls', '~> 1.2.0'
 gem 'bootsnap', '>= 1.4.2', require: false
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
-# gem 'rack-cors'
+gem 'rack-cors'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
