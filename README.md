@@ -122,7 +122,7 @@ Desplegar la aplicación en entorno de desarrollo:
 rails server
 ```
 
-## Testeo
+## Pruebas de la aplicación
 Para ejecutar las pruebas automatizadas de la aplicación, es necesario generar la base de datos de testeo con los siguientes comandos:
 ```
 rails db:test:purge
@@ -134,9 +134,10 @@ rails test
 ```
 
 ## Despliegue en producción
+### Instalación directa en el servidor
 La siguiente descripción del despliegue de la aplicación se realiza para un servidor con Ubuntu 18.04. Para otras versiones de distribución pueden haber variaciones en los comandos indicados. Se considera que ya se encuentran instaladas las dependencias necesarias. Para su instalación, ver el apartado de __Instalación__.
 
-### Instalación en producción con la configuración actual
+#### Instalación en producción con la configuración actual
 Ingresar al directorio de trabajo. Para ejemplificar se utiliza la carpeta /opt del sistema. Clonar el repositorio con permisos de superusuario:
 ```
 cd /opt
@@ -180,7 +181,7 @@ rvmsudo bundle exec passenger start
 ```
 La aplicación se iniciará en el puerto 8080 del servidor.
 
-### Cambiar la configuración de la ejecución de la aplicación en producción
+#### Cambiar la configuración de la ejecución de la aplicación en producción
 La configuración de la ejecución de la aplicación en entorno de producción se encuentra definida en el archivo Passengerfile.json que se encuentra en el directorio raíz de la aplicación. La estructura del archivo de configuración de Passenger es la siguiente:
 ```
 {
@@ -191,8 +192,8 @@ La configuración de la ejecución de la aplicación en entorno de producción s
 }
 ```
 
-### Actualizar la aplicación
-Para actualizar la aplicación a su versión más reciente, ingresar a la carpeta raiz y ejecutar:
+#### Actualizar la aplicación
+Para actualizar la aplicación a su versión más reciente, ingresar a la carpeta raíz y ejecutar:
 ```
 cd /opt/ptis-back
 git pull
@@ -208,4 +209,51 @@ bundle exec rails db:migrate RAILS_ENV=production
 Reiniciar la aplicación:
 ```
 bundle exec passenger-config restart-app $(pwd)
+```
+
+### Instalación con Docker
+Para realizar la instalación de la aplicación por esta vía, es necesario contar con los siguientes requisitos:
+
+* Docker v19.03.6 o superior
+* Docker Compose v1.17.1 o superior
+* Git v2.17.1 o superior
+
+#### Instalación con Docker Compose
+Clonar el repositorio y entrar al directorio:
+```
+git clone https://github.com/RodrigoCC-dev/P-TIS-tool-Back.git ptis-back
+cd ptis-back
+```
+Ejecutar la creación de los contenedores con docker-compose:
+```
+docker-compose up -d
+```
+Crear la base de datos y cargar los datos iniciales:
+```
+docker exec -it ptis-tool-api bundle exec rails db:create db:migrate db:seed RAILS_ENV=production
+```
+
+#### Desinstalación de la aplicación
+Detener y eliminar los contenedores:
+```
+docker-compose down
+```
+Eliminar las imágenes descargadas:
+```
+docker rmi ptistoolback_api postgres:10.14 ruby:2.6.6
+```
+
+#### Instalación y desinstalación con scripts
+Clonar el repositorio  y entrar al directorio:
+```
+git clone https://github.com/RodrigoCC-dev/P-TIS-tool-Back.git ptis-back
+cd ptis-back
+```
+Ejecutar el script de instalación:
+```
+./Instalador.sh
+```
+Para quitar la aplicación utilizar el script de desisntalación:
+```
+./Desinstalador.sh
 ```
