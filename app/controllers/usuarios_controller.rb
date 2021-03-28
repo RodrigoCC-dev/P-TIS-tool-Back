@@ -1,5 +1,5 @@
 class UsuariosController < ApplicationController
-  before_action :authenticate_usuario
+  before_action :authenticate_usuario, except: [:login]
   include JsonFormat
 
   # Servicio que permite actualizar la clave de acceso de un usuario
@@ -27,6 +27,16 @@ class UsuariosController < ApplicationController
         }
       }
     )
+  end
+
+  def login
+    usuario = Usuario.find_by(email: params[:auth][:email])
+    if usuario && usuario.authenticate(params[:auth][:password])
+      token = encode_token({usuario_id: usuario.id})
+      render json: {'jwt': token}
+    else
+      render json: {error: 'Usuario no autorizado o contraseña errónea'}
+    end
   end
 
   private
