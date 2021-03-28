@@ -3,11 +3,7 @@ FROM ruby:2.6.6
 RUN gem install bundler
 RUN bundle config --global frozen 1
 
-RUN apt-get update && apt-get install -y \
-  gcc g++ make \
-  nodejs \
-  yarn \
-  nano
+RUN apt-get update && apt-get install -y nano
 
 WORKDIR /usr/src/app
 
