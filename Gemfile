@@ -12,7 +12,8 @@ gem 'puma', '~> 4.1'
 # Use environment variables: gem: 'dotenv-rails', github: 'https://github.com/bkeepers/dotenv'
 gem 'dotenv-rails'
 # Use Knock for JWT authentication
-gem 'knock'
+# gem 'knock'
+gem 'jwt', '~> 2.2.2'
 # Use gem rack-cors for enable cross-origin resourse sharing
 gem 'rack-cors'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
