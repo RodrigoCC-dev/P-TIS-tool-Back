@@ -11,7 +11,7 @@ COPY Gemfile Gemfile.lock ./
 
 RUN bundle install --deployment --without development test
 
-EXPOSE 3000
+EXPOSE 8080
 
 COPY . .
 
