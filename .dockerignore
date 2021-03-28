@@ -1,0 +1,10 @@
+.git
+.gitignore
+.bundle
+.bundleignore
+.byebug_history
+.env
+sonar-project.properties
+Passengerfile.json
+test/
+coverage/
