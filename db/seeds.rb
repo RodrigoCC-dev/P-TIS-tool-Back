@@ -41,11 +41,11 @@ Jornada.create!([
 # Seeder para agregar Semestres
 Semestre.create!([
   {
-    "numero" => 2,
-    "agno" => 2020,
+    "numero" => 1,
+    "agno" => 2021,
     "activo" => true,
-    "inicio" => "2020-09-28",
-    "fin" => "2021-01-29"
+    "inicio" => "2021-03-22",
+    "fin" => "2021-07-24"
   }
 ])
 
