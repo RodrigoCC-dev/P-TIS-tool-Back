@@ -519,6 +519,7 @@ class MinutasController < ApplicationController
           bitacora_revisiones.revision AS revision_min,
           bitacora_revisiones.fecha_emision AS fecha_emi,
           motivos.motivo AS motivo_min,
+          motivos.identificador AS motivo_ident,
           tipo_minutas.tipo AS tipo_min,
           minutas.id AS id_minuta,
           minutas.codigo AS codigo_min,
@@ -552,6 +553,7 @@ class MinutasController < ApplicationController
           bitacora_revisiones.revision AS revision_min,
           bitacora_revisiones.fecha_emision AS fecha_emi,
           motivos.motivo AS motivo_min,
+          motivos.identificador AS motivo_ident,
           tipo_minutas.tipo AS tipo_min,
           minutas.id AS id_minuta,
           minutas.codigo AS codigo_min,
@@ -592,6 +594,7 @@ class MinutasController < ApplicationController
           bitacora_revisiones.revision AS revision_min,
           bitacora_revisiones.fecha_emision AS fecha_emi,
           motivos.motivo AS motivo_min,
+          motivos.identificador AS motivo_ident,
           tipo_minutas.tipo AS tipo_min,
           minutas.id AS id_minuta,
           minutas.codigo AS codigo_min,
@@ -609,7 +612,7 @@ class MinutasController < ApplicationController
         ')
       lista_bitacoras = []
       bitacoras.each do |bit|
-        h = {id: bit.id, motivo: bit.motivo_min, revision: bit.revision_min, fecha_emision: bit.fecha_emi,
+        h = {id: bit.id, motivo: bit.motivo_min, identificador: bit.motivo_ident, revision: bit.revision_min, fecha_emision: bit.fecha_emi,
           minuta: {
             id: bit.id_minuta, codigo: bit.codigo_min, correlativo: bit.correlativo_min, fecha_reunion: bit.fecha_min, tipo_minuta: bit.tipo_min, creada_por: bit.iniciales_est, creada_el: bit.creada_el
           },
@@ -638,6 +641,7 @@ class MinutasController < ApplicationController
           bitacora_revisiones.revision AS revision_min,
           bitacora_revisiones.fecha_emision AS fecha_emi,
           motivos.motivo AS motivo_min,
+          motivos.identificador AS motivo_ident,
           tipo_minutas.tipo AS tipo_min,
           minutas.id AS id_minuta,
           minutas.codigo AS codigo_min,
