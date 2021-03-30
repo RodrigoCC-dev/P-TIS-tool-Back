@@ -81,22 +81,10 @@ Seccion.create!([
     "curso" => cursos.find_by(codigo: '13267')
   },
   {
-    "codigo" => "B2",
-    "jornada" => jornadas.find_by(identificador: 1),
-    "semestre" => semestres.first,
-    "curso" => cursos.find_by(codigo: '13230')
-  },
-  {
     "codigo" => "V21",
     "jornada" => jornadas.find_by(identificador: 2),
     "semestre" => semestres.first,
     "curso" => cursos.find_by(codigo: '13168')
-  },
-  {
-    "codigo" => "V35",
-    "jornada" => jornadas.find_by(identificador: 2),
-    "semestre" => semestres.first,
-    "curso" => cursos.find_by(codigo: '13126')
   }
 ])
 
