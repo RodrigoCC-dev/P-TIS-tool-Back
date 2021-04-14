@@ -634,9 +634,10 @@ class MinutasController < ApplicationController
   # Servicio que entrega el listado de minutas respondidas por los estudiantes creadores de minutas
   def por_respuestas
     if current_usuario.rol.rango == 3
-      bitacoras = BitacoraRevision.joins(:motivo).joins(minuta: {bitacora_estados: :tipo_estado}).joins(minuta: :tipo_minuta).joins(minuta: :estudiante).where('
+      estudiante = Estudiante.find_by(usuario_id: current_usuario.id)
+      bitacoras = BitacoraRevision.joins(:motivo).joins(minuta: {bitacora_estados: :tipo_estado}).joins(minuta: :tipo_minuta).joins(minuta: {estudiante: :grupo}).where('
         minutas.borrado = ? AND estudiantes.usuario_id <> ? AND bitacora_revisiones.activa = ? AND tipo_minutas.tipo <> ? AND bitacora_estados.activo = ? AND
-        tipo_estados.abreviacion = ?', false, current_usuario.id, true, 'Semanal', true, 'RIG').select('
+        tipo_estados.abreviacion = ? AND grupos.id = ?', false, current_usuario.id, true, 'Semanal', true, 'RIG', estudiante.grupo_id).select('
           bitacora_revisiones.id,
           bitacora_revisiones.revision AS revision_min,
           bitacora_revisiones.fecha_emision AS fecha_emi,
