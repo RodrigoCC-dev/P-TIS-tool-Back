@@ -35,7 +35,7 @@ class UsuariosController < ApplicationController
       token = encode_token({usuario_id: usuario.id})
       render json: {'jwt': token}
     else
-      render json: {error: 'Usuario no autorizado o contraseña errónea'}
+      render json: {error: 'Usuario no autorizado o contraseña errónea'}, status: :unprocessable_entity
     end
   end
 
