@@ -808,14 +808,17 @@ class MinutasController < ApplicationController
   def actualizar_avance
     bitacora = BitacoraRevision.find(params[:id])
     bitacora.minuta.numero_sprint = params[:numero_sprint]
-    if bitacora.minuta.save
+    if bitacora.minuta.numero_sprint_changed?
+      bitacora.minuta.save
       nueva_actividad(bitacora.minuta_id, 'NS1')
     end
     bitacora.minuta.fecha_reunion = params[:minuta][:fecha_avance]
-    if bitacora.minuta.save
+    if bitacora.minuta.fecha_reunion_changed?
+      bitacora.minuta.save
       nueva_actividad(bitacora.minuta_id, 'F4')
     end
-    asistencia = Asistencia.where(id_estudiante: params[:minuta][:estudiante_id], minuta_id: bitacora.minuta_id).last
+    estudiante = Estudiante.find_by(usuario_id: current_usuario.id)
+    asistencia = Asistencia.where(id_estudiante: estudiante.id, minuta_id: bitacora.minuta_id).last
     if asistencia.nil?
       asistencia = Asistencia.new
       asistencia.tipo_asistencia_id = TipoAsistencia.find_by(tipo: 'PRE').id
@@ -940,7 +943,7 @@ class MinutasController < ApplicationController
   def params_include(params, id_item)
     presente = false
     params.each do |p|
-      if p[:id] = id_item
+      if p[:id] == id_item
         presente = true
       end
     end
