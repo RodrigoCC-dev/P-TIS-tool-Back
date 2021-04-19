@@ -493,7 +493,7 @@ class MinutasController < ApplicationController
       minutas.created_at AS creada_el,
       estudiantes.iniciales AS iniciales_est,
       tipo_minutas.tipo AS tipo_min
-      ').where('grupos.id = ? AND minutas.borrado = ? AND bitacora_revisiones.emitida = ?', params[:id], false, true)
+      ').where('grupos.id = ? AND minutas.borrado = ? AND bitacora_revisiones.emitida = ?', params[:id], false, true).where.not('tipo_minutas.tipo = ?', 'Semanal')
     minutas = []
     bitacoras.each do |bit|
       h = {
