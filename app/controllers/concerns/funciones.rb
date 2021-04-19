@@ -61,6 +61,6 @@ module Funciones
   end
 
   def nueva_password(nombre)
-    return nombre.parameterize.titleize.split(' ').join + '123'
+    return nombre.parameterize.titleize.split(' ')[0] + '123'
   end
 end
