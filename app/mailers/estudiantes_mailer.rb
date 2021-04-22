@@ -9,11 +9,16 @@ class EstudiantesMailer < ApplicationMailer
         lista_ids << a.id_estudiante
       end
     end
-    estudiantes = Estudiante.where(id: lista_ids)
-    estudiantes.each do |est|
-      @estudiante = est
-      mail(to: @estudiante.usuario.email, subject: "Hay una nueva minuta de reunión que requiere tu revisión", template_name: 'nueva_minuta_coordinacion')
-    end
+    usuarios = Estudiante.joins(:usuario).where(id: lista_ids).select('usuarios.email AS correo')
+    emails = usuarios.collect(&:correo).join(', ')
+    mail(to: emails, subject: "Hay una nueva minuta de reunión que requiere tu revisión", template_name: 'nueva_minuta_coordinacion')
+  end
+
+  def notificacionEstudiantes(emisor, bitacora, estudiante)
+    @emisor = emisor
+    @bitacora = bitacora
+    @estudiante = estudiante
+    mail(to: @estudiante.usuario.email, subject: "Hay una nueva minuta de reunión que requiere tu revisión", template_name: 'nueva_minuta_coordinacion')
   end
 
   def revisionCliente(bitacora)
