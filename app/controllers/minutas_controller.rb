@@ -18,37 +18,17 @@ class MinutasController < ApplicationController
     end
     if bitacora.valid?
       bitacora.save!
-      nueva_actividad = Registro.create!(
-        realizada_por: current_usuario.id,
-        minuta_id: bitacora.minuta_id,
-        tipo_actividad_id: TipoActividad.find_by(identificador: 'M1').id
-      )
-      nueva_actividad = Registro.create!(
-        realizada_por: current_usuario.id,
-        minuta_id: bitacora.minuta_id,
-        tipo_actividad_id: TipoActividad.find_by(identificador: 'M2').id
-      )
-      nueva_actividad = Registro.create!(
-        realizada_por: current_usuario.id,
-        minuta_id: bitacora.minuta_id,
-        tipo_actividad_id: TipoActividad.find_by(identificador: 'T1').id
-      )
-      nueva_actividad = Registro.create!(
-        realizada_por: current_usuario.id,
-        minuta_id: bitacora.minuta_id,
-        tipo_actividad_id: TipoActividad.find_by(identificador: 'M4').id
-      )
+      nueva_actividad(bitacora.minuta_id, 'M1')
+      nueva_actividad(bitacora.minuta_id, 'M2')
+      nueva_actividad(bitacora.minuta_id, 'T1')
+      nueva_actividad(bitacora.minuta_id, 'M4')
       params[:objetivos].each do |obj|
         objetivo = Objetivo.new
         objetivo.descripcion = obj[:descripcion]
         objetivo.bitacora_revision_id = bitacora.id
         if objetivo.valid?
           objetivo.save!
-          nueva_actividad = Registro.create!(
-            realizada_por: current_usuario.id,
-            minuta_id: bitacora.minuta_id,
-            tipo_actividad_id: TipoActividad.find_by(identificador: 'O1').id
-          )
+          nueva_actividad(bitacora.minuta_id, 'O1')
         end
       end
       params[:conclusiones].each do |con|
@@ -57,11 +37,7 @@ class MinutasController < ApplicationController
         conclusion.bitacora_revision_id = bitacora.id
         if conclusion.valid?
           conclusion.save!
-          nueva_actividad = Registro.create!(
-            realizada_por: current_usuario.id,
-            minuta_id: bitacora.minuta_id,
-            tipo_actividad_id: TipoActividad.find_by(identificador: 'C1').id
-          )
+          nueva_actividad(bitacora.minuta_id, 'C1')
         end
       end
       params[:asistencia].each do |a|
@@ -78,11 +54,7 @@ class MinutasController < ApplicationController
           asistencia.save!
         end
       end
-      nueva_actividad = Registro.create!(
-        realizada_por: current_usuario.id,
-        minuta_id: bitacora.minuta_id,
-        tipo_actividad_id: TipoActividad.find_by(identificador: 'M3').id
-      )
+      nueva_actividad(bitacora.minuta_id, 'M3')
       asistencias = Asistencia.where('minuta_id = ?', bitacora.minuta.id)
       params[:items].each do |i|
         item = Item.new
@@ -104,27 +76,15 @@ class MinutasController < ApplicationController
             if responsable.valid?
               responsable.save!
               item.responsables << responsable
-              nueva_actividad = Registro.create!(
-                realizada_por: current_usuario.id,
-                minuta_id: bitacora.minuta_id,
-                tipo_actividad_id: TipoActividad.find_by(identificador: 'R1').id
-              )
+              nueva_actividad(bitacora.minuta_id, 'R1')
             end
           end
         end
         if item.valid?
           item.save!
-          nueva_actividad = Registro.create!(
-            realizada_por: current_usuario.id,
-            minuta_id: bitacora.minuta_id,
-            tipo_actividad_id: TipoActividad.find_by(identificador: 'M5').id
-          )
+          nueva_actividad(bitacora.minuta_id, 'M5')
           unless i[:fecha] == ''
-            nueva_actividad = Registro.create!(
-              realizada_por: current_usuario.id,
-              minuta_id: bitacora.minuta_id,
-              tipo_actividad_id: TipoActividad.find_by(identificador: 'F1').id
-            )
+            nueva_actividad(bitacora.minuta_id, 'F1')
           end
         end
       end
@@ -133,6 +93,15 @@ class MinutasController < ApplicationController
       bitacora_estado.tipo_estado_id = tipo_estado.id
       if bitacora_estado.valid?
         bitacora_estado.save!
+      end
+      if tipo_estado.abreviacion.eql?('EMI')
+        case bitacora.motivo.identificador
+        when 'ECI'
+          EstudiantesMailer.nuevaMinutaCoordinacion(bitacora).deliver_later
+        when 'ERC'
+          EstudiantesMailer.revisionCliente(bitacora).deliver_later
+          EstudiantesMailer.avisoAestudiantes(bitacora).deliver_later
+        end
       end
     else
       render json: ['error': 'Información de la minuta no es válida'], status: :unprocessable_entity
@@ -464,6 +433,14 @@ class MinutasController < ApplicationController
         bitacora_estado.tipo_estado_id = tipo_estado.id
         if bitacora_estado.valid?
           bitacora_estado.save!
+        end
+      end
+      if tipo_estado.abreviacion.eql?('EMI')
+        case bitacora.motivo.identificador
+        when 'ECI'
+          EstudiantesMailer.nuevaMinutaCoordinacion(bitacora).deliver_later
+        when 'ERC'
+          EstudiantesMailer.revisionCliente(bitacora).deliver_later
         end
       end
     else

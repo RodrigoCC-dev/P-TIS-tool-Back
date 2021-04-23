@@ -21,9 +21,11 @@ class AprobacionesController < ApplicationController
       if current_usuario.rol.rango == 3
         estudiante = Estudiante.find_by(usuario_id: current_usuario.id)
         asistencia = Asistencia.where(minuta_id: bitacora.minuta_id, id_estudiante: estudiante.id).first
+        es_estudiante = true
       elsif current_usuario.rol.rango == 4
         stakeholder = Stakeholder.find_by(usuario_id: current_usuario.id)
         asistencia = Asistencia.where(minuta_id: bitacora.minuta_id, id_stakeholder: stakeholder.id).first
+        es_estudiante = false
       end
       aprobacion = Aprobacion.where(bitacora_revision_id: bitacora.id, asistencia_id: asistencia.id).first
       unless aprobacion.nil?
@@ -43,6 +45,9 @@ class AprobacionesController < ApplicationController
             if bitacora_estado.valid?
               bitacora_estado.save
             end
+          end
+          unless es_estudiante
+            StakeholdersMailer.aprobacionMinuta(bitacora, current_usuario).deliver_later
           end
         else
           render json: ['error': 'No se ha podido actualizar el estado de aprobación'], status: :unprocessable_entity
