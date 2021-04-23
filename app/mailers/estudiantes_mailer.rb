@@ -31,16 +31,8 @@ class EstudiantesMailer < ApplicationMailer
     @bitacora = bitacora
     @emisor = bitacora.minuta.estudiante
     @grupo = @emisor.grupo
-    asistencias = bitacora.minuta.asistencias.where.not(id_stakeholder: nil)
-    lista_ids = []
-    asistencias.each do |a|
-      lista_ids << a.id_stakeholder
-    end
-    stakeholders = Stakeholder.where(id: lista_ids)
-    stakeholders.each do |stk|
-      @stakeholder = stk
-      mail(to: @stakeholder.usuario.email, subject: "Se han respondido los comentarios realizados a la minuta #{@bitacora.minuta.codigo}_#{@bitacora.revision}", template_name: 'respuestas_a_comentarios')
-    end
+    emails = obtener_correos_stakeholders(bitacora)
+    mail(to: emails, subject: "Se han respondido los comentarios realizados a la minuta #{@bitacora.minuta.codigo}_#{@bitacora.revision}", template_name: 'respuestas_a_comentarios')
   end
 
   private
@@ -55,5 +47,15 @@ class EstudiantesMailer < ApplicationMailer
     estudiantes = Estudiante.joins(:usuario).where(id: lista_ids).select('usuarios.email AS correo')
     emails = estudiantes.collect(&:correo).join(', ')
     return emails
+  end
+
+  def obtener_correos_stakeholders(bitacora)
+    asistencias = bitacora.minuta.asistencias.where.not(id_stakeholder: nil)
+    lista_ids = []
+    asistencias.each do |a|
+      lista_ids << a.id_stakeholder
+    end
+    stakeholders = Stakeholder.joins(:usuario).where(id: lista_ids).select('usuarios.email AS correo')
+    return stakeholders.collect(&:correo).join(', ')
   end
 end
