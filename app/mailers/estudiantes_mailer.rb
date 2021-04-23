@@ -10,13 +10,7 @@ class EstudiantesMailer < ApplicationMailer
     @bitacora = bitacora
     @emisor = bitacora.minuta.estudiante
     @grupo = @emisor.grupo
-    asistencias = bitacora.minuta.asistencias.where.not(id_stakeholder: nil)
-    lista_ids = []
-    asistencias.each do |a|
-      lista_ids << a.id_stakeholder
-    end
-    stakeholders = Stakeholder.joins(:usuario).where(id: lista_ids).select('usuarios.email AS correo')
-    emails = stakeholders.collect(&:correo).join(', ')
+    emails = obtener_correos_stakeholders(bitacora)
     mail(to: emails, subject: "Se ha emitido una nueva minuta para su revisión", template_name: 'minuta_revision_cliente')
   end
 
