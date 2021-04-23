@@ -10,7 +10,7 @@
     <p>Estimado/a estudiante:</p>
     <br>
     <p>Tu compañero/a <strong><%= @emisor.usuario.nombre + ' ' + @emisor.usuario.apellido_paterno %></strong>
-    ha emitido la minuta <strong><%= @bitacora.minuta.codigo %></strong> para la revisión del cliente. 
-    </p>
+    ha emitido la minuta <strong><%= @bitacora.minuta.codigo + '_' + @bitacora.revision %></strong> para la revisión del cliente. Quedará a la espera
+    de los comentarios que el cliente le pueda realizar.</p>
   </body>
 </html>

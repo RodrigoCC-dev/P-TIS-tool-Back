@@ -8,8 +8,9 @@
     <h1>El cliente ha terminado su revisión de la minuta de reunión</h1>
     <br>
     <p>Estimado/a <strong><%= @estudiante.usuario.nombre + ' ' + @estudiante.usuario.apellido_paterno %></strong>, el cliente
-    <strong><%= @usuario.nombre + ' ' + @usuario.apellido_paterno %></strong> ha concluido su revisión de la minuta <strong><%= @bitacora.minuta.codigo %></strong>
-    en revisión <strong><%= @bitacora.revision %></strong>. Para ver el estado de esta revisión, ingresa a la aplicación <b>Módulo de Minutas de Reunión</b> de los
-    cursos <b>Proyecto y Taller de Ingeniería de Software</b>.</p>
+    <strong><%= @usuario.nombre + ' ' + @usuario.apellido_paterno %></strong> ha concluido su revisión de la minuta
+    <strong><%= @bitacora.minuta.codigo + '_' + @bitacora.revision %></strong>. Para ver el estado de esta revisión,
+    ingresa a la aplicación <b>Módulo de Minutas de Reunión</b> de los cursos <b>Proyecto y Taller de Ingeniería de Software</b> 
+    y revisa la minuta en la sección <b>Cerradas</b>.</p>
   </body>
 </html>
