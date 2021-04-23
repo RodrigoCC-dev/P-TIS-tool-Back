@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="es" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <h1>Se ha emitido una minuta para la revisión del cliente</h1>
+    <br>
+    <p>Estimado/a estudiante:</p>
+    <br>
+    <p>Tu compañero/a <strong><%= @emisor.usuario.nombre + ' ' + @emisor.usuario.apellido_paterno %></strong>
+    ha emitido la minuta <strong><%= @bitacora.minuta.codigo %></strong> para la revisión del cliente. 
+    </p>
+  </body>
+</html>

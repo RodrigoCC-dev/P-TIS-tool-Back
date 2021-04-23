@@ -100,6 +100,7 @@ class MinutasController < ApplicationController
           EstudiantesMailer.nuevaMinutaCoordinacion(bitacora).deliver_later
         when 'ERC'
           EstudiantesMailer.revisionCliente(bitacora).deliver_later
+          EstudiantesMailer.avisoAestudiantes(bitacora).deliver_later
         end
       end
     else
