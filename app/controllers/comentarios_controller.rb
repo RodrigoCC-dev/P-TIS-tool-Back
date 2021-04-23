@@ -64,9 +64,9 @@ class ComentariosController < ApplicationController
         if bitacora_estado.valid?
           bitacora_estado.save!
         end
-      end
-      if es_estudiante == false
-        StakeholdersMailer.comentariosMinuta(bitacora, current_usuario)
+        if es_estudiante == false
+          StakeholdersMailer.comentariosMinuta(bitacora, current_usuario).deliver_later
+        end
       end
     else
       render json: ['error': 'Servicio no permitido para este usuario'], status: :unprocessable_entity

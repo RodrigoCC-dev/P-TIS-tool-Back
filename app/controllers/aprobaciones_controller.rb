@@ -47,7 +47,7 @@ class AprobacionesController < ApplicationController
             end
           end
           unless es_estudiante
-            StakeholdersMailer.aprobacionMinuta(bitacora, current_usuario)
+            StakeholdersMailer.aprobacionMinuta(bitacora, current_usuario).deliver_later
           end
         else
           render json: ['error': 'No se ha podido actualizar el estado de aprobación'], status: :unprocessable_entity
