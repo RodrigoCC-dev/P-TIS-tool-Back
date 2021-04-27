@@ -65,13 +65,23 @@ class ComentariosController < ApplicationController
           bitacora_estado.save!
         end
         if es_estudiante == false
-          StakeholdersMailer.comentariosMinuta(bitacora, current_usuario).deliver_later
+          if es_numero?(bitacora.revision) && bitacora.revision.to_i > 0
+            aprobaciones = Aprobacion.where(bitacora_revision_id: bitacora.id)
+            aprobado = true
+            aprobaciones.each do |a|
+              aprobado = aprobado && a.tipo_aprobacion.identificador.eql?('A')
+            end
+            if aprobado
+              bitacora.motivo_id = Motivo.find_by(identificador: 'EF').id
+            end
+          else
+            StakeholdersMailer.comentariosMinuta(bitacora, current_usuario).deliver_later
+          end
         end
       end
     else
       render json: ['error': 'Servicio no permitido para este usuario'], status: :unprocessable_entity
     end
-
   end
 
   # Servicio que entrega los comentarios de una minuta identificada por su 'bitacora_revision_id'
@@ -80,4 +90,13 @@ class ComentariosController < ApplicationController
     render json: comentarios.as_json(json_data)
   end
 
+  private
+  def expresion_regular(dato)
+    reg_exp = Regexp.new('[0-9]')
+    return reg_exp.match(dato)
+  end
+
+  def es_numero?(revision)
+    return !expresion_regular(revision).nil?
+  end
 end
