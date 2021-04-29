@@ -686,6 +686,18 @@ class MinutasController < ApplicationController
           nueva_actividad(bitacora.minuta_id, 'MT1')
         end
       end
+      params[:impedimentos].each do |i|
+        impedimento = Item.new
+        impedimento.descripcion = i[:descripcion]
+        impedimento.correlativo = i[:correlativo]
+        impedimento.bitacora_revision_id = bitacora.id
+        impedimento.tipo_item_id = TipoItem.find_by(tipo: 'Impedimento').id
+        impedimento.responsables << responsable
+        if impedimento.valid?
+          impedimento.save
+          nueva_actividad(bitacora.minuta_id, 'I1')
+        end
+      end
       bitacora_estado = BitacoraEstado.new
       bitacora_estado.minuta_id = bitacora.minuta_id
       bitacora_estado.tipo_estado_id = tipo_estado.id
@@ -800,28 +812,29 @@ class MinutasController < ApplicationController
       asistencia = Asistencia.new
       asistencia.tipo_asistencia_id = TipoAsistencia.find_by(tipo: 'PRE').id
       asistencia.minuta_id = bitacora.minuta_id
-      asistencia.id_estudiante = Estudiante.find_by(usuario_id: current_usuario.id).id
+      asistencia.id_estudiante = estudiante.id
       asistencia.save
       responsable = Responsable.new
       responsable.asistencia_id = asistencia.id
       responsable.save
       nuevos_items(params[:logros], bitacora, 'Logro', responsable)
       nuevos_items(params[:metas], bitacora, 'Meta', responsable)
+      nuevos_items(params[:impedimentos], bitacora, 'Impedimento', responsable)
     else
       responsable = Responsable.find_by(asistencia_id: asistencia.id)
       items = Item.joins(:responsables).where('items.bitacora_revision_id = ? AND responsables.id = ? AND items.borrado = ?', bitacora.id, responsable.id, false)
       items.each do |item|
         if item.tipo_item.tipo == 'Logro'
           unless params_include(params[:logros], item.id)
-            item.borrado = true
-            item.deleted_at = Time.now
-            item.save
+            borrar_objeto(item)
           end
         elsif item.tipo_item.tipo == 'Meta'
           unless params_include(params[:metas], item.id)
-            item.borrado = true
-            item.deleted_at = Time.now
-            item.save
+            borrar_objeto(item)
+          end
+        elsif item.tipo_item.tipo == 'Impedimento'
+          unless params_include(params[:impedimentos], item.id)
+            borrar_objeto(item)
           end
         end
       end
@@ -841,8 +854,17 @@ class MinutasController < ApplicationController
           nuevas_metas << m
         end
       end
+      nuevos_impedimentos = []
+      params[:impedimentos].each do |i|
+        if i[:id] != 0
+          actualizar_item(i)
+        else
+          nuevos_impedimentos << i
+        end
+      end
       nuevos_items(nuevos_logros, bitacora, 'Logro', responsable)
       nuevos_items(nuevas_metas, bitacora, 'Meta', responsable)
+      nuevos_items(nuevos_impedimentos, bitacora, 'Impedimento', responsable)
     end
     if to_boolean(params[:emitir])
       bitacora.minuta.bitacora_estados.each do |bit|
@@ -912,6 +934,8 @@ class MinutasController < ApplicationController
           nueva_actividad(bitacora.minuta_id, 'L1')
         elsif tipo == 'Meta'
           nueva_actividad(bitacora.minuta_id, 'MT1')
+        elsif tipo == 'Impedimento'
+          nueva_actividad(bitacora.minuta_id, 'I1')
         end
       end
     end
