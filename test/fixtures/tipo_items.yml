@@ -23,3 +23,9 @@ meta:
   descripcion: MyString
   borrado: false
   deleted_at: 2020-10-19 20:20:33
+
+impedimento:
+  tipo: Impedimento
+  descripcion: MyString
+  borrado: false
+  deleted_at: 2020-10-19 20:20:33

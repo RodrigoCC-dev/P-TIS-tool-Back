@@ -244,3 +244,10 @@ treintaycinco:
   identificador: 'F4'
   borrado: false
   deleted_at: 2020-10-19 21:21:09
+
+treintayseis:
+  actividad: MyString
+  descripcion: MyString
+  identificador: 'I1'
+  borrado: false
+  deleted_at: 2020-10-19 21:21:09
