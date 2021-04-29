@@ -189,6 +189,11 @@ TipoItem.create!([
     "tipo" => "Meta",
     "descripcion" => "Meta a conseguir en la siguiente semana de trabajo",
     "rango" => 2
+  },
+  {
+    "tipo" => "Impedimento",
+    "descripcion" => "Impedimento que se generó durante la semana de trabajo",
+    "rango" => 2
   }
 ])
 
@@ -410,6 +415,11 @@ TipoActividad.create!([
     "actividad" => "Registrar una meta",
     "descripcion" => "Se registra una meta en una minuta de avance semanal",
     "identificador" => "MT1"
+  },
+  {
+    "actividad" => "Registrar un impedimento",
+    "descripcion" => "Se registra un impedimento en una minuta de avance semanal",
+    "identificador" => "I1"
   },
   {
     "actividad" => "Cambiar número Sprint",

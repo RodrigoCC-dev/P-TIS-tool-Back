@@ -418,7 +418,7 @@ class MinutasControllerTest < ActionDispatch::IntegrationTest
   end
 
 
-  # Revisiopn del funcionamiento del serivicio 'crear_avance'
+  # Revisión del funcionamiento del serivicio 'crear_avance'
 
   test "Debería obtener código 401 al tratar de crear un avance sin autenticación" do
     post minutas_avance_semanal_url(params: {
@@ -444,8 +444,8 @@ class MinutasControllerTest < ActionDispatch::IntegrationTest
 
   test "Debería poder crear una minuta de avance semanal" do
     assert_difference 'BitacoraEstado.count', 1 do
-      assert_difference 'Registro.count', 5 do
-        assert_difference 'Item.count', 4 do
+      assert_difference 'Registro.count', 7 do
+        assert_difference 'Item.count', 6 do
           assert_difference 'Responsable.count', 1 do
             assert_difference 'Asistencia.count', 1 do
               assert_difference 'BitacoraRevision.count', 1 do
@@ -465,6 +465,10 @@ class MinutasControllerTest < ActionDispatch::IntegrationTest
                   metas: [
                     {id: 34534, descripcion: 'Esta es una meta de prueba', correlativo: 345413},
                     {id: 11345, descripcion: 'Esta es otra meta de prueba', correlativo: 45343}
+                  ],
+                  impedimentos: [
+                    {id: 923453, descripcion: 'Este es un impedimento de prueba', correlativo: 8534},
+                    {id: 72453, descripcion: 'Este es otro impedimento de prueba', correlativo: 493453}
                   ]
                 }), headers: authenticated_header(usuarios(:Pablo), 'pablo123')
               end
