@@ -77,12 +77,12 @@ Rails.application.configure do
 
   # SMTP settings for Yandex.mail
   config.action_mailer.smtp_settings = {
-    :address              => "smtp.yandex.ru",
+    :address              => "smtp.yandex.com",
     :port                 => 465,
     :user_name            => ENV["MAIL_USERNAME"],
     :password             => ENV["MAIL_PASSWORD"],
     :authentication       => "plain",
-    :enable_starttls_auto => true
+    :ssl                  => true
   }
 
   # Ignore bad email addresses and do not raise email delivery errors.
