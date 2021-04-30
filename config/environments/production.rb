@@ -77,7 +77,7 @@ Rails.application.configure do
 
   # SMTP settings for Yandex.mail
   config.action_mailer.smtp_settings = {
-    :address              => "smtp.yandex.com",
+    :address              => "smtp.yandex.ru",
     :port                 => 465,
     :user_name            => ENV["MAIL_USERNAME"],
     :password             => ENV["MAIL_PASSWORD"],
