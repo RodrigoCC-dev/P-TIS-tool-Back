@@ -54,6 +54,36 @@ Rails.application.configure do
   # config.active_job.queue_name_prefix = "P_TIS_tool_Back_production"
 
   config.action_mailer.perform_caching = false
+  config.action_mailer.delivery_method = :smtp
+
+  config.before_configuration do
+    env_file = File.join(Rails.root, 'local_env.yml')
+    YAML.load(File.open(env_file)).each do |key, value|
+      ENV[key.to_s] = value
+    end if File.exists?(env_file)
+  end
+
+  # SMTP settings for Gmail
+=begin
+  config.action_mailer.smtp_settings = {
+    :address              => "smtp.gmail.com",
+    :port                 => 587,
+    :user_name            => ENV["MAIL_USERNAME"],
+    :password             => ENV["MAIL_PASSWORD"],
+    :authentication       => "plain",
+    :enable_starttls_auto => true
+  }
+=end
+
+  # SMTP settings for Yandex.mail
+  config.action_mailer.smtp_settings = {
+    :address              => "smtp.yandex.com",
+    :port                 => 465,
+    :user_name            => ENV["MAIL_USERNAME"],
+    :password             => ENV["MAIL_PASSWORD"],
+    :authentication       => "plain",
+    :enable_starttls_auto => true
+  }
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.

@@ -63,4 +63,10 @@ module Funciones
   def nueva_password(nombre)
     return nombre.parameterize.titleize.split(' ')[0] + '123'
   end
+
+  def borrar_objeto(obj)
+    obj.borrado = true
+    obj.deleted_at = Time.now
+    obj.save
+  end
 end
