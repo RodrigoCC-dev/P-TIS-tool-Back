@@ -15,6 +15,7 @@ class EstudiantesController < ApplicationController
           usuarios.nombre AS nombre_est,
           usuarios.apellido_paterno AS apellido1,
           usuarios.apellido_materno AS apellido2,
+          usuarios.email AS correo,
           secciones.codigo AS codigo_seccion,
           jornadas.nombre AS jornada
           ')
@@ -26,6 +27,7 @@ class EstudiantesController < ApplicationController
           usuarios.nombre AS nombre_est,
           usuarios.apellido_paterno AS apellido1,
           usuarios.apellido_materno AS apellido2,
+          usuarios.email AS correo,
           secciones.codigo AS codigo_seccion,
           jornadas.nombre AS jornada
           ')
