@@ -465,6 +465,7 @@ class MinutasController < ApplicationController
       bitacora_revisiones.id AS id_bitacora,
       bitacora_revisiones.revision AS rev_min,
       motivos.motivo AS motivo_min,
+      motivos.identificador AS motivo_ident,
       minutas.id AS id_minuta,
       minutas.codigo AS codigo_min,
       minutas.created_at AS creada_el,
@@ -474,7 +475,7 @@ class MinutasController < ApplicationController
     minutas = []
     bitacoras.each do |bit|
       h = {
-        id: bit.id_bitacora, revision: bit.rev_min, motivo: bit.motivo_min,
+        id: bit.id_bitacora, revision: bit.rev_min, motivo: bit.motivo_min, identificador: bit.motivo_ident,
         minuta: {
           id: bit.id_minuta, codigo: bit.codigo_min, creada_por: bit.iniciales_est, creada_el: bit.creada_el, tipo: bit.tipo_min,
         }

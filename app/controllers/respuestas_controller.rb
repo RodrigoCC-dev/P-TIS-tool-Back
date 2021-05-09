@@ -39,7 +39,7 @@ class RespuestasController < ApplicationController
     if bitacora_estado.valid?
       bitacora_estado.save!
     end
-    if es_estudiante
+    if es_estudiante && bitacora.motivo.identificador == 'ERC'
       EstudiantesMailer.respuestaAlCliente(bitacora).deliver_later
     end
   end
