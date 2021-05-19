@@ -170,7 +170,8 @@ class EstudiantesControllerTest < ActionDispatch::IntegrationTest
 
 
   # Revisión del funcionamiento del servicio 'update'
-  test "Debería poder actualizar la informacion de un estudiante" do
+
+  test "Debería poder actualizar la información de un estudiante como coordinador" do
     @estudiante = estudiantes(:two)
     assert_difference 'Estudiante.count', 0 do
       patch estudiante_url(id: estudiantes(:two).id, params: {estudiante: {
@@ -191,6 +192,83 @@ class EstudiantesControllerTest < ActionDispatch::IntegrationTest
       assert_equal @estudiante.usuario.apellido_materno, 'Pereira'
       assert_equal @estudiante.usuario.run, '22333444-5'
       assert_equal @estudiante.usuario.email, 'josefina.martinez@algo.com'
+      assert_response :success
+    end
+  end
+
+  test "Debería negarse a actualizar la información de un estudiante con 'email' existente como coordinador" do
+    @estudiante = estudiantes(:one)
+    assert_difference 'Estudiante.count', 0 do
+      patch estudiante_url(id: estudiantes(:one).id, params: {estudiante: {
+        seccion_id: secciones(:one).id,
+        usuario_attributes: {
+          nombre: 'Pablo',
+          apellido_paterno: 'Castro',
+          apellido_materno: 'Norambuena',
+          run: '11222333-4',
+          email: 'pablo.castro@usach.cl'
+        }
+        }
+      }), headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
+      @estudiante.reload
+      assert_equal @estudiante.iniciales, 'ONE'
+      assert_equal @estudiante.usuario.nombre, 'MyString'
+      assert_equal @estudiante.usuario.apellido_paterno, 'MyString'
+      assert_equal @estudiante.usuario.apellido_materno, 'MyString'
+      assert_equal @estudiante.usuario.run, '11222333-4'
+      assert_equal @estudiante.usuario.email, 'one@mystring.com'
+      assert_response 422
+    end
+  end
+
+
+  test "Debería poder actualizar la información de un estudiante como profesor" do
+    @estudiante = estudiantes(:one)
+    assert_difference 'Estudiante.count', 0 do
+      patch estudiante_url(id: estudiantes(:one).id, params: {estudiante: {
+        seccion_id: secciones(:one).id,
+        usuario_attributes: {
+          nombre: 'Josefina',
+          apellido_paterno: 'Martinez',
+          apellido_materno: 'Pereira',
+          run: '11222333-4',
+          email: 'josefina.martinez.p@algo.com'
+        }
+        }
+      }), headers: authenticated_header(usuarios(:profesor), 'profe')
+      @estudiante.reload
+      assert_equal @estudiante.iniciales, 'JMP'
+      assert_equal @estudiante.usuario.nombre, 'Josefina'
+      assert_equal @estudiante.usuario.apellido_paterno, 'Martinez'
+      assert_equal @estudiante.usuario.apellido_materno, 'Pereira'
+      assert_equal @estudiante.usuario.run, '11222333-4'
+      assert_equal @estudiante.usuario.email, 'josefina.martinez.p@algo.com'
+      assert_response :success
+    end
+  end
+
+  test "Debería negarse a actualizar la información de un estudiante con 'email' existente como profesor" do
+    @estudiante = estudiantes(:two)
+    assert_difference 'Estudiante.count', 0 do
+      patch estudiante_url(id: estudiantes(:two).id, params: {estudiante: {
+        seccion_id: secciones(:two).id,
+        usuario_attributes: {
+          nombre: 'Pablo',
+          apellido_paterno: 'Castro',
+          apellido_materno: 'Norambuena',
+          run: '11222333-4',
+          email: 'pablo.castro@usach.cl'
+        }
+        }
+      }), headers: authenticated_header(usuarios(:profesor), 'profe')
+      @estudiante.reload
+      assert_equal @estudiante.iniciales, 'MyString'
+      assert_equal @estudiante.usuario.nombre, 'MyString'
+      assert_equal @estudiante.usuario.apellido_paterno, 'MyString'
+      assert_equal @estudiante.usuario.apellido_materno, 'MyString'
+      assert_equal @estudiante.usuario.run, '22333444-5'
+      assert_equal @estudiante.usuario.email, 'two@mystring.com'
+      assert_response 422
     end
   end
 
