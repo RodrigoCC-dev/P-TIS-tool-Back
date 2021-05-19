@@ -29,6 +29,20 @@ class EstudiantesControllerTest < ActionDispatch::IntegrationTest
     assert_response 401
   end
 
+  test "Debería obtener código '401' al tratar de obtener 'udpate'" do
+    patch '/estudiantes/54945', params: {estudiante: {
+      seccion_id: secciones(:one),
+      usuario_attributes: {
+        nombre: 'Juan',
+        apellido_paterno: 'Castro',
+        apellido_materno: 'Mendez',
+        run: '12345678-9',
+        email: 'juan.castro@usach.cl',
+        }
+      }}
+    assert_response 401
+  end
+
   test "Debería obtener código '401' al tratar de obtener 'sin_grupo'" do
     get estudiantes_asignacion_sin_grupo_url
     assert_response 401
@@ -152,6 +166,32 @@ class EstudiantesControllerTest < ActionDispatch::IntegrationTest
   test "Debería poder obtener la información de un estudiante" do
     get estudiante_url(id: usuarios(:Pablo).id), headers: authenticated_header(usuarios(:Pablo), 'pablo123')
     assert_response :success
+  end
+
+
+  # Revisión del funcionamiento del servicio 'update'
+  test "Debería poder actualizar la informacion de un estudiante" do
+    @estudiante = estudiantes(:two)
+    assert_difference 'Estudiante.count', 0 do
+      patch estudiante_url(id: estudiantes(:two).id, params: {estudiante: {
+        seccion_id: secciones(:two).id,
+        usuario_attributes: {
+          nombre: 'Josefina',
+          apellido_paterno: 'Martinez',
+          apellido_materno: 'Pereira',
+          run: '22333444-5',
+          email: 'josefina.martinez@algo.com'
+        }
+        }
+      }), headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
+      @estudiante.reload
+      assert_equal @estudiante.iniciales, 'JMP'
+      assert_equal @estudiante.usuario.nombre, 'Josefina'
+      assert_equal @estudiante.usuario.apellido_paterno, 'Martinez'
+      assert_equal @estudiante.usuario.apellido_materno, 'Pereira'
+      assert_equal @estudiante.usuario.run, '22333444-5'
+      assert_equal @estudiante.usuario.email, 'josefina.martinez@algo.com'
+    end
   end
 
 
