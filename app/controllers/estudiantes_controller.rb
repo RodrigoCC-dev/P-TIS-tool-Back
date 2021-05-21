@@ -87,6 +87,23 @@ class EstudiantesController < ApplicationController
     )
   end
 
+  # Servicio que permite actualizar la información de un estudiante
+  def update
+    estudiante = Estudiante.find(params[:id])
+    unless estudiante.nil?
+      estudiante.usuario.assign_attributes(estudiantes_params[:usuario_attributes])
+      estudiante.iniciales = obtener_iniciales(estudiante.usuario)
+      estudiante.seccion_id = estudiantes_params[:seccion_id]
+      if estudiante.valid?
+        estudiante.save!
+      else
+        render json: ['error': 'Los datos del estudiante no son válidos'], status: :unprocessable_entity
+      end
+    else
+      render json: ['error': 'No existe el estudiante'], status: :unprocessable_entity
+    end
+  end
+
   # Servicio que entrega el listado de estudiantes sin asignación de grupo en el sistema, según las secciones asignadas al profesor
   def sin_grupo
     if @usuario.rol.rango == 1
