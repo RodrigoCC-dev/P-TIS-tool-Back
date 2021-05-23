@@ -14,7 +14,7 @@ Rails.application.routes.draw do
 
   resources :profesores, only: [:index, :create]
 
-  resources :grupos, except: [:new, :edit, :update]
+  resources :grupos, except: [:new, :edit]
   post 'grupos/ultimo_grupo', to: 'grupos#ultimo_grupo'
 
   resources :jornadas, only: [:index]
