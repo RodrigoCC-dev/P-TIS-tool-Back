@@ -96,6 +96,7 @@ class GruposController < ApplicationController
     grupo.save
   end
 
+  # Servicio que permite actualizar un grupo de trabajo
   def update
     if current_usuario.rol.rango < 3
       grupo = Grupo.find(params[:id])
