@@ -54,17 +54,9 @@ class StakeholdersController < ApplicationController
     )
   end
 
-  # Servicio que permite editar la asignación de stakeholders a un grupo identificado por su 'id'
+  # Servicio que permite editar los datos de un stakeholder
   def update
-    grupo = Grupo.find(params[:id])
-    stakeholders = Stakeholder.where(id: params[:stakeholders])
-    unless stakeholders.size == 0
-      grupo.stakeholders.clear
-      grupo.stakeholders << stakeholders
-      grupo.save
-    else
-      render json: ['Error': 'No se han agregado stakeholders al grupo seleccionado'], status: :unprocessable_entity
-    end
+    
   end
 
   # Servicio que muestra los stakeholder ingresados en el sistema según las secciones asignadas al profesor

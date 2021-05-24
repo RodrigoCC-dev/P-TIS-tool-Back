@@ -135,6 +135,19 @@ class GruposController < ApplicationController
     render json: grupo[0].as_json(json_data)
   end
 
+  # Servicio que permite editar la asignación de stakeholders de un grupo identificado por su 'id'
+  def cambiar_asignacion
+    grupo = Grupo.find(params[:id])
+    stakeholders = Stakeholder.where(id: params[:stakeholders])
+    unless stakeholders.size == 0
+      grupo.stakeholders.clear
+      grupo.stakeholders << stakeholders
+      grupo.save
+    else
+      render json: ['Error': 'No se han agregado stakeholders al grupo seleccionado'], status: :unprocessable_entity
+    end
+  end
+
   private
   def grupo_params
     params.require(:grupo).permit(:nombre, :proyecto, :correlativo)
