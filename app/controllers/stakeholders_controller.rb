@@ -56,7 +56,21 @@ class StakeholdersController < ApplicationController
 
   # Servicio que permite editar los datos de un stakeholder
   def update
-    
+    if current_usuario.rol.rango < 3
+      stakeholder = Stakeholder.find(params[:id])
+      unless stakeholder.nil?
+        stakeholder.usuario.assign_attributes(stakeholders_params[:usuario_attributes])
+        if stakeholder.valid?
+          stakeholder.save!
+        else
+          render json: ['Error': 'Los datos del stakeholder no son válidos'], status: :unprocessable_entity
+        end
+      else
+        render json: ['Error': 'No existe el stakeholder a editar'], status: :unprocessable_entity
+      end
+    else
+      render json: ['Error': 'Servicio no disponible para este usuario'], status: :unprocessable_entity
+    end
   end
 
   # Servicio que muestra los stakeholder ingresados en el sistema según las secciones asignadas al profesor
