@@ -99,86 +99,22 @@ class StakeholdersControllerTest < ActionDispatch::IntegrationTest
   # Revisión del funcionamiento del servicio 'update'
 
   test "Debería obtener código '401' al tratar de obtener 'update' sin autenticación" do
-    put stakeholder_url(id: grupos(:one).id, params: {
-      id: grupos(:one).id,
-      stakeholders: [stakeholders(:two).id]
+    put stakeholder_url(id: stakeholders(:one).id, params: {
+      id: stakeholders(:one).id,
+      stakeholders: {
+        usuario: {
+          nombre: 'Patricio',
+          apellido_paterno: 'Gomez',
+          apellido_materno: 'Hernandez',
+          email: 'patricio.gomez@algo.com'
+        },
+        grupo_id: grupos(:one).id
+      }
       })
     assert_response 401
   end
 
-  test "Debería poder cambiar la asignación de stakeholders a un grupo como coordinador" do
-    @stakeholder1 = stakeholders(:one)
-    @stakeholder2 = stakeholders(:two)
-    @grupo = grupos(:one)
-    put stakeholder_url(id: grupos(:one).id, params: {
-      id: grupos(:one).id,
-      stakeholders: [stakeholders(:two).id, stakeholders(:Gabriela).id]
-      }), headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
-    @stakeholder1.reload
-    @stakeholder2.reload
-    @grupo.reload
-    assert_equal @grupo.stakeholders.size, 2
-    assert @grupo.stakeholders.include?(stakeholders(:two))
-    assert @grupo.stakeholders.include?(stakeholders(:Gabriela))
-    assert_equal @stakeholder1.grupos, []
-    assert_equal @stakeholder1.grupos.size, 0
-    assert_equal @stakeholder2.grupos.size, 2
-    assert @stakeholder2.grupos.include?(grupos(:two))
-    assert @stakeholder2.grupos.include?(grupos(:one))
-    assert_response :success
-  end
 
-  test "Debería obtener código 422 al tratar quitar la asignación de stakeholders a un grupo como coordinador" do
-    @stakeholder = stakeholders(:two)
-    @grupo = grupos(:two)
-    put stakeholder_url(id: grupos(:two).id, params: {
-      id: grupos(:two).id,
-      stakeholders: []
-      }), headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
-    @stakeholder.reload
-    @grupo.reload
-    assert_not_equal @grupo.stakeholders.size, 0
-    assert @stakeholder.grupos.include?(grupos(:two))
-    assert_equal @stakeholder.grupos.size, 1
-    assert_response 422
-  end
-
-  test "Debería poder cambiar la asignación de stakeholders a un grupo como profesor" do
-    @stakeholder1 = stakeholders(:one)
-    @stakeholder2 = stakeholders(:two)
-    @grupo = grupos(:one)
-    put stakeholder_url(id: grupos(:one).id, params: {
-      id: grupos(:one).id,
-      stakeholders: [stakeholders(:two).id, stakeholders(:Gabriela).id]
-      }), headers: authenticated_header(usuarios(:profesor), 'profe')
-    @stakeholder1.reload
-    @stakeholder2.reload
-    @grupo.reload
-    assert_equal @grupo.stakeholders.size, 2
-    assert @grupo.stakeholders.include?(stakeholders(:two))
-    assert @grupo.stakeholders.include?(stakeholders(:Gabriela))
-    assert_equal @stakeholder1.grupos, []
-    assert_equal @stakeholder1.grupos.size, 0
-    assert_equal @stakeholder2.grupos.size, 2
-    assert @stakeholder2.grupos.include?(grupos(:two))
-    assert @stakeholder2.grupos.include?(grupos(:one))
-    assert_response :success
-  end
-
-  test "Debería obtener código 422 al tratar quitar la asignación de stakeholders a un grupo como profesor" do
-    @stakeholder = stakeholders(:two)
-    @grupo = grupos(:two)
-    put stakeholder_url(id: grupos(:two).id, params: {
-      id: grupos(:two).id,
-      stakeholders: []
-      }), headers: authenticated_header(usuarios(:profesor), 'profe')
-    @stakeholder.reload
-    @grupo.reload
-    assert_not_equal @grupo.stakeholders.size, 0
-    assert @stakeholder.grupos.include?(grupos(:two))
-    assert_equal @stakeholder.grupos.size, 1
-    assert_response 422
-  end
 
 
   # Revisión del funcionamiento del servicio 'por_jornada'
