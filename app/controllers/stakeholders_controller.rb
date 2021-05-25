@@ -60,6 +60,7 @@ class StakeholdersController < ApplicationController
       stakeholder = Stakeholder.find(params[:id])
       unless stakeholder.nil?
         stakeholder.usuario.assign_attributes(stakeholders_params[:usuario_attributes])
+        stakeholder.iniciales = obtener_iniciales(stakeholder.usuario)
         if stakeholder.valid?
           stakeholder.save!
         else
