@@ -16,6 +16,7 @@ Rails.application.routes.draw do
 
   resources :grupos, except: [:new, :edit]
   post 'grupos/ultimo_grupo', to: 'grupos#ultimo_grupo'
+  put 'grupos/asignacion/stakeholders/:id', to: 'grupos#cambiar_asignacion'
 
   resources :jornadas, only: [:index]
   resources :tipo_minutas, only: [:index]
