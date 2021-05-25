@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   resources :stakeholders, except: [:destroy, :new, :edit]
   get 'stakeholders/asignacion/grupos', to: 'stakeholders#por_jornada'
 
-  resources :profesores, only: [:index, :create]
+  resources :profesores, only: [:index, :create, :update]
 
   resources :grupos, except: [:new, :edit]
   post 'grupos/ultimo_grupo', to: 'grupos#ultimo_grupo'

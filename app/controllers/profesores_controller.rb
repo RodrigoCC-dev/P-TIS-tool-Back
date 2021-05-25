@@ -30,7 +30,34 @@ class ProfesoresController < ApplicationController
       profesor.secciones << secciones
       profesor.save!
     else
-      render json: ['error': 'Informacion del profesor no es válida'], status: :unprocessable_entity
+      render json: ['error': 'Información del profesor no es válida'], status: :unprocessable_entity
+    end
+  end
+
+  # Servicio que permite editar un profesor en el sistema
+  def update
+    if current_usuario.rol.rango == 1
+      profesor = Profesor.find(params[:id])
+      secciones = Seccion.where(id: params[:secciones])
+      unless profesor.nil?
+        unless secciones.size == 0
+          profesor.usuario.assign_attributes(profesor_params[:usuario_attributes])
+          if profesor.valid?
+            profesor.save!
+            profesor.secciones.clear
+            profesor.secciones << secciones
+            profesor.save!
+          else
+            render json: ['Error': 'Información del profesor no es válida'], status: :unprocessable_entity
+          end
+        else
+          render json: ['Error': 'No hay jornada asignada al profesor'], status: :unprocessable_entity
+        end
+      else
+        render json: ['Error': 'No existe el profesor a editar'], status: :unprocessable_entity
+      end
+    else
+      render json: ['Error': 'Servicio no disponible para este usuario'], status: :unprocessable_entity
     end
   end
 
