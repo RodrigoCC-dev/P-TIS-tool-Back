@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   resources :usuarios, only: [:index]
   resources :secciones, only: [:index]
-  resources :estudiantes, only: [:index, :create, :show]
+  resources :estudiantes, only: [:index, :create, :show, :update]
   get 'estudiantes/asignacion/sin_grupo', to: 'estudiantes#sin_grupo'
   post 'estudiantes/eliminar', to: 'estudiantes#eliminar'
   post 'estudiantes/archivo/nuevos', to: 'estudiantes#desde_archivo'
@@ -12,10 +12,11 @@ Rails.application.routes.draw do
   resources :stakeholders, except: [:destroy, :new, :edit]
   get 'stakeholders/asignacion/grupos', to: 'stakeholders#por_jornada'
 
-  resources :profesores, only: [:index, :create]
+  resources :profesores, only: [:index, :create, :update]
 
-  resources :grupos, except: [:new, :edit, :update]
+  resources :grupos, except: [:new, :edit]
   post 'grupos/ultimo_grupo', to: 'grupos#ultimo_grupo'
+  put 'grupos/asignacion/stakeholders/:id', to: 'grupos#cambiar_asignacion'
 
   resources :jornadas, only: [:index]
   resources :tipo_minutas, only: [:index]

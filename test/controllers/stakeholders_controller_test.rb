@@ -99,85 +99,101 @@ class StakeholdersControllerTest < ActionDispatch::IntegrationTest
   # Revisión del funcionamiento del servicio 'update'
 
   test "Debería obtener código '401' al tratar de obtener 'update' sin autenticación" do
-    put stakeholder_url(id: grupos(:one).id, params: {
-      id: grupos(:one).id,
-      stakeholders: [stakeholders(:two).id]
+    put stakeholder_url(id: stakeholders(:one).id, params: {
+      id: stakeholders(:one).id,
+      stakeholder: {
+        usuario: {
+          nombre: 'Patricio',
+          apellido_paterno: 'Gomez',
+          apellido_materno: 'Hernandez',
+          email: 'patricio.gomez@algo.com'
+        },
+        grupo_id: grupos(:one).id
+      }
       })
     assert_response 401
   end
 
-  test "Debería poder cambiar la asignación de stakeholders a un grupo como coordinador" do
-    @stakeholder1 = stakeholders(:one)
-    @stakeholder2 = stakeholders(:two)
-    @grupo = grupos(:one)
-    put stakeholder_url(id: grupos(:one).id, params: {
-      id: grupos(:one).id,
-      stakeholders: [stakeholders(:two).id, stakeholders(:Gabriela).id]
-      }), headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
-    @stakeholder1.reload
-    @stakeholder2.reload
-    @grupo.reload
-    assert_equal @grupo.stakeholders.size, 2
-    assert @grupo.stakeholders.include?(stakeholders(:two))
-    assert @grupo.stakeholders.include?(stakeholders(:Gabriela))
-    assert_equal @stakeholder1.grupos, []
-    assert_equal @stakeholder1.grupos.size, 0
-    assert_equal @stakeholder2.grupos.size, 2
-    assert @stakeholder2.grupos.include?(grupos(:two))
-    assert @stakeholder2.grupos.include?(grupos(:one))
-    assert_response :success
-  end
-
-  test "Debería obtener código 422 al tratar quitar la asignación de stakeholders a un grupo como coordinador" do
-    @stakeholder = stakeholders(:two)
-    @grupo = grupos(:two)
-    put stakeholder_url(id: grupos(:two).id, params: {
-      id: grupos(:two).id,
-      stakeholders: []
-      }), headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
-    @stakeholder.reload
-    @grupo.reload
-    assert_not_equal @grupo.stakeholders.size, 0
-    assert @stakeholder.grupos.include?(grupos(:two))
-    assert_equal @stakeholder.grupos.size, 1
+  test "Debería obtener código '422' al tratar de obtener 'update' como estudiante" do
+    put stakeholder_url(id: stakeholders(:one).id, params: {
+      id: stakeholders(:one).id,
+      stakeholder: {
+        usuario: {
+          nombre: 'Patricio',
+          apellido_paterno: 'Gomez',
+          apellido_materno: 'Hernandez',
+          email: 'patricio.gomez@algo.com'
+        },
+        grupo_id: grupos(:one).id
+      }
+      }), headers: authenticated_header(usuarios(:Pablo), 'pablo123')
     assert_response 422
   end
 
-  test "Debería poder cambiar la asignación de stakeholders a un grupo como profesor" do
-    @stakeholder1 = stakeholders(:one)
-    @stakeholder2 = stakeholders(:two)
-    @grupo = grupos(:one)
-    put stakeholder_url(id: grupos(:one).id, params: {
-      id: grupos(:one).id,
-      stakeholders: [stakeholders(:two).id, stakeholders(:Gabriela).id]
-      }), headers: authenticated_header(usuarios(:profesor), 'profe')
-    @stakeholder1.reload
-    @stakeholder2.reload
-    @grupo.reload
-    assert_equal @grupo.stakeholders.size, 2
-    assert @grupo.stakeholders.include?(stakeholders(:two))
-    assert @grupo.stakeholders.include?(stakeholders(:Gabriela))
-    assert_equal @stakeholder1.grupos, []
-    assert_equal @stakeholder1.grupos.size, 0
-    assert_equal @stakeholder2.grupos.size, 2
-    assert @stakeholder2.grupos.include?(grupos(:two))
-    assert @stakeholder2.grupos.include?(grupos(:one))
-    assert_response :success
+  test "Debería obtener código '422' al tratar de actualizar con 'update' como stakeholder" do
+    put stakeholder_url(id: stakeholders(:one).id, params: {
+      id: stakeholders(:one).id,
+      stakeholder: {
+        usuario: {
+          nombre: 'Patricio',
+          apellido_paterno: 'Gomez',
+          apellido_materno: 'Hernandez',
+          email: 'patricio.gomez@algo.com'
+        },
+        grupo_id: grupos(:one).id
+      }
+      }), headers: authenticated_header(usuarios(:stakeholder), 'cliente')
+    assert_response 422
   end
 
-  test "Debería obtener código 422 al tratar quitar la asignación de stakeholders a un grupo como profesor" do
-    @stakeholder = stakeholders(:two)
-    @grupo = grupos(:two)
-    put stakeholder_url(id: grupos(:two).id, params: {
-      id: grupos(:two).id,
-      stakeholders: []
-      }), headers: authenticated_header(usuarios(:profesor), 'profe')
+  test "Debería poder actualizar los datos de un stakeholder como coordinador" do
+    @stakeholder = stakeholders(:one)
+    assert_difference 'Stakeholder.count', 0 do
+      put stakeholder_url(id: stakeholders(:one).id, params: {
+        id: stakeholders(:one).id,
+        stakeholder: {
+          usuario_attributes: {
+            nombre: 'Patricio',
+            apellido_paterno: 'Gomez',
+            apellido_materno: 'Hernandez',
+            email: 'patricio.gomez@algo.com'
+          },
+          grupo_id: grupos(:one).id
+        }
+        }), headers: authenticated_header(usuarios(:coordinador), 'coordinacion')
+      assert_response :success
+    end
     @stakeholder.reload
-    @grupo.reload
-    assert_not_equal @grupo.stakeholders.size, 0
-    assert @stakeholder.grupos.include?(grupos(:two))
-    assert_equal @stakeholder.grupos.size, 1
-    assert_response 422
+    assert_equal @stakeholder.usuario.nombre, 'Patricio'
+    assert_equal @stakeholder.usuario.apellido_paterno, 'Gomez'
+    assert_equal @stakeholder.usuario.apellido_materno, 'Hernandez'
+    assert_equal @stakeholder.usuario.email, 'patricio.gomez@algo.com'
+    assert_equal @stakeholder.iniciales, 'PGH'
+  end
+
+  test "Debería poder actualizar los datos de un stakeholder como profesor" do
+    @stakeholder = stakeholders(:two)
+    assert_difference 'Stakeholder.count', 0 do
+      put stakeholder_url(id: stakeholders(:two).id, params: {
+        id: stakeholders(:two).id,
+        stakeholder: {
+          usuario_attributes: {
+            nombre: 'Nelson',
+            apellido_paterno: 'Poblete',
+            apellido_materno: 'Torres',
+            email: 'nelson.poblete@algo.com'
+          },
+          grupo_id: 0
+        }
+        }), headers: authenticated_header(usuarios(:profesor), 'profe')
+      assert_response :success
+    end
+    @stakeholder.reload
+    assert_equal @stakeholder.usuario.nombre, 'Nelson'
+    assert_equal @stakeholder.usuario.apellido_paterno, 'Poblete'
+    assert_equal @stakeholder.usuario.apellido_materno, 'Torres'
+    assert_equal @stakeholder.usuario.email, 'nelson.poblete@algo.com'
+    assert_equal @stakeholder.iniciales, 'NPT'
   end
 
 

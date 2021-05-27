@@ -96,6 +96,35 @@ class GruposController < ApplicationController
     grupo.save
   end
 
+  # Servicio que permite actualizar un grupo de trabajo
+  def update
+    if current_usuario.rol.rango < 3
+      grupo = Grupo.find(params[:id])
+      sin_asignacion = Grupo.find_by(nombre: 'SG')
+      estudiantes = grupo.estudiantes
+      nuevos_estudiantes = Estudiante.where(id: params[:estudiantes])
+      unless grupo.nil?
+        grupo.assign_attributes(grupo_params)
+        unless nuevos_estudiantes.size == 0
+          estudiantes.each do |est|
+            est.grupo_id = sin_asignacion.id
+            est.save
+          end
+          grupo.estudiantes << nuevos_estudiantes
+        end
+        if grupo.valid?
+          grupo.save!
+        else
+          render json: ['error': 'Los datos del grupo no son válidos'], status: :unprocessable_entity
+        end
+      else
+        render json: ['error': 'No existe el grupo a editar'], status: :unprocessable_entity
+      end
+    else
+      render json: ['error': 'Servicio no disponible para este usuario'], status: :unprocessable_entity
+    end
+  end
+
   # Servicio que entrega el último grupo de estudiantes disponibles asociados a una jornada
   def ultimo_grupo
     grupo = Estudiante.joins(:grupo).joins(seccion: :jornada).where('grupos.borrado = ? AND grupos.nombre <> ? AND jornadas.nombre = ?', false, 'SG', params[:jornada]).select('
@@ -104,6 +133,19 @@ class GruposController < ApplicationController
       grupos.correlativo
       ').order('grupos.correlativo DESC').limit(1)
     render json: grupo[0].as_json(json_data)
+  end
+
+  # Servicio que permite editar la asignación de stakeholders de un grupo identificado por su 'id'
+  def cambiar_asignacion
+    grupo = Grupo.find(params[:id])
+    stakeholders = Stakeholder.where(id: params[:stakeholders])
+    unless stakeholders.size == 0
+      grupo.stakeholders.clear
+      grupo.stakeholders << stakeholders
+      grupo.save
+    else
+      render json: ['Error': 'No se han agregado stakeholders al grupo seleccionado'], status: :unprocessable_entity
+    end
   end
 
   private

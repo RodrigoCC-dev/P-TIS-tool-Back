@@ -54,16 +54,23 @@ class StakeholdersController < ApplicationController
     )
   end
 
-  # Servicio que permite editar la asignación de stakeholders a un grupo identificado por su 'id'
+  # Servicio que permite editar los datos de un stakeholder
   def update
-    grupo = Grupo.find(params[:id])
-    stakeholders = Stakeholder.where(id: params[:stakeholders])
-    unless stakeholders.size == 0
-      grupo.stakeholders.clear
-      grupo.stakeholders << stakeholders
-      grupo.save
+    if current_usuario.rol.rango < 3
+      stakeholder = Stakeholder.find(params[:id])
+      unless stakeholder.nil?
+        stakeholder.usuario.assign_attributes(stakeholders_params[:usuario_attributes])
+        stakeholder.iniciales = obtener_iniciales(stakeholder.usuario)
+        if stakeholder.valid?
+          stakeholder.save!
+        else
+          render json: ['Error': 'Los datos del stakeholder no son válidos'], status: :unprocessable_entity
+        end
+      else
+        render json: ['Error': 'No existe el stakeholder a editar'], status: :unprocessable_entity
+      end
     else
-      render json: ['Error': 'No se han agregado stakeholders al grupo seleccionado'], status: :unprocessable_entity
+      render json: ['Error': 'Servicio no disponible para este usuario'], status: :unprocessable_entity
     end
   end
 
