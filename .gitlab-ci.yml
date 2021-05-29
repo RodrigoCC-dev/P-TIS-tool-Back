@@ -96,7 +96,6 @@ sonarqube:
   allow_failure: true
   only:
     - master
-    - main
 
 deploy:
   image: docker:latest
