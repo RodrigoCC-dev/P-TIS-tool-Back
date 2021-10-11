@@ -437,7 +437,8 @@ TipoActividad.create!([
 grupo = Grupo.new
 grupo.nombre = 'SG'
 grupo.proyecto = 'Sin asignacion'
-grupo.save(validate: false)
+sin_asignacion = Grupo.find_by(nombre: 'SG')
+grupo.save(validate: false) if sin_asignacion.nil?
 
 # Seeder para crear profesores
 usuarios = Usuario.all
