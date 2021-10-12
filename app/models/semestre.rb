@@ -3,7 +3,7 @@ class Semestre < ApplicationRecord
   before_create :crear_identificador
 
   # Validaciones
-  validates :identificador, uniqueness: true
+  validates_uniqueness_of :identificador
   validates :identificador, format: {with: /(\d{1})-(\d{4})/}
 
   private
