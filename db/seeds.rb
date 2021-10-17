@@ -73,6 +73,8 @@ Curso.create([
 jornadas = Jornada.all
 semestres = Semestre.all
 cursos = Curso.all
+seccion_A1 = Seccion.find_by(codigo: "A1")
+seccion_V21 = Seccion.find_by(codigo: "V21")
 Seccion.create([
   {
     "codigo" => "A1",
@@ -86,7 +88,7 @@ Seccion.create([
     "semestre" => semestres.first,
     "curso" => cursos.find_by(codigo: '13168')
   }
-])
+]) if seccion_A1.nil? && seccion_V21.nil?
 
 # Seeder para crear usuarios
 roles = Rol.all
