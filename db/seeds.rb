@@ -452,6 +452,7 @@ Profesor.create([
 profesores = Profesor.all
 profesor_uno = profesores.first
 secciones = Seccion.joins(:jornada)
+profesor_uno.secciones.clear
 profesor_uno.secciones << secciones.where('jornadas.identificador =?', 2)
 profesor_uno.save
 
