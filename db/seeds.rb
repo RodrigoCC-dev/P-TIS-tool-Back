@@ -7,7 +7,7 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 # Seeder para Roles
-Rol.create!([
+Rol.create([
   {
     "rol" => "Coordinador",
     "rango" => 1
@@ -27,7 +27,7 @@ Rol.create!([
 ])
 
 # Seeder para agregar Jornadas
-Jornada.create!([
+Jornada.create([
   {
     "nombre" => "Diurna",
     "identificador" => 1
@@ -39,7 +39,7 @@ Jornada.create!([
 ])
 
 # Seeder para agregar Semestres
-Semestre.create!([
+Semestre.create([
   {
     "numero" => 1,
     "agno" => 2021,
@@ -50,7 +50,7 @@ Semestre.create!([
 ])
 
 # Seeder para agregar Cursos
-Curso.create!([
+Curso.create([
   {
     "nombre" => "Proyecto de Ingenieria de Software",
     "codigo" => "13168"
@@ -73,7 +73,7 @@ Curso.create!([
 jornadas = Jornada.all
 semestres = Semestre.all
 cursos = Curso.all
-Seccion.create!([
+Seccion.create([
   {
     "codigo" => "A1",
     "jornada" => jornadas.find_by(identificador: 1),
@@ -90,7 +90,7 @@ Seccion.create!([
 
 # Seeder para crear usuarios
 roles = Rol.all
-Usuario.create!([
+Usuario.create([
   {
     "nombre" => "Hector",
     "apellido_paterno" => "Antillanca",
@@ -112,7 +112,7 @@ Usuario.create!([
 ])
 
 # Seeder para agregar tipos de minutas
-TipoMinuta.create!([
+TipoMinuta.create([
   {
     "tipo" => "Coordinacion",
     "descripcion" => "Minuta para reunión entre los estudiantes de un grupo de trabajo"
@@ -128,7 +128,7 @@ TipoMinuta.create!([
 ])
 
 # Seeder para agregar tipos de asistencia
-TipoAsistencia.create!([
+TipoAsistencia.create([
   {
     "tipo" => "PRE",
     "descripcion" => "Presente"
@@ -144,7 +144,7 @@ TipoAsistencia.create!([
 ])
 
 # Seeder para agregar tipos de ítems
-TipoItem.create!([
+TipoItem.create([
   {
     "tipo" => "Agenda",
     "descripcion" => "Comprimiso con fecha y responsable",
@@ -198,7 +198,7 @@ TipoItem.create!([
 ])
 
 # Seeder para agregar motivos de revisión
-Motivo.create!([
+Motivo.create([
   {
     "motivo" => "Emitida para coordinación interna",
     "identificador" => "ECI"
@@ -218,7 +218,7 @@ Motivo.create!([
 ])
 
 # Seeder para agregar Tipos de estados
-TipoEstado.create!([
+TipoEstado.create([
   {
     "abreviacion" => "BOR",
     "descripcion" => "Borrador"
@@ -250,7 +250,7 @@ TipoEstado.create!([
 ])
 
 # Seeder para agregar Tipos de actividades
-TipoActividad.create!([
+TipoActividad.create([
   {
     "actividad" => "Crear minuta",
     "descripcion" => "Se creó una nueva minuta de reunión",
@@ -442,7 +442,7 @@ grupo.save(validate: false) if sin_asignacion.nil?
 
 # Seeder para crear profesores
 usuarios = Usuario.all
-Profesor.create!([
+Profesor.create([
   {
     "usuario" => usuarios.find_by(email: 'mcchamorro@gmail.com')
   }
@@ -453,10 +453,10 @@ profesores = Profesor.all
 profesor_uno = profesores.first
 secciones = Seccion.joins(:jornada)
 profesor_uno.secciones << secciones.where('jornadas.identificador =?', 2)
-profesor_uno.save!
+profesor_uno.save
 
 # Seeder para agregar Tipos de Aprobaciones
-TipoAprobacion.create!([
+TipoAprobacion.create([
   {
     "identificador" => "A",
     "descripcion" => "Aprobada",
