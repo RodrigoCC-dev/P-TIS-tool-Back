@@ -1,6 +1,6 @@
 class Semestre < ApplicationRecord
   has_many :secciones
-  before_create :crear_identificador
+  before_validation :crear_identificador
 
   # Validaciones
   validates_uniqueness_of :identificador
@@ -8,6 +8,6 @@ class Semestre < ApplicationRecord
 
   private
   def crear_identificador
-    self.identificador = self.numero + '-' + self.agno
+    self.identificador = self.numero.to_s + '-' + self.agno.to_s
   end
 end
