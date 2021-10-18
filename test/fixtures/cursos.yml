@@ -23,3 +23,9 @@ four:
   codigo: MyString
   borrado: false
   deleted_at: 2020-10-19 01:07:03
+
+five:
+  nombre: Curso de prueba
+  codigo: 12345
+  borrado: false
+  deleted_at: 2020-10-19 01:07:03

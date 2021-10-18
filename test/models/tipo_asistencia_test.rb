@@ -1,7 +1,17 @@
 require 'test_helper'
 
-class TipoAsistenciumTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+class TipoAsistenciaTest < ActiveSupport::TestCase
+  test "TipoAsistencia con tipo existente no se guarda" do
+    tipo = TipoAsistencia.new
+    tipo.tipo = 'PRE'
+    tipo.descripcion = "Prueba"
+    assert_not tipo.save
+  end
+
+  test "TipoAsistencia con nuevo tipo se guarda" do
+    tipo = TipoAsistencia.new
+    tipo.tipo = 'AUS'
+    tipo.descripcion = "Prueba"
+    assert tipo.save
+  end
 end

@@ -17,3 +17,13 @@ two:
   fin: 2020-10-19 01:03:25
   borrado: false
   deleted_at: 2020-10-19 01:03:25
+
+three:
+  numero: 2
+  agno: 2021
+  activo: false
+  inicio: 2021-10-19 01:03:25
+  fin: 2021-10-19 01:03:25
+  identificador: '2-2021'
+  borrado: false
+  deleted_at: 2020-10-19 01:03:25

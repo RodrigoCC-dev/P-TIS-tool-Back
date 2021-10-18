@@ -2,13 +2,13 @@
 
 one:
   rol: MyString
-  rango: 1
+  rango: 0
   borrado:
   deleted_at: 2020-10-19 00:34:26
 
 two:
   rol: MyString
-  rango: 1
+  rango: 5
   borrado:
   deleted_at: 2020-10-19 00:34:26
 
