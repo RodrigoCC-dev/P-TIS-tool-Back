@@ -15,24 +15,28 @@ two:
 uno:
   identificador: A
   descripcion: Aprobada
+  rango: 1
   borrado: false
   deleted_at: 2020-12-09 03:33:46
 
 dos:
   identificador: AC
   descripcion: Aprobada con comentarios
+  rango: 2
   borrado: false
   deleted_at: 2020-12-09 03:33:46
 
 tres:
   identificador: R
   descripcion: Rechazada
+  rango: 3
   borrado: false
   deleted_at: 2020-12-09 03:33:46
 
 cuatro:
   identificador: RC
   descripcion: Rechazada con comentarios
+  rango: 4
   borrado: false
   deleted_at: 2020-12-09 03:33:46
 
