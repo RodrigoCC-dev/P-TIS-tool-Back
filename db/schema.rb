@@ -78,9 +78,9 @@ ActiveRecord::Schema.define(version: 2021_10_12_003938) do
     t.boolean "borrado", default: false
     t.datetime "deleted_at"
     t.bigint "asistencia_id", null: false
-    t.bigint "bitacora_revision_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "bitacora_revision_id", null: false
     t.index ["asistencia_id"], name: "index_comentarios_on_asistencia_id"
     t.index ["bitacora_revision_id"], name: "index_comentarios_on_bitacora_revision_id"
   end
