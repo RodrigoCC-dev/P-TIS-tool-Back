@@ -21,6 +21,7 @@ services:
     restart: always
     ports:
       - 8080:8080
+      - 80:80
     environment:
       - RAILS_ENV=production
       - DISABLE_SPRING=1
