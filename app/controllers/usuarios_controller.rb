@@ -39,6 +39,11 @@ class UsuariosController < ApplicationController
     end
   end
 
+  # Servicio página de inicio para conseguir certificado SSL para HTTPS con Let's Encrypt
+  def inicio
+    render json: {message: 'Bienvenido a la aplicación Módulo Minutas de Reunión (MMR) del Departamento de Ingeniería Informática (DIINF)'}
+  end
+
   private
   def json_user
     { except: %i[created_at updated_at password_digest], :include => {:rol => {except: %i[created_at updated_at]} } }
