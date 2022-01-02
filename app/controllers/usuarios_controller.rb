@@ -41,7 +41,7 @@ class UsuariosController < ApplicationController
 
   # Servicio página de inicio para conseguir certificado SSL para HTTPS con Let's Encrypt
   def inicio
-    render html: Rails.root.join('app','views','usuarios',"inicio.html.erb")
+    render html: File.read(Rails.root.join('app','views','usuarios',"inicio.html.erb"))
   end
 
   private
