@@ -53,7 +53,6 @@ end
 group :production do
   # Server for production
   gem 'passenger'
-  gem 'rails-letsencrypt'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

@@ -1,5 +1,5 @@
 class UsuariosController < ApplicationController
-  before_action :authenticate_usuario, except: [:login]
+  before_action :authenticate_usuario, except: [:login, :inicio]
   include JsonFormat
 
   # Servicio que permite actualizar la clave de acceso de un usuario
