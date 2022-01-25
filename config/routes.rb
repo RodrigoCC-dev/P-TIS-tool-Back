@@ -1,9 +1,6 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
-  resources :usuarios, only: [:index]
-  get '/', to: 'usuarios#inicio'
-
   resources :secciones, only: [:index]
   resources :estudiantes, only: [:index, :create, :show, :update]
   get 'estudiantes/asignacion/sin_grupo', to: 'estudiantes#sin_grupo'
