@@ -16,11 +16,10 @@ services:
 
   api:
     build: .
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 9898 -b 'ssl://0.0.0.0:8080?key=config/cert/key_file.key&cert=config/cert/cert_file.crt'"
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 8080 -b 'ssl://0.0.0.0:8080?key=config/cert/key_file.key&cert=config/cert/cert_file.crt'"
     container_name: ptis-tool-api
     restart: always
     ports:
-      - 9898:9898
       - 8080:8080
     environment:
       - RAILS_ENV=production
