@@ -1,5 +1,5 @@
 class UsuariosController < ApplicationController
-  before_action :authenticate_usuario, except: [:login]
+  before_action :authenticate_usuario, except: [:login, :inicio]
   include JsonFormat
 
   # Servicio que permite actualizar la clave de acceso de un usuario
@@ -38,6 +38,7 @@ class UsuariosController < ApplicationController
       render json: {error: 'Usuario no autorizado o contraseña errónea'}, status: :unprocessable_entity
     end
   end
+
 
   private
   def json_user
