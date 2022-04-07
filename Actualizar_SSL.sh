@@ -10,6 +10,14 @@ echo .................................
 echo Se ha obtenido el certificado SSL
 echo .................................
 
+# Retirar aplicación actual
+docker stop ptis-tool-api
+docker rm ptis-tool-api
+docker rmi ptis-back_api:latest
+echo ....................................
+echo Se ha eliminado la aplicación actual
+echo ....................................
+
 # Levantar aplicación en SSL
 cp docker-compose.yml docker-compose.bak
 cp docker-compose_SSL.yml docker-compose.yml
