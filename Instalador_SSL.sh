@@ -2,7 +2,7 @@
 
 # Obtener los certificados
 docker pull registry.gitlab.com/rodrigo.castillo.c/p-tis-tool-front
-docker run --name ptis-front -p 80:80 registry.gitlab.com/rodrigo.castillo.c/p-tis-tool-front
+docker run --name ptis-front -p 80:80 -d registry.gitlab.com/rodrigo.castillo.c/p-tis-tool-front
 docker exec -it ptis-front bash -c "chmod 775 Crear_SSL.sh && ./Crear_SSL.sh"
 docker cp ptis-front:/certificates/cert_file.cer config/cert/cert_file.cer
 docker cp ptis-front:/certificates/key_file.key config/cert/key_file.key
