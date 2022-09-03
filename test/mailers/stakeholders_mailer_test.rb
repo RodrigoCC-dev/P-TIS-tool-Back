@@ -6,7 +6,7 @@ class StakeholdersMailerTest < ActionMailer::TestCase
     assert_emails 1 do
       email.deliver_now
     end
-    assert_equal ['modulo.minutas@yandex.com'], email.from
+    assert_equal ['minutas.reunion@informatica.usach.cl'], email.from
     assert_equal ['one@mystring.com'], email.to
     assert_equal 'Se ha realizado la revisión de una minuta de reunión', email.subject
     assert_equal ActionMailer::Base.deliveries.last.body.to_s, email.body.to_s
@@ -17,7 +17,7 @@ class StakeholdersMailerTest < ActionMailer::TestCase
     assert_emails 1 do
       email.deliver_now
     end
-    assert_equal ['modulo.minutas@yandex.com'], email.from
+    assert_equal ['minutas.reunion@informatica.usach.cl'], email.from
     assert_equal ['one@mystring.com'], email.to
     assert_equal 'Ha concluido la revisión de una minuta de reunión por parte del cliente', email.subject
     assert_equal ActionMailer::Base.deliveries.last.body.to_s, email.body.to_s
