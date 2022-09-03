@@ -6,7 +6,7 @@ class EstudiantesMailerTest < ActionMailer::TestCase
     assert_emails 1 do
       email.deliver_now
     end
-    assert_equal ['modulo.minutas@yandex.com'], email.from
+    assert_equal ['minutas.reunion@informatica.usach.cl'], email.from
     assert_equal ['pablo.castro@usach.cl', 'maria.facunda@usach.cl'], email.to
     assert_equal 'Hay una nueva minuta de reunión que requiere tu revisión', email.subject
     assert_equal ActionMailer::Base.deliveries.last.body.to_s, email.body.to_s
@@ -17,7 +17,7 @@ class EstudiantesMailerTest < ActionMailer::TestCase
     assert_emails 1 do
       email.deliver_now
     end
-    assert_equal ['modulo.minutas@yandex.com'], email.from
+    assert_equal ['minutas.reunion@informatica.usach.cl'], email.from
     assert_equal ['gabriela.martinez@algo.com'], email.to
     assert_equal 'Se ha emitido una nueva minuta para su revisión', email.subject
     assert_equal ActionMailer::Base.deliveries.last.body.to_s, email.body.to_s
@@ -28,7 +28,7 @@ class EstudiantesMailerTest < ActionMailer::TestCase
     assert_emails 1 do
       email.deliver_now
     end
-    assert_equal ['modulo.minutas@yandex.com'], email.from
+    assert_equal ['minutas.reunion@informatica.usach.cl'], email.from
     assert_equal ['pablo.castro@usach.cl', 'maria.facunda@usach.cl'], email.to
     assert_equal 'Se ha emitido una minuta para revisión del cliente', email.subject
     assert_equal ActionMailer::Base.deliveries.last.body.to_s, email.body.to_s
@@ -39,7 +39,7 @@ class EstudiantesMailerTest < ActionMailer::TestCase
     assert_emails 1 do
       email.deliver_now
     end
-    assert_equal ['modulo.minutas@yandex.com'], email.from
+    assert_equal ['minutas.reunion@informatica.usach.cl'], email.from
     assert_equal ['gabriela.martinez@algo.com'], email.to
     assert_equal 'Se han respondido los comentarios realizados a la minuta MINUTA_G01_01_2020-2_0929_A', email.subject
     assert_equal ActionMailer::Base.deliveries.last.body.to_s, email.body.to_s
