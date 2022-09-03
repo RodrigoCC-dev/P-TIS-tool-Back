@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: 'modulo.minutas@yandex.com'
+  default from: 'minutas.reunion@informatica.usach.cl'
   layout 'mailer'
 end
