@@ -1,6 +1,6 @@
 FROM ruby:2.6.6
 
-RUN gem install bundler
+RUN gem install bundler -v '~> 2.2.26'
 RUN bundle config --global frozen 1
 
 RUN apt-get update && apt-get install -y nano
